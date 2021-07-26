@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/JournalFragment">
+
+    <fragment
+        android:id="@+id/JournalFragment"
+        android:name="com.starstudio.projectdemo.JournalFragment"
+        android:label="journal_fragment"
+        tools:layout="@layout/fragment_journal" />
+
+    <fragment
+        android:id="@+id/AccountFragment"
+        android:name="com.starstudio.projectdemo.AccountFragment"
+        android:label="account_fragment"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/TodoFragment"
+        android:name="com.starstudio.projectdemo.TodoFragment"
+        android:label="todo_fragment"
+        tools:layout="@layout/fragment_todo" />
+
+    <fragment
+        android:id="@+id/InfoFragment"
+        android:name="com.starstudio.projectdemo.InfoFragment"
+        android:label="info_fragment"
+        tools:layout="@layout/fragment_info" />
+
+</navigation>

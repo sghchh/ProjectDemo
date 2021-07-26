@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.starstudio.projectdemo.MainActivity">
+
+    <item
+        android:id="@+id/JournalFragment"
+        android:title="@string/menu_bottom_journal"
+        android:icon="@drawable/info"/>
+
+    <item
+        android:id="@+id/TodoFragment"
+        android:title="@string/menu_bottom_todo"
+        android:icon="@drawable/info"/>
+
+    <item
+        android:id="@+id/AccountFragment"
+        android:title="@string/menu_bottom_account"
+        android:icon="@drawable/info"/>
+
+    <item
+        android:id="@+id/InfoFragment"
+        android:title="@string/menu_bottom_info"
+        android:icon="@drawable/info"/>
+
+</menu>

@@ -9,4 +9,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <string name="menu_bottom_journal">日记</string>
+    <string name="menu_bottom_todo">TODO</string>
+    <string name="menu_bottom_account">记账</string>
+    <string name="menu_bottom_info">我的</string>
 </resources>
