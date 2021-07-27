@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".TodoFragment">
 
+    <include
+        android:id="@+id/toolbar_todo"
+        layout="@layout/toolbar_fragment" />
+
     <TextView
         android:id="@+id/textview_first"
         android:layout_width="wrap_content"
