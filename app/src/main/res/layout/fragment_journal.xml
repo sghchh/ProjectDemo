@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".JournalFragment">
 
+    <include
+        android:id="@+id/toolbar_journal"
+        layout="@layout/toolbar_journal" />
+
     <TextView
         android:id="@+id/textview_first"
         android:layout_width="wrap_content"
