@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void configView() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
 
         // 将BottomNavigationView与NavController绑定
-        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.bottomNavMain, navController);
     }
 }

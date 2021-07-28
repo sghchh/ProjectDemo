@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/toolbar_journal"
-        layout="@layout/toolbar_fragment" />
+        layout="@layout/toolbar_journal" />
 
     <TextView
         android:id="@+id/textview_first"
