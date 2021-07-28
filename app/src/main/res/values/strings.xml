@@ -13,7 +13,7 @@
     <!--BottomNavigationView底部的文字-->
     <string name="menu_bottom_journal">日记</string>
     <string name="menu_bottom_todo">TODO</string>
-    <string name="menu_bottom_account">记账</string>
+    <string name="menu_bottom_account">账单</string>
     <string name="menu_bottom_info">我的</string>
 
     <!--toolbar显示的title文字-->
