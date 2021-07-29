@@ -42,6 +42,7 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
+        android:id="@+id/tv_reset_pic"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:paddingLeft="24dp"

@@ -1,11 +1,13 @@
 package com.starstudio.projectdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -19,6 +21,7 @@ import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,5 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
         // 将BottomNavigationView与NavController绑定
         NavigationUI.setupWithNavController(binding.bottomNavMain, navController);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
