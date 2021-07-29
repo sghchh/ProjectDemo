@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,14 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
+import com.starstudio.projectdemo.journal.PagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 public class JournalFragment extends Fragment {
-
-    FragmentJournalBinding binding;
+    private final String[] TAGS = {"日记", "相册"};
+    private FragmentJournalBinding binding;
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -39,6 +42,19 @@ public class JournalFragment extends Fragment {
         binding = FragmentJournalBinding.inflate(inflater, container, false);
         configToolbar();
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        binding.pager.setAdapter(new PagerAdapter(this));
+        // 将ViewPager2与TabLayout绑定起来
+        new TabLayoutMediator(binding.tabLayout, binding.pager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull @NotNull TabLayout.Tab tab, int position) {
+                tab.setText(TAGS[position]);
+            }
+        }).attach();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
