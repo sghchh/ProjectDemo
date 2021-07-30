@@ -1,13 +1,18 @@
 package com.starstudio.projectdemo;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,10 +33,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.starstudio.projectdemo.databinding.FragmentInfoBinding;
+import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.URI;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -40,15 +47,17 @@ public class InfoFragment extends Fragment {
     FragmentInfoBinding binding;
     private static final int PICTURE = 1;
     private static final int REQUEST_CODE_PERMISSION = 10;
+    private SharedPreferencesUtils mSharedPreferencesUtils;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentInfoBinding.inflate(inflater, container, false);
+        mSharedPreferencesUtils = SharedPreferencesUtils.getInstance(getContext());
         configToolbar();
-        circleImage(null);
         setAllOnClick();
+        circleImage(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
         return binding.getRoot();
     }
 
@@ -73,17 +82,18 @@ public class InfoFragment extends Fragment {
     }
 
     //该方法用来将用户头像设置为圆形
-    private void circleImage(File file){
+    private void circleImage(Uri uri){
         RequestOptions options = new RequestOptions()
                 .error(R.mipmap.nav_my_unselect)
                 .placeholder(R.mipmap.nav_my_unselect)
                 .transforms(new CircleCrop());
 
         Glide.with(getContext())
-                .load(R.mipmap.nav_my_unselect)
+                .load(uri)
                 .apply(options)
                 .into(binding.ivInfo);
     }
+
 
     //设置控件的点击事件
     private void setAllOnClick(){
@@ -146,27 +156,8 @@ public class InfoFragment extends Fragment {
             //打开系统相册后执行此处
             case PICTURE:
                 if(requestCode != RESULT_OK && data != null){
-                    Toast.makeText(getActivity(), "相册返回成功", Toast.LENGTH_SHORT).show();
-                    Log.e(getClass().getSimpleName(), "相册返回数据 -> " + data);
-//                    //图库
-//                    String pathResult = null;  // 获取图片路径的方法调用
-//                    try {
-//                        /**
-//                         * 在4.4.2之前返回的uri是:content://media/external/images/media/3951或者file://....
-//                         * 在4.4.2之后返回的是:content://com.android.providers.media.documents/document/image:3951或者...
-//                         * 总结：uri的组成，eg:content://com.example.project:200/folder/subfolder/etc
-//                         * content:--->"scheme"
-//                         * com.example.project:200-->"host":"port"--->"authority"[主机地址+端口(省略) =authority]
-//                         * folder/subfolder/etc-->"path" 路径部分
-//                         * android各个不同的系统版本,对于获取外部存储上的资源，返回的Uri对象都可能各不一样,所以要保证无论是哪个系统版本都能正确获取到图片资源的话
-//                         * 就需要针对各种情况进行一个处理了
-//                         **/
-//                        Uri uri = data.getData();
-//                        pathResult = getPath(uri);
-//                        Log.e("TAG", "图片路径===" + pathResult);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
+                    circleImage(data.getData());
+                    mSharedPreferencesUtils.putUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString(),data.getData());
                 }
                 break;
         }
