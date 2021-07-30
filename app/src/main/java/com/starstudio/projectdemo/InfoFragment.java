@@ -126,7 +126,7 @@ public class InfoFragment extends Fragment {
         }
     }
 
-
+    //提示
     private void showWaringDialog() {
         AlertDialog dialog = new AlertDialog.Builder(this.getContext())
                 .setTitle("警告！")
