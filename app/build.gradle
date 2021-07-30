@@ -72,5 +72,7 @@ dependencies {
     // 高斯模糊和圆角等
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
+    // github上圆形ImageView轮子，专门为各种头像准备
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.huawei.hms:site:6.0.0.300'
 }
