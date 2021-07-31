@@ -6,22 +6,22 @@
 
     <item
         android:id="@+id/JournalFragment"
-        android:title="@string/menu_bottom_journal"
+        android:title="@string/toolbar_journal"
         android:icon="@drawable/journal"/>
 
     <item
         android:id="@+id/TodoFragment"
-        android:title="@string/menu_bottom_todo"
+        android:title="@string/toolbar_todo"
         android:icon="@drawable/todo"/>
 
     <item
         android:id="@+id/AccountFragment"
-        android:title="@string/menu_bottom_account"
+        android:title="@string/toolbar_account"
         android:icon="@drawable/account"/>
 
     <item
         android:id="@+id/InfoFragment"
-        android:title="@string/menu_bottom_info"
+        android:title="@string/toolbar_info"
         android:icon="@drawable/info"/>
 
 </menu>

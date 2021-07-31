@@ -1,6 +1,5 @@
 package com.starstudio.projectdemo;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
-import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
-import com.starstudio.projectdemo.journal.PagerAdapter;
+import com.starstudio.projectdemo.journal.adapter.PagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 

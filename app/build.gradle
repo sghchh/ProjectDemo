@@ -61,6 +61,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'org.jetbrains:annotations:15.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -71,5 +72,7 @@ dependencies {
     // 高斯模糊和圆角等
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
 
+    // github上圆形ImageView轮子，专门为各种头像准备
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.huawei.hms:site:6.0.0.300'
 }
