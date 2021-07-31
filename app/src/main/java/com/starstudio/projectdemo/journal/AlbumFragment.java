@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.starstudio.projectdemo.databinding.FragmentAlbumBinding;
+import com.starstudio.projectdemo.journal.adapter.AlbumAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * created by sgh 2021-7-29
- * 为“心情日记”页面的“相册”
+ * 为“心情日记”页面的“相册”板块
  */
 public class AlbumFragment extends Fragment {
 

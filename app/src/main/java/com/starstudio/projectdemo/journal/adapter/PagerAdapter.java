@@ -1,8 +1,11 @@
-package com.starstudio.projectdemo.journal;
+package com.starstudio.projectdemo.journal.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.starstudio.projectdemo.journal.AlbumFragment;
+import com.starstudio.projectdemo.journal.JourFragment;
 
 import org.jetbrains.annotations.NotNull;
 
