@@ -1,6 +1,7 @@
 package com.starstudio.projectdemo.journal.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,6 +84,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             this.content.setText(data.getContent());
             this.week.setText(data.getWeek());
 
+            // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getImgs().length, 3);
             this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(context, coloum, LinearLayoutManager.VERTICAL, false));

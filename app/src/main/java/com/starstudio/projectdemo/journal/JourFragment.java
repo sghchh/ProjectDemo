@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.starstudio.projectdemo.databinding.FragmentJourBinding;
@@ -31,6 +32,7 @@ public class JourFragment extends Fragment {
         binding = FragmentJourBinding.inflate(inflater, container, false);
         binding.recycler.setAdapter(new JourAdapter(JourData.testData));
         binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.recycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         return binding.getRoot();
     }
 
