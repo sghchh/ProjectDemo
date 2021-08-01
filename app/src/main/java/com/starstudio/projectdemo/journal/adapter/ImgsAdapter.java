@@ -50,6 +50,14 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
         return Math.min(data.length, 9);
     }
 
+    public void clear() {
+        this.data = null;
+    }
+
+    public void addData(String[] data) {
+        this.data = data;
+    }
+
     public static class ImgHolder extends RecyclerView.ViewHolder {
 
         private ImageView img;

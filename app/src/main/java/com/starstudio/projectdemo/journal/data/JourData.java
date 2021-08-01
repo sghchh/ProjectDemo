@@ -52,7 +52,7 @@ public class JourData {
             new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test", "test", "test", "test", "test", "test", "test", "test", "test"}),
             new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test"}),
             new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test"}),
-            //new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test", "test", "test", "test", "test", "test", "test", "test"}),
-            //new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test", "test", "test", "test", "test", "test", "test", "test", "test"})
+            new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test", "test", "test", "test", "test", "test", "test", "test"}),
+            new JourData("星期一", "7月31日", "晴", "四川.成都", "今天好热啊", new String[]{"test", "test", "test", "test", "test", "test", "test", "test", "test", "test"})
     };
 }

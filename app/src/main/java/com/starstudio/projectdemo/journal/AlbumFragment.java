@@ -28,8 +28,9 @@ public class AlbumFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = Fragment2AlbumBinding.inflate(inflater, container, false);
-        binding.recycler.setAdapter(new AlbumAdapter());
+        binding.recycler.setAdapter(new AlbumAdapter(new String[]{}));
         binding.recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        binding.recycler.addItemDecoration(new CommonDecoration(getActivity()));
         return binding.getRoot();
     }
 

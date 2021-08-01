@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.journal.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,12 @@ import org.jetbrains.annotations.NotNull;
  * “心情日记”页面的“相册”板块的适配器
  */
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumHolder> {
+
+    private String[] data;
+
+    public AlbumAdapter(String[] data) {
+        this.data = data;
+    }
 
     @NonNull
     @NotNull
