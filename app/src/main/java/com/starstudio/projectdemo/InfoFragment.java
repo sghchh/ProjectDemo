@@ -2,6 +2,7 @@ package com.starstudio.projectdemo;
 
 import android.Manifest;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,11 +16,14 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+
 import com.starstudio.projectdemo.databinding.FragmentInfoBinding;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
@@ -56,8 +61,8 @@ public class InfoFragment extends Fragment {
         binding = FragmentInfoBinding.inflate(inflater, container, false);
         mSharedPreferencesUtils = SharedPreferencesUtils.getInstance(getContext());
         configToolbar();
+        initView();
         setAllOnClick();
-        circleImage(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
         return binding.getRoot();
     }
 
@@ -79,6 +84,14 @@ public class InfoFragment extends Fragment {
         // 将Fragment的toolbar添加上
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbarInfo.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+    }
+
+    //页面初始化部分控件
+    private void initView(){
+        circleImage(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
+        if(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + "") != ""){
+            binding.etInfoName.setText(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + ""));
+        }
     }
 
     //该方法用来将用户头像设置为圆形
@@ -110,6 +123,20 @@ public class InfoFragment extends Fragment {
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
             }
 
+        });
+
+        binding.etInfoName.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //当点击键盘回车时，隐藏光标和键盘，同时保存修改后的内容
+                if(keyCode == KeyEvent.KEYCODE_ENTER){
+                    binding.etInfoName.clearFocus();
+                    InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    manager.hideSoftInputFromWindow(binding.etInfoName.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    mSharedPreferencesUtils.putString(binding.etInfoName.getId() + "",binding.etInfoName.getText().toString());
+                }
+                return false;
+            }
         });
     }
 

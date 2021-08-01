@@ -9,7 +9,13 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
+
+/**
+ * EditText失去焦点后，光标消失
+ */
 public class HideInputActivity extends AppCompatActivity {
+    protected SharedPreferencesUtils sharedPreferencesUtils;
 
     /**
      * 获取点击事件
@@ -18,9 +24,11 @@ public class HideInputActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View view = getCurrentFocus();
+            //如果点击在非EditView位置，隐藏光标和键盘，同时保存修改后的内容
             if (isHideInput(view, ev)) {
                 HideSoftInput(view.getWindowToken());
                 view.clearFocus();
+                sharedPreferencesUtils.putString(view.getId() + "",((EditText)view).getText().toString());
             }
         }
         return super.dispatchTouchEvent(ev);

@@ -18,8 +18,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 import com.starstudio.projectdemo.utils.RequestPermission;
+import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +29,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends HideInputActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
 
         configView();
     }
