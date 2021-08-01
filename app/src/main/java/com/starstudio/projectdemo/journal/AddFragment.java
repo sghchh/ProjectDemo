@@ -1,6 +1,7 @@
 package com.starstudio.projectdemo.journal;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
@@ -31,6 +33,7 @@ public class AddFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
         configToolbar();
         return binding.getRoot();
@@ -44,6 +47,7 @@ public class AddFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding = null;
     }
 
     // 用来构建appbar最右侧的按钮菜单
@@ -55,8 +59,12 @@ public class AddFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
-        if (item.getItemId() == R.id.add_jour) {
+        if (item.getItemId() == R.id.send_jour) {
+            Log.d("menuitemid", "onOptionsItemSelected: id"+item.getItemId());
             Toast.makeText(getActivity(), "点击了发表按钮", Toast.LENGTH_SHORT).show();
+        } else if (item.getItemId() == android.R.id.home) {
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+            navHost.getNavController().navigate(R.id.action_JournalAddFragment_backto_JournalFragment);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -67,6 +75,6 @@ public class AddFragment extends Fragment {
         // 将Fragment的toolbar添加上
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbarAddJour.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }
