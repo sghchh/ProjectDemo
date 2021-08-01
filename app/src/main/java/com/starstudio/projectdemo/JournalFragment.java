@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -25,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
 public class JournalFragment extends Fragment {
     private final String[] TAGS = {"日记", "相册"};
     private FragmentJournalBinding binding;
+    private NavHostFragment navHostFragment;
+    private NavController navController;
+
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
@@ -39,6 +44,9 @@ public class JournalFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = FragmentJournalBinding.inflate(inflater, container, false);
         configToolbar();
+        navHostFragment =
+                (NavHostFragment) (getActivity().getSupportFragmentManager()).findFragmentById(R.id.nav_host_fragment_content_main);
+        navController = navHostFragment.getNavController();
         return binding.getRoot();
     }
 
@@ -71,9 +79,9 @@ public class JournalFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.journal_add) {
-            Toast.makeText(getActivity(), "点击了add按钮", Toast.LENGTH_SHORT).show();
+            navController.navigate(R.id.action_JournalFragment_to_JourAddFragment);
         }
-        Log.d("icon bounds", "icon bounds " + item.getIcon().getBounds().toShortString());
+
         return super.onOptionsItemSelected(item);
     }
 

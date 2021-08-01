@@ -16,6 +16,8 @@
     <string name="toolbar_todo">待办</string>
     <string name="toolbar_account">记账</string>
     <string name="toolbar_info">我的信息</string>
+    <string name="toolbar_add_jour">写日记</string>
+    <string name="toolbar2_add_jour">发表</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

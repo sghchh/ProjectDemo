@@ -10,7 +10,17 @@
         android:id="@+id/JournalFragment"
         android:name="com.starstudio.projectdemo.JournalFragment"
         android:label="journal_fragment"
-        tools:layout="@layout/fragment_journal" />
+        tools:layout="@layout/fragment_journal">
+        <action
+            android:id="@+id/action_JournalFragment_to_JourAddFragment"
+            app:destination="@id/JourAddFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/JourAddFragment"
+        android:name="com.starstudio.projectdemo.journal.AddFragment"
+        android:label="jour_add_fragment"
+        tools:layout="@layout/fragment2_add_jour" />
 
     <fragment
         android:id="@+id/AccountFragment"
