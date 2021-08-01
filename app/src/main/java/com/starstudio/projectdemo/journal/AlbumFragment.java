@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.starstudio.projectdemo.databinding.FragmentAlbumBinding;
+import com.starstudio.projectdemo.databinding.Fragment2AlbumBinding;
 import com.starstudio.projectdemo.journal.adapter.AlbumAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AlbumFragment extends Fragment {
 
-    private FragmentAlbumBinding binding;
+    private Fragment2AlbumBinding binding;
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = FragmentAlbumBinding.inflate(inflater, container, false);
+        binding = Fragment2AlbumBinding.inflate(inflater, container, false);
         binding.recycler.setAdapter(new AlbumAdapter());
         binding.recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
         return binding.getRoot();
