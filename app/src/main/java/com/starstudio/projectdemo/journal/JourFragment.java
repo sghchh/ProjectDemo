@@ -30,7 +30,7 @@ public class JourFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         binding = Fragment2JourBinding.inflate(inflater, container, false);
-        binding.recycler.setAdapter(new JourAdapter(JourData.testData, getActivity()));
+        binding.recycler.setAdapter(new JourAdapter(JourData.testData));
         binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.recycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         return binding.getRoot();

@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
+import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.RequestPermission;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
@@ -39,6 +40,8 @@ public class MainActivity extends HideInputActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //
+        ContextHolder.init(this);
         // 进行权限申请的操作
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();

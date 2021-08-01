@@ -15,9 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
+import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -26,8 +30,9 @@ import org.jetbrains.annotations.NotNull;
  * 2021-7-31
  * “日记添加”页面
  */
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemClickListener{
     Fragment2AddJourBinding binding;
+    AddImgVideoAdapter addImgAdapter;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -36,6 +41,11 @@ public class AddFragment extends Fragment {
         setHasOptionsMenu(true);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
         configToolbar();
+
+        addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
+        binding.recyclerAddImg.setAdapter(addImgAdapter);
+        binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
+
         return binding.getRoot();
     }
 
@@ -76,5 +86,12 @@ public class AddFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbarAddJour.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onItemClick(View view) {
+        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST)) {
+            this.addImgAdapter.append("hello");
+        }
     }
 }
