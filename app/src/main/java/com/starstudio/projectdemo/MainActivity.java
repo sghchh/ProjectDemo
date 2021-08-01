@@ -19,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
+import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
 import android.view.Menu;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //
+        ContextHolder.init(this);
         // 进行权限申请的操作
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();

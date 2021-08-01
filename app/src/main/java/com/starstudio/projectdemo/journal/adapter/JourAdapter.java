@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.CommonDecoration;
 import com.starstudio.projectdemo.journal.data.JourData;
+import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Text;
@@ -29,12 +30,10 @@ import org.w3c.dom.Text;
  */
 public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
-    private JourData[] data;
-    private Context context;
+    private final JourData[] data;
 
-    public JourAdapter(JourData[] data, Context context) {
+    public JourAdapter(JourData[] data) {
         this.data = data;
-        this.context = context;
     }
 
     @NonNull
@@ -47,7 +46,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JourAdapter.JourHolder holder, int position) {
-        holder.loadData(data[position], context);
+        holder.loadData(data[position]);
     }
 
 
@@ -60,10 +59,9 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     public static class JourHolder extends RecyclerView.ViewHolder {
 
         // 该RecyclerView是展示图片的控件
-        private RecyclerView imgGrid;
-        private TextView week, date, location, content;
-        private ImageView weather;
-        private ImgsAdapter adapter;
+        private final RecyclerView imgGrid;
+        private final TextView week, date, location, content;
+        private final ImageView weather;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             imgGrid = (RecyclerView) itemView.findViewById(R.id.imgs_recycler);
@@ -72,12 +70,10 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             weather = (ImageView) itemView.findViewById(R.id.weather);
             content = (TextView)itemView.findViewById(R.id.content);
             location = (TextView)itemView.findViewById(R.id.location);
-            adapter = new ImgsAdapter(new String[]{});
-            imgGrid.setAdapter(this.adapter);
         }
 
         // 通过data数据来加载控件内容
-        private void loadData(JourData data, Context context) {
+        private void loadData(JourData data) {
             this.date.setText(data.getDate());
             this.location.setText(data.getLoaction());
             this.content.setText(data.getContent());
@@ -85,12 +81,9 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getImgs().length, 3);
-            this.adapter.clear();
-            this.adapter.addData(data.getImgs());
-            //this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
-            this.imgGrid.setLayoutManager(new GridLayoutManager(context, coloum, LinearLayoutManager.VERTICAL, false));
-            this.imgGrid.addItemDecoration(new CommonDecoration(context));
-            this.adapter.notifyDataSetChanged();
+            this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
+            this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
+            this.imgGrid.addItemDecoration(new CommonDecoration(ContextHolder.context()));
         }
     }
 }
