@@ -46,7 +46,9 @@ public class MainActivity extends HideInputActivity {
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE};
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+        // 本次申请的权限是必要的，即没用通过则会导致APP无法使用
         permissionRequest.checkPermissions(RequestPermission.CODE_MUST, permissions);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

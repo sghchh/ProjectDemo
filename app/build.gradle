@@ -5,7 +5,7 @@ apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
 
 
     defaultConfig {
@@ -17,6 +17,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resConfigs "zh-rCN"
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -75,4 +76,9 @@ dependencies {
     // github上圆形ImageView轮子，专门为各种头像准备
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.huawei.hms:site:6.0.0.300'
+
+    // 添加PictureSelector库
+    implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc06'
+    // 编译打包依赖
+    implementation 'com.android.support:multidex:1.0.3'
 }
