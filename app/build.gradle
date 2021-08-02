@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.starstudio.projectdemo"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -81,4 +81,8 @@ dependencies {
     implementation 'io.github.lucksiege:pictureselector:v2.7.3-rc06'
     // 编译打包依赖
     implementation 'com.android.support:multidex:1.0.3'
+
+    // 添加hms中图像服务所需的依赖
+    implementation 'com.huawei.hms:image-vision:1.0.3.304'
+    implementation 'com.huawei.hms:image-vision-fallback:1.0.3.304'
 }
