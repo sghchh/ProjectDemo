@@ -28,12 +28,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * created by sgh
@@ -113,8 +117,11 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA);
 
-        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST)) {
-            showPop();
+        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST))
+            showPop();   // 弹出弹窗，选择图片
+        else {
+            // 添加点击事件，跳转到HmsEditPicFragment调用hms api实现图片编辑功能
+
         }
     }
 
@@ -159,7 +166,17 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                                 .minSelectNum(1)
                                 .imageSpanCount(4)
                                 .selectionMode(PictureConfig.MULTIPLE)
-                                .forResult(PictureConfig.CHOOSE_REQUEST);
+                                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                                    @Override
+                                    public void onResult(List<LocalMedia> result) {
+                                        addImgAdapter.append(result);
+                                    }
+
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                });
                         break;
                     case R.id.tv_camera:
                         //拍照

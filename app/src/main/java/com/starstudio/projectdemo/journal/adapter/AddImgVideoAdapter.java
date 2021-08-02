@@ -11,12 +11,14 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.luck.picture.lib.entity.LocalMedia;
 import com.starstudio.projectdemo.R;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * created by sgh
@@ -25,24 +27,24 @@ import java.util.Arrays;
  */
 public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.AddHolder> {
 
-    private ArrayList<String> data;
+    private ArrayList<LocalMedia> data;
     private OnItemClickListener clickListener;
 
     public AddImgVideoAdapter(OnItemClickListener clickListener) {
         this.data = new ArrayList<>();
-        this.data.add("first");
+        this.data.add(null);
         this.clickListener = clickListener;
     }
 
-    public void append(String... append) {
-        data.addAll(Arrays.asList(append));
+    public void append(List<LocalMedia> append) {
+        data.addAll(append);
         this.notifyDataSetChanged();
     }
 
-    public void reset(String... data) {
+    public void reset(List<LocalMedia> data) {
         this.data = new ArrayList();
-        this.data.add("first");
-        this.data.addAll(Arrays.asList(data));
+        this.data.add(null);
+        this.data.addAll(data);
         this.notifyDataSetChanged();
     }
 
@@ -73,8 +75,8 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
             this.imgView = (ImageView) itemView.findViewById(R.id.add_img_video);
         }
 
-        protected void loadData(String data) {
-            if (data.equals("first")) {
+        protected void loadData(LocalMedia data) {
+            if (data == null) {
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
