@@ -17,11 +17,11 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
+import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +43,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         configToolbar();
 
         addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
+        binding.recyclerAddImg.getLayoutParams().height = (int) (DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) * 0.65);
         binding.recyclerAddImg.setAdapter(addImgAdapter);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
 
