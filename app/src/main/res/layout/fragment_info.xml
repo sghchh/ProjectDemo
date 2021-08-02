@@ -22,13 +22,17 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar_info"
         tools:src="@tools:sample/avatars" />
 
-    <TextView
+    <EditText
+        android:id="@+id/et_info_name"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
         android:layout_marginTop="8dp"
-        android:text="打磕冲"
+        android:text="无名氏"
         android:textSize="20sp"
         android:textColor="#1F2329"
+        android:inputType="text"
+        android:maxLines="1"
+        android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_info" />
@@ -54,7 +58,7 @@
         android:textColor="#646A73"
         app:layout_constraintTop_toBottomOf="@+id/iv_info"
         tools:layout_editor_absoluteX="0dp"
-        android:drawableRight="@mipmap/nav_my_unselect" />
+        android:drawableRight="@drawable/ic_info_set_name" />
 
     <View
         android:layout_width="match_parent"

@@ -18,9 +18,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.RequestPermission;
+import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +30,7 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends HideInputActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -44,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE};
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
+        // 本次申请的权限是必要的，即没用通过则会导致APP无法使用
         permissionRequest.checkPermissions(RequestPermission.CODE_MUST, permissions);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
 
         configView();
     }
