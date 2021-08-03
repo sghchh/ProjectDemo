@@ -1,10 +1,13 @@
 package com.starstudio.projectdemo.journal.api;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import com.huawei.hms.image.vision.*;
 import com.huawei.hms.image.vision.bean.ImageVisionResult;
+import com.starstudio.projectdemo.journal.data.HMSImageServiceJson;
 
 import java.util.HashMap;
 
@@ -23,7 +26,9 @@ public class HmsImageService {
         this.callBack = new ImageVision.VisionCallBack() {
             @Override
             public void onSuccess(int i) {
-                imageVision.init(context, JsonObjects.AuthJson.getInstance());
+                int code = imageVision.init(context, HMSImageServiceJson.AuthJson.getInstance());
+                if (code != 0)
+                    Toast.makeText(context, "滤镜服务初始化失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -32,6 +37,7 @@ public class HmsImageService {
             }
         };
 
+        // 初始化滤镜服务的code与type对应表
         for(int i = 0; i < types.length; i ++)
             type2Code.put(types[i], i + 1);
     }
@@ -45,7 +51,18 @@ public class HmsImageService {
         return INSTANCE;
     }
 
-    public int type2Code(String type) {
-        return (int)type2Code.get(type);
+    /**
+     * HMS滤镜服务使用
+     * @param filterType 滤镜服务的类别，可选方案参考types数组
+     * @param imgPath 应用滤镜服务的图像的路径
+     * @return HMS接口的ImageVisionResult
+     */
+    public ImageVisionResult getFilterResult(String filterType, String imgPath) {
+        Bitmap initBitmap = BitmapFactory.decodeFile(imgPath);
+
+        HMSImageServiceJson.TaskJson taskJson = new HMSImageServiceJson.TaskJson();
+        int typeCode = (int)type2Code.get(filterType);
+        HMSImageServiceJson.RequestJson requestJson = new HMSImageServiceJson.RequestJson(typeCode + "", taskJson);
+        return imageVision.getColorFilter(requestJson, initBitmap);
     }
 }

@@ -1,4 +1,4 @@
-package com.starstudio.projectdemo.journal.api;
+package com.starstudio.projectdemo.journal.data;
 
 import android.graphics.Bitmap;
 
@@ -6,9 +6,9 @@ import com.huawei.hms.image.vision.A;
 
 import org.json.JSONObject;
 
-public class JsonObjects {
+public class HMSImageServiceJson {
 
-    static class AuthJson extends JSONObject {
+    public static class AuthJson extends JSONObject {
         private String projectId;
         private String appId;
         private String authApiKey;
@@ -73,7 +73,7 @@ public class JsonObjects {
         }
     }
 
-    static class RequestJson extends JSONObject{
+    public static class RequestJson extends JSONObject{
         private String requestId;
         private AuthJson authJson;
         private TaskJson taskJson;  // 具体请求业务参数
@@ -85,19 +85,19 @@ public class JsonObjects {
         }
     }
 
-    static class TaskJson extends JSONObject{
+    public static class TaskJson extends JSONObject{
         private int filterType;   // 滤镜的类别
         private float intensity = 1;  // 滤镜强度，范围为(0,1]，默认为1
         private float compresssRate = 1;  // 压缩率，范围为(0,1]，默认为1
     }
 
-    static class VisionResultJson extends JSONObject {
+    public static class VisionResultJson extends JSONObject {
         private int resultCode;
         private ResponseJson response;
         private Bitmap image;
     }
 
-    static class ResponseJson extends JSONObject {
+    public static class ResponseJson extends JSONObject {
         private String requestId;
         private String serviceId;
     }

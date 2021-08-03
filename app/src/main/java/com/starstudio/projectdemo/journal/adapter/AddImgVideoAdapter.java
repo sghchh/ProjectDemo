@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.journal.adapter;
 
 import android.content.ClipData;
 import android.media.Image;
+import android.net.Uri;
 import android.text.method.CharacterPickerDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.starstudio.projectdemo.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +82,7 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
-                imgView.setImageResource(R.drawable.weather_overcast);
+                imgView.setImageURI(Uri.fromFile(new File(data.getRealPath())));
                 imgView.setTag(ItemType.OTHER);
             }
 

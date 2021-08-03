@@ -170,13 +170,13 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                         //相册
                         PictureSelector.create(activity)
                                 .openGallery(PictureMimeType.ofImage())
-                                //.maxSelectNum(maxSelectNum)
-                                .minSelectNum(1)
+                                .imageEngine(GlideEngine.createGlideEngine())
                                 .imageSpanCount(4)
                                 .selectionMode(PictureConfig.MULTIPLE)
                                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                                     @Override
                                     public void onResult(List<LocalMedia> result) {
+                                        // 将选择好的图片添加到Adapter中
                                         addImgAdapter.append(result);
                                     }
 
