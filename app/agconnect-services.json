@@ -23,7 +23,7 @@
 		"project_id":"736430079245885371",
 		"app_id":"104557639",
 		"api_key":"CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc",
-		"package_name":"com.starstudio.ProjectDemo"
+		"package_name":"com.starstudio.projectdemo"
 	},
 	"oauth_client":{
 		"client_id":"104557639",
@@ -31,7 +31,7 @@
 	},
 	"app_info":{
 		"app_id":"104557639",
-		"package_name":"com.starstudio.ProjectDemo"
+		"package_name":"com.starstudio.projectdemo"
 	},
 	"service":{
 		"analytics":{
@@ -53,12 +53,12 @@
 	"configuration_version":"3.0",
 	"appInfos":[
 		{
-			"package_name":"com.starstudio.ProjectDemo",
+			"package_name":"com.starstudio.projectdemo",
 			"client":{
 				"app_id":"104557639"
 			},
 			"app_info":{
-				"package_name":"com.starstudio.ProjectDemo",
+				"package_name":"com.starstudio.projectdemo",
 				"app_id":"104557639"
 			},
 			"oauth_client":{
