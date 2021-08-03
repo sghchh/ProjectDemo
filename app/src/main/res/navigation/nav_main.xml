@@ -13,19 +13,42 @@
         tools:layout="@layout/fragment_journal">
         <action
             android:id="@+id/action_JournalFragment_to_JourAddFragment"
-            app:destination="@id/JourAddFragment" />
+            app:destination="@id/journal_add_graph" />
     </fragment>
 
-    <fragment
-        android:id="@+id/JourAddFragment"
-        android:name="com.starstudio.projectdemo.journal.AddFragment"
-        android:label="jour_add_fragment"
-        tools:layout="@layout/fragment2_add_jour" >
+    <!--这个导航图是为写日记提供的-->
+    <navigation
+        android:id="@+id/journal_add_graph"
+        app:startDestination="@id/JourAddFragment">
 
-        <action
-            android:id="@+id/action_JournalAddFragment_backto_JournalFragment"
-            app:destination="@id/JournalFragment"/>
-    </fragment>
+        <fragment
+            android:id="@+id/JourAddFragment"
+            android:name="com.starstudio.projectdemo.journal.AddFragment"
+            android:label="jour_add_fragment"
+            tools:layout="@layout/fragment2_add_jour" >
+
+            <action
+                android:id="@+id/action_JournalAddFragment_backto_JournalFragment"
+                app:destination="@id/JournalFragment"/>
+            <action
+                android:id="@+id/action_JournalAddFragment_to_ImagePreviewFragment"
+                app:destination="@id/ImagePreviewFragment"/>
+        </fragment>
+
+        <fragment
+            android:id="@+id/ImagePreviewFragment"
+            android:name="com.starstudio.projectdemo.journal.ImagePreviewFragment"
+            android:label="image_preview_fragment"
+            tools:layout="@layout/fragment3_preview_imgs">
+            <action
+                android:id="@+id/action_ImagePreviewFragment_backto_JourAddFragment"
+                app:destination="@id/JourAddFragment" />
+        </fragment>
+
+
+    </navigation>
+
+
 
     <fragment
         android:id="@+id/AccountFragment"

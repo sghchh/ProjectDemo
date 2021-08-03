@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.huawei.hms.image.vision.A;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -39,6 +41,8 @@ import com.starstudio.projectdemo.utils.RequestPermission;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -57,20 +61,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
-
-        addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
-        binding.recyclerAddImg.getLayoutParams().height = (int) (DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) * 0.65);
-        binding.recyclerAddImg.setAdapter(addImgAdapter);
-        binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
-
         configView();
 
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -109,7 +102,11 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
         // 之后配置RecyclerView
         addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.getStringArray("picturePaths") != null)
+            addImgAdapter.reset(Arrays.asList(bundle.getStringArray("picturePaths")));
         binding.recyclerAddImg.setAdapter(addImgAdapter);
+        binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
     }
 
@@ -128,10 +125,20 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST))
             showPop();   // 弹出弹窗，选择图片
         else {
-            // 添加点击事件，跳转到HmsEditPicFragment调用hms api实现图片编辑功能
-
+            Bundle bundle = new Bundle();
+            String[] paths = addImgAdapter.getDataArray();
+            if (paths == null)
+                return;
+            bundle.putStringArray("picturePaths", addImgAdapter.getDataArray());
+            // 添加点击事件，跳转到ImagePreviewFragment
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+            navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment, bundle);
         }
     }
+
+
+
+
 
     /**
      * 点击“添加”按钮时底部弹窗
@@ -176,8 +183,13 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                                 .forResult(new OnResultCallbackListener<LocalMedia>() {
                                     @Override
                                     public void onResult(List<LocalMedia> result) {
+                                        ArrayList<String> data = new ArrayList<>();
+                                        for (int i = 0; i < result.size(); i ++) {
+                                            data.add(result.get(i).getRealPath());
+                                        }
+
                                         // 将选择好的图片添加到Adapter中
-                                        addImgAdapter.append(result);
+                                        addImgAdapter.append(data);
                                     }
 
                                     @Override
