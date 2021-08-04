@@ -36,7 +36,7 @@
         </activity>
         <activity
             android:launchMode="singleTask"
-            android:name=".journal.activity.FilterActivity"
+            android:name=".journal.activity.JournalEditActivity"
             android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
     </application>
 

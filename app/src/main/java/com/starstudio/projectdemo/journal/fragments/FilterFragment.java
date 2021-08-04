@@ -1,10 +1,11 @@
 package com.starstudio.projectdemo.journal.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,25 +16,31 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.hms.image.vision.B;
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.databinding.Fragment3PreviewImgsBinding;
+import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
-import com.starstudio.projectdemo.journal.adapter.PagerPreviewAdapter;
+import com.starstudio.projectdemo.journal.adapter.FilterAdapter;
+import com.starstudio.projectdemo.journal.api.HmsImageService;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.ArrayList;
 
 /**
- * created by sgh
- * 2021-8-3
- * “写日记”板块点击已添加的图片进入到预览页面
+ * creted by sgh
+ * 2021-8-4
+ * 为图片添加滤镜的activity
  */
-public class ImagePreviewFragment extends Fragment {
+public class FilterFragment extends Fragment {
 
-    private Fragment3PreviewImgsBinding binding;
-    private PagerPreviewAdapter adapter;
+    private Fragment3FilterBinding binding;
+    private HmsImageService hmsImageService;
+    private ArrayList<String> picturePaths;
+    private int position;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -41,17 +48,17 @@ public class ImagePreviewFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        binding = Fragment3PreviewImgsBinding.inflate(inflater, container, false);
-        adapter = new PagerPreviewAdapter(((JournalEditActivity)getActivity()).picturePaths);
+
+        hmsImageService = HmsImageService.getInstance(getActivity());
+
+        picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
+        position = ((JournalEditActivity)getActivity()).currentPostion;
+
+        binding = Fragment3FilterBinding.inflate(inflater, container, false);
         configView();
         return binding.getRoot();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.adapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onDestroyView() {
@@ -60,16 +67,8 @@ public class ImagePreviewFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
-        inflater.inflate(R.menu.image_preview_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
-        if (item.getItemId() == R.id.image_preview_delete) {
-            adapter.remove(binding.pagerPreview.getCurrentItem());
-        } else if (item.getItemId() == android.R.id.home) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             // 添加点击事件，跳转到ImagePreviewFragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigateUp();
@@ -77,31 +76,21 @@ public class ImagePreviewFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void configView() {
-        // 将Fragment的toolbar添加上
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
-        binding.pagerPreview.setAdapter(adapter);
-        binding.cropTx.setOnClickListener(new View.OnClickListener() {
+
+        binding.recyclerFilter.setAdapter(new FilterAdapter(hmsImageService.getTypes()));
+        binding.recyclerFilter.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        binding.imageviewFilter.setImageURI(Uri.fromFile(new File(picturePaths.get(position))));
+
+        binding.saveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            }
-        });
-
-        binding.filterTx.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = binding.pagerPreview.getCurrentItem();
-                ((JournalEditActivity)getActivity()).currentPostion = position;
-                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
-                navHost.getNavController().navigate(R.id.action_ImagePreviewFragment_to_FilterFragment);
             }
         });
     }
-
-
 }

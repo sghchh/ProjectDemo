@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
+import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +81,8 @@ public class JournalFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.journal_add) {
-            navController.navigate(R.id.action_JournalFragment_to_JourAddFragment);
+            Intent intent = new Intent(getActivity(), JournalEditActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

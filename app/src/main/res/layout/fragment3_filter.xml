@@ -3,14 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <View
+        android:id="@+id/status_view"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/black"/>
+
+    <com.google.android.material.appbar.AppBarLayout
+        app:layout_constraintTop_toBottomOf="@id/status_view"
         android:id="@+id/toolbar_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.ProjectDemo.AppBarOverlay"
+        android:background="@color/black"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar

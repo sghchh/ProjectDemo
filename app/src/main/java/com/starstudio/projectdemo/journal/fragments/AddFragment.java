@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,9 +31,11 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.listener.OnResultCallbackListener;
+import com.starstudio.projectdemo.MainActivity;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.GlideEngine;
+import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
@@ -60,10 +63,17 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
         configView();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.addImgAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -84,8 +94,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         if (item.getItemId() == R.id.send_jour) {
             Toast.makeText(getActivity(), "点击了发表按钮", Toast.LENGTH_SHORT).show();
         } else if (item.getItemId() == android.R.id.home) {
-            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-            navHost.getNavController().navigate(R.id.action_JournalAddFragment_backto_JournalFragment);
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,9 +113,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
         // 之后配置RecyclerView
         addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.getStringArray("picturePaths") != null)
-            addImgAdapter.reset(Arrays.asList(bundle.getStringArray("picturePaths")));
+        if (((JournalEditActivity)getActivity()).picturePaths.size() > 0)
+            addImgAdapter.reset(((JournalEditActivity)getActivity()).picturePaths);
+
         binding.recyclerAddImg.setAdapter(addImgAdapter);
         binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
@@ -126,14 +137,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST))
             showPop();   // 弹出弹窗，选择图片
         else {
-            Bundle bundle = new Bundle();
-            String[] paths = addImgAdapter.getDataArray();
-            if (paths == null)
-                return;
-            bundle.putStringArray("picturePaths", addImgAdapter.getDataArray());
             // 添加点击事件，跳转到ImagePreviewFragment
-            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
-            navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment, bundle);
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+            navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment);
         }
     }
 
@@ -188,7 +194,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                                         for (int i = 0; i < result.size(); i ++) {
                                             data.add(result.get(i).getRealPath());
                                         }
-
+                                        ((JournalEditActivity)getActivity()).picturePaths.addAll(data);
                                         // 将选择好的图片添加到Adapter中
                                         addImgAdapter.append(data);
                                     }

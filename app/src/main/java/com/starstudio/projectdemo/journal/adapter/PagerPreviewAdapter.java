@@ -25,12 +25,6 @@ public class PagerPreviewAdapter extends PagerAdapter {
         this.pciturePaths = data;
     }
 
-    public PagerPreviewAdapter(String[] data) {
-
-        for (String s : data)
-            this.pciturePaths.add(s);
-    }
-
     public void remove(int position) {
         this.pciturePaths.remove(position);
         notifyDataSetChanged();

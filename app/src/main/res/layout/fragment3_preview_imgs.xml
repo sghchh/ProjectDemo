@@ -3,16 +3,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <include
-        app:layout_constraintStart_toStartOf="parent"
+    <View
+        android:id="@+id/status_view"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/black"/>
+
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar_fragment"
-        layout="@layout/toolbar_fragment"/>
+        app:layout_constraintTop_toBottomOf="@id/status_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/bar_padding_bottom"
+            android:paddingEnd="@dimen/bar_padding_end"
+            android:paddingStart="@dimen/bar_padding_start"
+            android:paddingTop="@dimen/bar_padding_top"
+            android:id="@+id/toolbar">
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager_preview"
@@ -32,19 +51,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/filter_bt"
+        <TextView
+            android:id="@+id/filter_tx"
+            android:textColor="@color/white"
             android:text="滤镜"
             android:textSize="15sp"
-            android:layout_marginStart="8dp"
+            android:layout_margin="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/crop_bt"
+        <TextView
+            android:id="@+id/crop_tx"
+            android:textColor="@color/white"
             android:text="裁剪"
             android:textSize="15sp"
-            android:layout_marginStart="8dp"
+            android:layout_margin="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
