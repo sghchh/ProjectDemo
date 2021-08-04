@@ -34,6 +34,7 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
+import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
@@ -107,6 +108,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         binding.recyclerAddImg.setAdapter(addImgAdapter);
         binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
+        binding.recyclerAddImg.addItemDecoration(new RecyclerGridDivider(5));
     }
 
     /**

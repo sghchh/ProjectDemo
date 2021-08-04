@@ -2,6 +2,8 @@ package com.starstudio.projectdemo.journal.adapter;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.text.method.CharacterPickerDialog;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -94,7 +97,10 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
-                imgView.setImageURI(Uri.fromFile(new File(data)));
+                Bitmap bitmap = BitmapFactory.decodeFile(data);
+                // 预览时将bitmap切成正方形来美化界面
+                bitmap = OtherUtil.scaleSquare(bitmap);
+                imgView.setImageBitmap(bitmap);
                 imgView.setTag(ItemType.OTHER);
             }
 

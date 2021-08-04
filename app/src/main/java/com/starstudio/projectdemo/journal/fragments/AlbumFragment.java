@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.starstudio.projectdemo.databinding.Fragment2AlbumBinding;
-import com.starstudio.projectdemo.journal.CommonDecoration;
 import com.starstudio.projectdemo.journal.adapter.AlbumAdapter;
+import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ public class AlbumFragment extends Fragment {
         binding = Fragment2AlbumBinding.inflate(inflater, container, false);
         binding.recycler.setAdapter(new AlbumAdapter(new String[]{}));
         binding.recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
-        binding.recycler.addItemDecoration(new CommonDecoration(getActivity()));
+        binding.recycler.addItemDecoration(new RecyclerGridDivider(10));
         return binding.getRoot();
     }
 

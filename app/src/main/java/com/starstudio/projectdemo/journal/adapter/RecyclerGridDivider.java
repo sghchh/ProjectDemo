@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Created by dzh on 02.22.022.
  * 网格布局分割线
  */
 public class RecyclerGridDivider extends RecyclerView.ItemDecoration {

@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.journal.CommonDecoration;
 import com.starstudio.projectdemo.journal.data.JourData;
 import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Text;
+
 
 /**
  * created by sgh
@@ -83,7 +82,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             int coloum = Math.min(data.getImgs().length, 3);
             this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
-            this.imgGrid.addItemDecoration(new CommonDecoration(ContextHolder.context()));
+            this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
         }
     }
 }
