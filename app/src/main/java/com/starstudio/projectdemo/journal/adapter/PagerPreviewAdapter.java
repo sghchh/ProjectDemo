@@ -49,6 +49,11 @@ public class PagerPreviewAdapter extends PagerAdapter {
         return res;
     }
 
+    public void update(int positon, String newPath) {
+        pciturePaths.set(positon, newPath);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @NotNull
     @Override

@@ -1,5 +1,6 @@
-package com.starstudio.projectdemo.journal;
+package com.starstudio.projectdemo.journal.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.starstudio.projectdemo.MainActivity;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3PreviewImgsBinding;
+import com.starstudio.projectdemo.journal.activity.FilterActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerPreviewAdapter;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +35,17 @@ public class ImagePreviewFragment extends Fragment {
 
     private Fragment3PreviewImgsBinding binding;
     private PagerPreviewAdapter adapter;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity().getIntent() != null && getActivity().getIntent().getStringExtra("newPath") != null) {
+            String newPath = getActivity().getIntent().getStringExtra("newPath");
+            int position = getActivity().getIntent().getIntExtra("position", -1);
+            adapter.update(position, newPath);
+        }
+
+    }
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -93,8 +107,14 @@ public class ImagePreviewFragment extends Fragment {
         binding.filterBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                int position = binding.pagerPreview.getCurrentItem();
+                intent.putExtra("position", position);
+                intent.putExtra("picturePath", adapter.getDataArray()[position]);
+                startActivity(intent);
             }
         });
     }
+
+
 }

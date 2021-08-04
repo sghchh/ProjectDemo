@@ -1,4 +1,4 @@
-package com.starstudio.projectdemo.journal;
+package com.starstudio.projectdemo.journal.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,31 +8,30 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.starstudio.projectdemo.databinding.Fragment2JourBinding;
-import com.starstudio.projectdemo.journal.adapter.JourAdapter;
-import com.starstudio.projectdemo.journal.data.JourData;
+import com.starstudio.projectdemo.databinding.Fragment2AlbumBinding;
+import com.starstudio.projectdemo.journal.CommonDecoration;
+import com.starstudio.projectdemo.journal.adapter.AlbumAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * created by sgh 2021-7-29
- * “心情日记”页面下的"日记"板块
+ * 为“心情日记”页面的“相册”板块
  */
-public class JourFragment extends Fragment {
+public class AlbumFragment extends Fragment {
 
-    private Fragment2JourBinding binding;
-
+    private Fragment2AlbumBinding binding;
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        binding = Fragment2JourBinding.inflate(inflater, container, false);
-        binding.recycler.setAdapter(new JourAdapter(JourData.testData));
-        binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        binding.recycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        binding = Fragment2AlbumBinding.inflate(inflater, container, false);
+        binding.recycler.setAdapter(new AlbumAdapter(new String[]{}));
+        binding.recycler.setLayoutManager(new GridLayoutManager(getActivity(), 2, LinearLayoutManager.VERTICAL, false));
+        binding.recycler.addItemDecoration(new CommonDecoration(getActivity()));
         return binding.getRoot();
     }
 

@@ -51,6 +51,10 @@ public class HmsImageService {
         return INSTANCE;
     }
 
+    public String[] getTypes() {
+        return types;
+    }
+
     /**
      * HMS滤镜服务使用
      * @param filterType 滤镜服务的类别，可选方案参考types数组

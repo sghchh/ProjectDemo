@@ -23,7 +23,7 @@
 
         <fragment
             android:id="@+id/JourAddFragment"
-            android:name="com.starstudio.projectdemo.journal.AddFragment"
+            android:name="com.starstudio.projectdemo.journal.fragments.AddFragment"
             android:label="jour_add_fragment"
             tools:layout="@layout/fragment2_add_jour" >
 
@@ -37,7 +37,7 @@
 
         <fragment
             android:id="@+id/ImagePreviewFragment"
-            android:name="com.starstudio.projectdemo.journal.ImagePreviewFragment"
+            android:name="com.starstudio.projectdemo.journal.fragments.ImagePreviewFragment"
             android:label="image_preview_fragment"
             tools:layout="@layout/fragment3_preview_imgs">
             <action

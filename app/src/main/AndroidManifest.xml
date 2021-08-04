@@ -25,6 +25,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:label="@string/app_name"
             android:theme="@style/Theme.ProjectDemo.NoActionBar">
             <intent-filter>
@@ -33,6 +34,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".journal.activity.FilterActivity"
+            android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
     </application>
 
     <queries>
