@@ -38,6 +38,10 @@
             android:launchMode="singleTask"
             android:name=".journal.activity.JournalEditActivity"
             android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".journal.activity.JournalItemDetailActivity"
+            android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
     </application>
 
     <queries>
