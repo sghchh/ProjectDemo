@@ -56,7 +56,6 @@ import java.util.List;
 public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemClickListener{
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
-    private PopupWindow pop;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -134,101 +133,35 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA);
 
-        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST))
-            showPop();   // 弹出弹窗，选择图片
-        else {
+        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST)) {
+            // 选择图片或者拍照
+            PictureSelector.create(getActivity())
+                    .openGallery(PictureMimeType.ofImage())
+                    .imageEngine(GlideEngine.createGlideEngine())
+                    .imageSpanCount(4)
+                    .selectionMode(PictureConfig.MULTIPLE)
+                    .forResult(new OnResultCallbackListener<LocalMedia>() {
+                        @Override
+                        public void onResult(List<LocalMedia> result) {
+                            ArrayList<String> data = new ArrayList<>();
+                            for (int i = 0; i < result.size(); i ++) {
+                                data.add(result.get(i).getRealPath());
+                            }
+                            ((JournalEditActivity)getActivity()).picturePaths.addAll(data);
+                            // 将选择好的图片添加到Adapter中
+                            addImgAdapter.append(data);
+                        }
+
+                        @Override
+                        public void onCancel() {
+
+                        }
+                    });
+        } else {
             // 添加点击事件，跳转到ImagePreviewFragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment);
         }
     }
 
-
-
-
-
-    /**
-     * 点击“添加”按钮时底部弹窗
-     */
-    private void showPop() {
-        View bottomView = View.inflate(getActivity(), R.layout.windows_bottom_pop, null);
-        TextView mAlbum = bottomView.findViewById(R.id.tv_album);
-        TextView mCamera = bottomView.findViewById(R.id.tv_camera);
-        TextView mCancel = bottomView.findViewById(R.id.tv_cancel);
-
-        Activity activity = getActivity();
-        pop = new PopupWindow(bottomView, -1, -2);
-        pop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        pop.setOutsideTouchable(true);
-        pop.setFocusable(true);
-        WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-        lp.alpha = 0.5f;
-        activity.getWindow().setAttributes(lp);
-        pop.setOnDismissListener(new PopupWindow.OnDismissListener() {
-
-            @Override
-            public void onDismiss() {
-                WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-                lp.alpha = 1f;
-                activity.getWindow().setAttributes(lp);
-            }
-        });
-        pop.setAnimationStyle(R.style.main_menu_photo_anim);
-        pop.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-
-        View.OnClickListener clickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()) {
-                    case R.id.tv_album:
-                        //相册
-                        PictureSelector.create(activity)
-                                .openGallery(PictureMimeType.ofImage())
-                                .imageEngine(GlideEngine.createGlideEngine())
-                                .imageSpanCount(4)
-                                .selectionMode(PictureConfig.MULTIPLE)
-                                .forResult(new OnResultCallbackListener<LocalMedia>() {
-                                    @Override
-                                    public void onResult(List<LocalMedia> result) {
-                                        ArrayList<String> data = new ArrayList<>();
-                                        for (int i = 0; i < result.size(); i ++) {
-                                            data.add(result.get(i).getRealPath());
-                                        }
-                                        ((JournalEditActivity)getActivity()).picturePaths.addAll(data);
-                                        // 将选择好的图片添加到Adapter中
-                                        addImgAdapter.append(data);
-                                    }
-
-                                    @Override
-                                    public void onCancel() {
-
-                                    }
-                                });
-                        break;
-                    case R.id.tv_camera:
-                        //拍照
-                        PictureSelector.create(activity)
-                                .openCamera(PictureMimeType.ofImage())
-                                .forResult(PictureConfig.CHOOSE_REQUEST);
-                        break;
-                    case R.id.tv_cancel:
-                        //取消
-                        //closePopupWindow();
-                        break;
-                }
-                closePopupWindow();
-            }
-        };
-
-        mAlbum.setOnClickListener(clickListener);
-        mCamera.setOnClickListener(clickListener);
-        mCancel.setOnClickListener(clickListener);
-    }
-
-    public void closePopupWindow() {
-        if (pop != null && pop.isShowing()) {
-            pop.dismiss();
-            pop = null;
-        }
-    }
 }

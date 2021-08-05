@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_detail"
+    app:startDestination="@id/DetailFragment">
+    <fragment
+        android:id="@+id/DetailFragment"
+        android:name="com.starstudio.projectdemo.journal.fragments.JournalItemDetailFragment"
+        android:label="jour_detail_fragment"
+        tools:layout="@layout/fragment3_journal_item_detail">
+
+        <action
+            android:id="@+id/action_DetailFragment_to_ImageShowFragment"
+            app:destination="@id/DetailImgShowFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/DetailImgShowFragment"
+        android:name="com.starstudio.projectdemo.journal.fragments.ImageShowFragment"
+        android:label="jour_detail_img_show_fragment"
+        tools:layout="@layout/fragment3_journal_detail_img_show">
+    </fragment>
+
+</navigation>
