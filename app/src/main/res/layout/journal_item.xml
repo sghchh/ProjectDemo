@@ -69,6 +69,8 @@
         android:id="@+id/content"
         android:text="这里显示动态的内容"
         android:textSize="14sp"
+        android:maxLines="5"
+        android:ellipsize="end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
