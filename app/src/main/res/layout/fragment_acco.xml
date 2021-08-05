@@ -17,7 +17,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tv_income"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -29,25 +29,29 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="9dp"
-                android:text="200.00"
-                android:textSize="24sp"
-                app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-            <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tv_symbol_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="31dp"
                 android:text="￥"
                 android:textSize="15sp"
-                app:layout_constraintEnd_toStartOf="@+id/textView3"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                tools:layout_editor_absoluteY="46dp" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_income_count"
+                app:layout_constraintEnd_toStartOf="@+id/tv_income_count"
+                app:layout_constraintStart_toStartOf="@+id/tv_income"
+                app:layout_constraintTop_toTopOf="@+id/tv_income_count"
+                app:layout_constraintVertical_bias="0.583" />
+
+            <TextView
+                android:id="@+id/tv_income_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:text="200.00"
+                android:textSize="24sp"
+                app:layout_constraintStart_toEndOf="@+id/tv_symbol_1"
+                app:layout_constraintTop_toBottomOf="@+id/tv_income" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -57,38 +61,55 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tv_disburse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="本月支出"
                 android:textColor="#646A73"
                 android:textSize="14sp"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="24dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/tv_disburse_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="9dp"
                 android:text="200.00"
                 android:textSize="24sp"
-                app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintStart_toEndOf="@+id/tv_symbol_2"
+                app:layout_constraintTop_toBottomOf="@+id/tv_disburse" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tv_symbol_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="31dp"
                 android:text="￥"
                 android:textSize="15sp"
-                app:layout_constraintEnd_toStartOf="@+id/textView3"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                tools:layout_editor_absoluteY="46dp" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_disburse_count"
+                app:layout_constraintEnd_toStartOf="@+id/tv_disburse_count"
+                app:layout_constraintStart_toStartOf="@+id/tv_disburse"
+                app:layout_constraintTop_toTopOf="@+id/tv_disburse_count"
+                app:layout_constraintVertical_bias="0.583" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#F4F7FA">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_acco"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
