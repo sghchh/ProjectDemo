@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.starstudio.projectdemo.journal.AlbumFragment;
-import com.starstudio.projectdemo.journal.JourFragment;
+import com.starstudio.projectdemo.journal.fragments.AlbumFragment;
+import com.starstudio.projectdemo.journal.fragments.JourFragment;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -4,14 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.view.View;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -21,14 +15,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+
 
 public class MainActivity extends HideInputActivity {
 
@@ -50,6 +44,9 @@ public class MainActivity extends HideInputActivity {
                 Manifest.permission.CAMERA};
         // 本次申请的权限是必要的，即没用通过则会导致APP无法使用
         permissionRequest.checkPermissions(RequestPermission.CODE_MUST, permissions);
+
+        // 进行文件操作
+        FileUtil.init(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

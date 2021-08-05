@@ -16,7 +16,7 @@
         app:tabSelectedTextColor="@color/upsdk_white"
         app:tabTextColor="@color/white"
         app:tabIndicatorColor="@color/white"
-        app:tabTextAppearance="?android:attr/textAppearanceMedium"
+        app:tabTextAppearance="?android:attr/textAppearanceSmall"
         android:background="#48D14D"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

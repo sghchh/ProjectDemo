@@ -3,6 +3,7 @@ plugins {
 }
 apply plugin: 'com.huawei.agconnect'
 
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -82,8 +83,8 @@ dependencies {
     // 编译打包依赖
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation 'com.huawei.hms:image-render:1.0.3.304'
-    implementation 'com.huawei.hms:image-render-fallback:1.0.3.304'
+
+    // 添加hms中图像服务所需的依赖
     implementation 'com.huawei.hms:image-vision:1.0.3.304'
     implementation 'com.huawei.hms:image-vision-fallback:1.0.3.304'
 }
