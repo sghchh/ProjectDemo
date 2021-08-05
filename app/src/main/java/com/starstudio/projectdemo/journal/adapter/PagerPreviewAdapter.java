@@ -8,9 +8,6 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import com.huawei.hms.image.vision.A;
 import com.starstudio.projectdemo.R;
 
 import org.jetbrains.annotations.NotNull;

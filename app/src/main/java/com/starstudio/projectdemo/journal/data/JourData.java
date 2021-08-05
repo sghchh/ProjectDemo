@@ -2,12 +2,14 @@ package com.starstudio.projectdemo.journal.data;
 
 import com.starstudio.projectdemo.R;
 
+import java.io.Serializable;
+
 /**
  * created by sgh
  * 2021-7-31
  * “心情日记”页面“日记”板块每一条日记对应的Java类型
  */
-public class JourData {
+public class JourData implements Serializable {
     private String week;  // 日记发表的星期
     private String date; // 日记发表的日期
     private String weather;  // 日记发表时的天气信息

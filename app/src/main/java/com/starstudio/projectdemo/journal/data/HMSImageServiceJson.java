@@ -6,9 +6,11 @@ import com.huawei.hms.image.vision.A;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 public class HMSImageServiceJson {
 
-    public static class AuthJson extends JSONObject {
+    public static class AuthJson implements Serializable {
         private String projectId;
         private String appId;
         private String authApiKey;
@@ -73,7 +75,7 @@ public class HMSImageServiceJson {
         }
     }
 
-    public static class RequestJson extends JSONObject{
+    public static class RequestJson implements Serializable{
         private String requestId;
         private AuthJson authJson;
         private TaskJson taskJson;  // 具体请求业务参数
@@ -83,22 +85,59 @@ public class HMSImageServiceJson {
             this.taskJson = taskJson;
             authJson = AuthJson.getInstance();
         }
+
+        public String getRequestId() {
+            return requestId;
+        }
+
+        public void setRequestId(String requestId) {
+            this.requestId = requestId;
+        }
+
+        public AuthJson getAuthJson() {
+            return authJson;
+        }
+
+        public void setAuthJson(AuthJson authJson) {
+            this.authJson = authJson;
+        }
+
+        public TaskJson getTaskJson() {
+            return taskJson;
+        }
+
+        public void setTaskJson(TaskJson taskJson) {
+            this.taskJson = taskJson;
+        }
     }
 
-    public static class TaskJson extends JSONObject{
+    public static class TaskJson implements Serializable {
         private int filterType;   // 滤镜的类别
         private float intensity = 1;  // 滤镜强度，范围为(0,1]，默认为1
         private float compresssRate = 1;  // 压缩率，范围为(0,1]，默认为1
-    }
 
-    public static class VisionResultJson extends JSONObject {
-        private int resultCode;
-        private ResponseJson response;
-        private Bitmap image;
-    }
+        public int getFilterType() {
+            return filterType;
+        }
 
-    public static class ResponseJson extends JSONObject {
-        private String requestId;
-        private String serviceId;
+        public void setFilterType(int filterType) {
+            this.filterType = filterType;
+        }
+
+        public float getIntensity() {
+            return intensity;
+        }
+
+        public void setIntensity(float intensity) {
+            this.intensity = intensity;
+        }
+
+        public float getCompresssRate() {
+            return compresssRate;
+        }
+
+        public void setCompresssRate(float compresssRate) {
+            this.compresssRate = compresssRate;
+        }
     }
 }

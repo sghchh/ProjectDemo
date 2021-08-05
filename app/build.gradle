@@ -31,6 +31,7 @@ android {
             keyAlias "HmsDemo"
             // 密钥口令
             keyPassword "starstudiohome"
+            v1SigningEnabled true
             v2SigningEnabled true
         }
     }
@@ -43,6 +44,7 @@ android {
         }
         debug {
             signingConfig signingConfigs.release
+            debuggable true
         }
     }
     compileOptions {
