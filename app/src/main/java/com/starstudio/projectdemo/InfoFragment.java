@@ -42,8 +42,6 @@ import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.net.URI;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -128,6 +126,9 @@ public class InfoFragment extends Fragment {
         binding.etInfoName.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                Log.e(getClass().getSimpleName(), "收起键盘的Keycode为: " + keyCode);
+
                 //当点击键盘回车时，隐藏光标和键盘，同时保存修改后的内容
                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                     binding.etInfoName.clearFocus();
