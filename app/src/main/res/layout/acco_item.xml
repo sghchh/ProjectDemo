@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#FAFAFA"
     android:layout_marginRight="16dp"
     android:layout_marginLeft="16dp"
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7月21日"
-            android:textColor="#000000"
+            android:textColor="#6B000000"
             android:textSize="14sp"
             android:layout_marginLeft="16dp"/>
 
@@ -30,18 +30,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-200"
-            android:textColor="#000000"
+            android:textColor="#6B000000"
             android:textSize="14sp"
             android:layout_marginRight="16dp"/>
 
     </LinearLayout>
 
-    <View
+    <ImageView
+        android:layout_marginTop="38dp"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@drawable/shape_dotted_line"
-        android:layerType="software"
-        android:layout_marginTop="38dp"/>
+        android:layout_height="wrap_content"
+        android:src="@mipmap/diary_card_line"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

@@ -36,7 +36,7 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AccoAdapter.AccoHolder holder, int position) {
-
+        holder.loadData(null);
     }
 
     @Override

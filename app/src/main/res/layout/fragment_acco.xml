@@ -23,7 +23,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="本月收入"
-                android:textColor="#646A73"
+                android:textColor="#FF646A73"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,6 +35,7 @@
                 android:layout_marginStart="31dp"
                 android:text="￥"
                 android:textSize="15sp"
+                android:textColor="#FF646A73"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_income_count"
                 app:layout_constraintEnd_toStartOf="@+id/tv_income_count"
                 app:layout_constraintStart_toStartOf="@+id/tv_income"
@@ -48,6 +49,7 @@
                 android:layout_marginTop="9dp"
                 android:text="200.00"
                 android:textSize="24sp"
+                android:textColor="#FF646A73"
                 app:layout_constraintStart_toEndOf="@+id/tv_symbol_1"
                 app:layout_constraintTop_toBottomOf="@+id/tv_income" />
 
@@ -67,7 +69,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="本月支出"
-                android:textColor="#646A73"
+                android:textColor="#FF646A73"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -79,6 +81,7 @@
                 android:layout_marginTop="9dp"
                 android:text="200.00"
                 android:textSize="24sp"
+                android:textColor="#FF646A73"
                 app:layout_constraintStart_toEndOf="@+id/tv_symbol_2"
                 app:layout_constraintTop_toBottomOf="@+id/tv_disburse" />
 
@@ -89,6 +92,7 @@
                 android:layout_marginStart="31dp"
                 android:text="￥"
                 android:textSize="15sp"
+                android:textColor="#FF646A73"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_disburse_count"
                 app:layout_constraintEnd_toStartOf="@+id/tv_disburse_count"
                 app:layout_constraintStart_toStartOf="@+id/tv_disburse"
@@ -104,7 +108,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:background="#F4F7FA">
+        android:background="#FFF4F7FA">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_acco"
