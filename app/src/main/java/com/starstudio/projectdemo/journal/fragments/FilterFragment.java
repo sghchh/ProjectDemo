@@ -2,6 +2,8 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.FilterAdapter;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
+import com.starstudio.projectdemo.utils.FileUtil;
+import com.starstudio.projectdemo.utils.HandlerHelper;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -42,6 +46,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
     private HmsImageService hmsImageService;
     private ArrayList<String> picturePaths;
     private int position;
+    private ImageVisionResult filterRes = null;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -91,20 +96,36 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         binding.saveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (filterRes != null) {
+                    FileUtil.saveBitmap(filterRes.getImage());
+                }
+            }
+        });
 
+        HandlerHelper.register(FilterFragment.class, new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message message) {
+                filterRes = (ImageVisionResult) message.obj;
+                Log.d("hms", "onFilterTypeClick: 返回结果是"+new Gson().toJson(filterRes));
+                binding.imageviewFilter.setImageBitmap(filterRes.getImage());
+                return true;
             }
         });
     }
 
     @Override
     public void onFilterTypeClick(View v, String type) {
-        ImageVisionResult res = null;
-        try {
-            res = hmsImageService.getFilterResult(type, picturePaths.get(position));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d("hms", "onFilterTypeClick: 返回结果是"+new Gson().toJson(res));
-        binding.imageviewFilter.setImageBitmap(res.getImage());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message = new Message();
+                try {
+                    message.obj = hmsImageService.getFilterResult(type, picturePaths.get(position));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                HandlerHelper.send(FilterFragment.class, message);;
+            }
+        }).start();
     }
 }

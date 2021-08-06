@@ -15,16 +15,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class HmsImageService {
     private volatile static HmsImageService INSTANCE;
-    private HashMap type2Code = new HashMap();
-    private String[] types = new String[]{"黑白", "棕调", "慵懒", "小苍兰",
+    private final Map<String, Integer> type2Code = new HashMap();
+    private final String[] types = new String[]{"黑白", "棕调", "慵懒", "小苍兰",
             "富士", "桃粉", "海盐", "薄荷", "蒹葭", "复古", "棉花糖", "青苔", "日光",
             "雾霾蓝", "向日葵", "硬朗", "古铜黄", "黑白调", "黄绿调", "黄调", "绿调", "青调", "紫调"};
 
-    private ImageVisionImpl imageVision;
-    private ImageVision.VisionCallBack callBack;
+    private final ImageVisionImpl imageVision;
 
     private HmsImageService(Context context) {
         this.imageVision = ImageVision.getInstance(context);
@@ -40,7 +40,6 @@ public class HmsImageService {
                 }
                 if (code != 0)
                     Toast.makeText(context, "滤镜服务初始化失败", Toast.LENGTH_SHORT).show();
-                Log.d("hms", "onSuccess:hms滤镜服务初始化结果 "+code);
             }
 
             @Override
@@ -81,11 +80,10 @@ public class HmsImageService {
         Bitmap initBitmap = BitmapFactory.decodeFile(imgPath);
 
         HMSImageServiceJson.TaskJson taskJson = new HMSImageServiceJson.TaskJson();
-        int typeCode = (int)type2Code.get(filterType);
+        int typeCode = type2Code.getOrDefault(filterType, 0);
+        taskJson.setFilterType(typeCode);
         HMSImageServiceJson.RequestJson requestJson = new HMSImageServiceJson.RequestJson(typeCode + "", taskJson);
-
         String jsonString = new Gson().toJson(requestJson);
-        Log.d("hms", "getFilterResult对象为: "+jsonString);
         return imageVision.getColorFilter(new JSONObject(jsonString), initBitmap);
     }
 }

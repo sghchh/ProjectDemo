@@ -25,30 +25,21 @@ public class FileUtil {
     public static void init(Context  context) {
         SD_PATH = Environment.getExternalStorageDirectory().getPath();
         FILE_STORAGE = context.getExternalFilesDir("").getPath();
-        if (createFile(FILE_STORAGE, "picture"))
-            PICTURE_FILE = FILE_STORAGE.concat("/picture");
-        if (createFile(FILE_STORAGE, "video"))
-            VIDEO_FILE = FILE_STORAGE.concat("/video");
-    }
-
-    private static boolean createFile(String parentDir, String filename) {
-        File file = new File(parentDir, filename);
+        File file = new File(FILE_STORAGE + "/picture");
         if (!file.exists())
-            try{
-                return file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
-        return true;
-    }
+            file.mkdir();
+        PICTURE_FILE = file.getAbsolutePath();
 
+        file = new File(FILE_STORAGE + "/video");
+        if (!file.exists())
+            file.mkdir();
+        VIDEO_FILE = file.getAbsolutePath();
+
+    }
 
     public static String saveBitmap(Bitmap bitmap) {
-        File save = new File(formatter.format(new Date()) + ".jpg");
-        boolean res = false;
+        File save = new File(PICTURE_FILE, formatter.format(new Date()) + ".jpg");
         try {
-            res = save.createNewFile();
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(save));
             bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
             bos.flush();
@@ -56,8 +47,6 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (!res)
-            return null;
         return save.getAbsolutePath();
     }
 }
