@@ -108,11 +108,13 @@
         android:layout_marginTop="12dp">
 
         <EditText
+            android:id="@+id/et_comment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="16dp"
-            android:background="@drawable/et_acco_add_comment"/>
+            android:background="@drawable/et_acco_add_comment"
+            android:hint="     添加备注"/>
 
         <ImageView
             android:layout_width="33dp"
@@ -128,7 +130,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp">
 
-        <Button
+        <TextView
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -141,11 +143,13 @@
             android:minWidth="0dp"
             android:paddingLeft="33dp"
             android:paddingRight="33dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@drawable/btn_acco_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button4" />
 
-        <Button
+        <TextView
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,6 +162,8 @@
             android:minWidth="0dp"
             android:paddingLeft="33dp"
             android:paddingRight="33dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:background="@drawable/btn_acco_add_press"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
