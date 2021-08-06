@@ -53,12 +53,17 @@ public class HmsImageService {
             type2Code.put(types[i], i + 1);
     }
 
-    public static synchronized HmsImageService getInstance(Context context) {
+    public static synchronized void init(Context context) {
         if (INSTANCE == null) {
             synchronized (HmsImageService.class) {
                 INSTANCE = new HmsImageService(context);
             }
         }
+    }
+
+    public static HmsImageService getInstance() {
+        if (INSTANCE == null)
+            throw new NullPointerException("请先调用init(Context)方法");
         return INSTANCE;
     }
 

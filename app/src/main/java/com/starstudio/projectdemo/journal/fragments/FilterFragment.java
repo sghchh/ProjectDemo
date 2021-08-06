@@ -1,11 +1,7 @@
 package com.starstudio.projectdemo.journal.fragments;
 
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -54,7 +50,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-        hmsImageService = HmsImageService.getInstance(getActivity());
+        hmsImageService = HmsImageService.getInstance();
 
         picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
         position = ((JournalEditActivity)getActivity()).currentPostion;
