@@ -2,9 +2,11 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.huawei.hms.image.vision.bean.ImageVisionResult;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
@@ -26,6 +30,7 @@ import com.starstudio.projectdemo.journal.adapter.FilterAdapter;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +40,7 @@ import java.util.ArrayList;
  * 2021-8-4
  * 为图片添加滤镜的activity
  */
-public class FilterFragment extends Fragment {
+public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTypeClickListener {
 
     private Fragment3FilterBinding binding;
     private HmsImageService hmsImageService;
@@ -81,8 +86,9 @@ public class FilterFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
-
-        binding.recyclerFilter.setAdapter(new FilterAdapter(hmsImageService.getTypes()));
+        FilterAdapter adapter = new FilterAdapter(hmsImageService.getTypes());
+        adapter.setListener(this::onFilterTypeClick);
+        binding.recyclerFilter.setAdapter(adapter);
         binding.recyclerFilter.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         binding.imageviewFilter.setImageURI(Uri.fromFile(new File(picturePaths.get(position))));
 
@@ -92,5 +98,17 @@ public class FilterFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onFilterTypeClick(View v, String type) {
+        ImageVisionResult res = null;
+        try {
+            res = hmsImageService.getFilterResult(type, picturePaths.get(position));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d("hms", "onFilterTypeClick: 返回结果是"+new Gson().toJson(res));
+        binding.imageviewFilter.setImageBitmap(res.getImage());
     }
 }

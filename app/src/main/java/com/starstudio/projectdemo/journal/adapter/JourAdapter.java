@@ -30,9 +30,14 @@ import org.jetbrains.annotations.NotNull;
 public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     private final JourData[] data;
+    private OnJourItemClickListener listener;
 
     public JourAdapter(JourData[] data) {
         this.data = data;
+    }
+
+    public void setListener(OnJourItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -45,7 +50,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JourAdapter.JourHolder holder, int position) {
-        holder.loadData(data[position]);
+        holder.loadData(data[position], listener);
     }
 
 
@@ -72,7 +77,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         }
 
         // 通过data数据来加载控件内容
-        private void loadData(JourData data) {
+        private void loadData(JourData data, OnJourItemClickListener listener) {
             this.date.setText(data.getDate());
             this.location.setText(data.getLoaction());
             this.content.setText(data.getContent());
@@ -83,6 +88,23 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
             this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
+            this.content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onJourItemClick(view, data);
+                }
+            });
+
+            this.imgGrid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onJourItemClick(view, data);
+                }
+            });
         }
+    }
+
+    public static interface OnJourItemClickListener{
+        void onJourItemClick(View view, JourData data);
     }
 }

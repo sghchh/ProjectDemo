@@ -14,7 +14,7 @@ buildscript {
         // in the individual module build.gradle files
 
         // 增加agcp插件配置。
-        classpath 'com.huawei.agconnect:agcp:1.4.2.300'
+        classpath 'com.huawei.agconnect:agcp:1.5.2.300'
     }
 }
 

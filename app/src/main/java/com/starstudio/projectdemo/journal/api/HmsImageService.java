@@ -3,11 +3,16 @@ package com.starstudio.projectdemo.journal.api;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.huawei.hms.image.vision.*;
 import com.huawei.hms.image.vision.bean.ImageVisionResult;
 import com.starstudio.projectdemo.journal.data.HMSImageServiceJson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -23,20 +28,26 @@ public class HmsImageService {
 
     private HmsImageService(Context context) {
         this.imageVision = ImageVision.getInstance(context);
-        this.callBack = new ImageVision.VisionCallBack() {
+        this.imageVision.setVisionCallBack(new ImageVision.VisionCallBack() {
             @Override
             public void onSuccess(int i) {
-                int code = imageVision.init(context, HMSImageServiceJson.AuthJson.getInstance());
+                String authJson = new Gson().toJson(HMSImageServiceJson.AuthJson.getInstance());
+                int code = 0;
+                try {
+                    code = imageVision.init(context, new JSONObject(authJson));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 if (code != 0)
                     Toast.makeText(context, "滤镜服务初始化失败", Toast.LENGTH_SHORT).show();
+                Log.d("hms", "onSuccess:hms滤镜服务初始化结果 "+code);
             }
 
             @Override
             public void onFailure(int i) {
-
+                Log.d("hms", "onSuccess:hms滤镜服务初始化结果 "+i);
             }
-        };
-
+        });
         // 初始化滤镜服务的code与type对应表
         for(int i = 0; i < types.length; i ++)
             type2Code.put(types[i], i + 1);
@@ -61,12 +72,15 @@ public class HmsImageService {
      * @param imgPath 应用滤镜服务的图像的路径
      * @return HMS接口的ImageVisionResult
      */
-    public ImageVisionResult getFilterResult(String filterType, String imgPath) {
+    public ImageVisionResult getFilterResult(String filterType, String imgPath) throws JSONException {
         Bitmap initBitmap = BitmapFactory.decodeFile(imgPath);
 
         HMSImageServiceJson.TaskJson taskJson = new HMSImageServiceJson.TaskJson();
         int typeCode = (int)type2Code.get(filterType);
         HMSImageServiceJson.RequestJson requestJson = new HMSImageServiceJson.RequestJson(typeCode + "", taskJson);
-        return imageVision.getColorFilter(requestJson, initBitmap);
+
+        String jsonString = new Gson().toJson(requestJson);
+        Log.d("hms", "getFilterResult对象为: "+jsonString);
+        return imageVision.getColorFilter(new JSONObject(jsonString), initBitmap);
     }
 }

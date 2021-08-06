@@ -13,13 +13,20 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHolder> {
 
+    private OnFilterTypeClickListener listener;
     private final String[] data;
     public FilterAdapter(String[] data) {
         this.data = data;
     }
+
+    public void setListener(OnFilterTypeClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @NotNull
     @Override
@@ -30,7 +37,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull FilterAdapter.FilterHolder holder, int position) {
-        holder.loadData(data[position]);
+        holder.loadData(data[position], listener);
     }
 
     @Override
@@ -46,7 +53,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
             txt = itemView.findViewById(R.id.filter_item_txt);
         }
 
-        void loadData(String data) {
+        void loadData(String data, OnFilterTypeClickListener listener) {
             txt.setText(data);
             txt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -60,6 +67,21 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
                     }
                 }
             });
+
+            txt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    try {
+                        listener.onFilterTypeClick(view, data);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
+    }
+
+    public static interface OnFilterTypeClickListener {
+        void onFilterTypeClick(View v, String type) throws JSONException;
     }
 }
