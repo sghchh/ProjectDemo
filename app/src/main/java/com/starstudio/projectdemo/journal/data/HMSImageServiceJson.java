@@ -114,7 +114,7 @@ public class HMSImageServiceJson {
     public static class TaskJson implements Serializable {
         private int filterType;   // 滤镜的类别
         private float intensity = 1;  // 滤镜强度，范围为(0,1]，默认为1
-        private float compresssRate = 1;  // 压缩率，范围为(0,1]，默认为1
+        private float compresssRate = 0.5f;  // 压缩率，范围为(0,1]，默认为1
 
         public int getFilterType() {
             return filterType;
