@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
@@ -46,11 +47,16 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
 
     static class AccoHolder extends RecyclerView.ViewHolder{
 
+        private final RecyclerView recyclerDaily;
+
         public AccoHolder(@NonNull @NotNull View itemView) {
             super(itemView);
+            recyclerDaily = (RecyclerView)itemView.findViewById(R.id.recycler_daily);
         }
 
         private void loadData(AccoData data){
+            this.recyclerDaily.setAdapter(new AccoDailyAdapter());
+            this.recyclerDaily.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
 
         }
     }
