@@ -1,4 +1,4 @@
-package com.starstudio.projectdemo.account;
+package com.starstudio.projectdemo.account.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

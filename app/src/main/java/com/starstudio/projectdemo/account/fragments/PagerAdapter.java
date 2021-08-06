@@ -1,4 +1,4 @@
-package com.starstudio.projectdemo.account;
+package com.starstudio.projectdemo.account.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

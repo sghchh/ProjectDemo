@@ -8,17 +8,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableRow;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.starstudio.projectdemo.account.PagerAdapter;
+import com.starstudio.projectdemo.account.fragments.AccoAddFragment;
+import com.starstudio.projectdemo.account.fragments.PagerAdapter;
 import com.starstudio.projectdemo.databinding.FragmentAccountBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +68,9 @@ public class AccountFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.account_add) {
-            Toast.makeText(getActivity(), "点击了Account页面的add按钮", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "点击了Account页面的add按钮", Toast.LENGTH_SHORT).show();
+            DialogFragment dialogFragment = new AccoAddFragment();
+            dialogFragment.show(getActivity().getSupportFragmentManager(),"添加");
         }
         Log.d("icon bounds", "icon bounds " + item.getIcon().getBounds().toShortString());
         return super.onOptionsItemSelected(item);
