@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.huawei.hms.image.vision.*;
 import com.huawei.hms.image.vision.bean.ImageVisionResult;
 import com.starstudio.projectdemo.journal.data.HMSImageServiceJson;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * created by sgh
+ * 简单封装HMS中滤镜API
+ */
 public class HmsImageService {
     private volatile static HmsImageService INSTANCE;
     private final Map<String, Integer> type2Code = new HashMap();
@@ -83,7 +88,7 @@ public class HmsImageService {
         int typeCode = type2Code.getOrDefault(filterType, 0);
         taskJson.setFilterType(typeCode);
         HMSImageServiceJson.RequestJson requestJson = new HMSImageServiceJson.RequestJson(typeCode + "", taskJson);
-        String jsonString = new Gson().toJson(requestJson);
+        String jsonString = OtherUtil.decodeObject(requestJson);
         return imageVision.getColorFilter(new JSONObject(jsonString), initBitmap);
     }
 }

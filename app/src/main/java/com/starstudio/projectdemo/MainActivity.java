@@ -26,6 +26,7 @@ import com.huawei.hms.kit.awareness.CaptureClient;
 import com.huawei.hms.kit.awareness.capture.LocationResponse;
 import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
+import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
@@ -47,9 +48,6 @@ public class MainActivity extends HideInputActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //
-        ContextHolder.init(this);
-
         // 进行权限申请的操作
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();
@@ -64,14 +62,20 @@ public class MainActivity extends HideInputActivity {
         // 本次申请的权限是必要的，即没用通过则会导致APP无法使用
         permissionRequest.checkPermissions(RequestPermission.CODE_MUST, permissions);
 
-        // 进行文件操作
-        FileUtil.init(this);
+
+        // init
+        {
+            ContextHolder.init(this);
+            // 进行文件操作
+            FileUtil.init(this);
+            //HMS天气、地理信息
+            HmsWeatherService.init(this);
+        }
+
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
-
         configView();
 
     }

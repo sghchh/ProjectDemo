@@ -2,53 +2,42 @@ package com.starstudio.projectdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerAdapter;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 public class JournalFragment extends Fragment {
     private final String[] TAGS = {"日记", "相册"};
     private FragmentJournalBinding binding;
-    private NavHostFragment navHostFragment;
-    private NavController navController;
-
-
-    @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // 开启fragment的toolbar右侧的菜单
-        setHasOptionsMenu(true);
-    }
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        // 开启fragment的toolbar右侧的菜单
+        setHasOptionsMenu(true);
+
         binding = FragmentJournalBinding.inflate(inflater, container, false);
-        configToolbar();
-        navHostFragment =
-                (NavHostFragment) (getActivity().getSupportFragmentManager()).findFragmentById(R.id.nav_host_fragment_content_main);
-        navController = navHostFragment.getNavController();
+        configView();
         return binding.getRoot();
     }
 
@@ -89,10 +78,14 @@ public class JournalFragment extends Fragment {
     }
 
     // 该方法用来配置toolbar
-    private void configToolbar() {
+    private void configView() {
         binding.toolbarJournal.titleText.setText(R.string.toolbar_journal);
         // 将Fragment的toolbar添加上
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbarJournal.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        binding.toolbarJournal.dateAndWeather.dayText.setText(OtherUtil.getSystemDay());
+        binding.toolbarJournal.dateAndWeather.weekText.setText(OtherUtil.getSystemWeek());
+        binding.toolbarJournal.dateAndWeather.monthText.setText(OtherUtil.getSystemMonth());
     }
 }
