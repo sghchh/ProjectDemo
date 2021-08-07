@@ -13,12 +13,16 @@ import com.huawei.hms.kit.awareness.CaptureClient;
 import com.huawei.hms.kit.awareness.capture.WeatherStatusResponse;
 import com.huawei.hms.kit.awareness.status.weather.WeatherSituation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * created by sgh
  * 2021-8-7
  * HMS获取天气与定位的简单封装
  */
 public class HmsWeatherService {
+
     private WeatherSituation weatherSituation;   // hms提供的类，封装天气请求返回结果
     private CaptureClient client;         // hms内部类，发起天气请求
     private volatile static HmsWeatherService serviceImpl;
