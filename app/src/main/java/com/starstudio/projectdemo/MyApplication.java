@@ -9,12 +9,15 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.huawei.hms.mlsdk.common.MLApplication;
+
 
 public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
     }
 
 

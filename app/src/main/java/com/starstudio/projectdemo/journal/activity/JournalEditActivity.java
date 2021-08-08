@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.starstudio.projectdemo.databinding.Activity2JournalEditBinding;
+import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 
@@ -22,6 +23,7 @@ public class JournalEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         HmsImageService.init(this);
         HmsWeatherService.init(this);
+        HmsClassificationService.init();
 
         binding = Activity2JournalEditBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

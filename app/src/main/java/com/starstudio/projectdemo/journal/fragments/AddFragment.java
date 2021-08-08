@@ -164,7 +164,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
      * @param view
      */
     @Override
-    public void onItemClick(View view) {
+    public void onItemClick(View view, int curPosition) {
         // 首先检查并申请sd卡权限
         RequestPermission.getInstance().checkPermissions(RequestPermission.CODE_SIMPLE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -197,6 +197,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                     });
         } else {
             // 添加点击事件，跳转到ImagePreviewFragment
+            ((JournalEditActivity)getActivity()).currentPostion = ((JournalEditActivity)getActivity()).picturePaths.size() - 1 - curPosition;  // 因为显示的顺序是反的，所以要反过来
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment);
         }
