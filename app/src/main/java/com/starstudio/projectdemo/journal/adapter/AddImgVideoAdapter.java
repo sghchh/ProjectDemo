@@ -67,7 +67,7 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
     @Override
     public void onBindViewHolder(@NonNull @NotNull AddImgVideoAdapter.AddHolder holder, int position) {
         holder.loadData(this.data.get(data.size() - 1 - position));
-        holder.setClickListener(clickListener);
+        holder.setClickListener(clickListener, position);
     }
 
     @NonNull
@@ -107,11 +107,11 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
 
         }
 
-        protected void setClickListener(OnItemClickListener clickListener) {
+        protected void setClickListener(OnItemClickListener clickListener, int position) {
             this.imgView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    clickListener.onItemClick(view);
+                    clickListener.onItemClick(view, position);
                 }
             });
         }
@@ -129,7 +129,7 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
      * RecyclerView中item的点击事件
      */
     public static interface OnItemClickListener {
-        void onItemClick(View view);
+        void onItemClick(View view, int position);
     }
 }
 
