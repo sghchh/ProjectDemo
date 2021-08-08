@@ -4,17 +4,32 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />     <!-- SD卡权限 -->
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--调用相机权限-->
     <uses-permission android:name="android.permission.CAMERA" />
     <!--使用网络权限-->
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <!--获取网络状态权限-->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!--获取wifi状态权限-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <!--录音权限-->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- 位置权限，此权限为敏感权限，声明后还需在代码中动态申请-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!--震动权限-->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!--麦克风权限-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <application
         android:name=".MyApplication"
@@ -48,6 +63,10 @@
         <activity
             android:launchMode="singleTask"
             android:name=".journal.activity.JournalItemDetailActivity"
+            android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".journal.activity.JournalVideoActivity"
             android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
     </application>
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -36,6 +38,7 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
+import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
@@ -119,6 +122,41 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
         binding.recyclerAddImg.addItemDecoration(new RecyclerGridDivider(5));
+
+        // 添加点击事件选择视频文件
+        binding.imageviewAddVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((JournalEditActivity)getActivity()).videoPath != null) {
+                    Intent intent = new Intent(getActivity(), JournalVideoActivity.class);
+                    intent.putExtra("videoPath", ((JournalEditActivity)getActivity()).videoPath);
+                    startActivity(intent);
+                    return;
+                }
+                PictureSelector.create(getActivity())
+                        .openGallery(PictureMimeType.ofVideo())
+                        .selectionMode(PictureConfig.SINGLE)
+                        .imageEngine(GlideEngine.createGlideEngine())
+                        .maxVideoSelectNum(1)
+                        .filterMaxFileSize(100000)  // 视频上限100MB
+                        .imageSpanCount(3)
+                        .forResult(new OnResultCallbackListener<LocalMedia>() {
+                            @Override
+                            public void onResult(List<LocalMedia> result) {
+                                Log.d("pictureselector", "onResult: 视频地址为"+result.get(0).getRealPath());
+                                String videoPath = result.get(0).getRealPath();
+                                ((JournalEditActivity)getActivity()).videoPath = videoPath;
+                                binding.imageviewAddVideo.getLayoutParams().width = DisplayMetricsUtil.getDisplayWidthPxiels(getActivity());
+                                GlideEngine.createGlideEngine().loadImage(getActivity(), videoPath, binding.imageviewAddVideo);
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        });
+            }
+        });
     }
 
     /**

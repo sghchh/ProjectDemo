@@ -64,12 +64,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!--添加视频的RecyclerView-->
-    <androidx.recyclerview.widget.RecyclerView
+    <!--添加视频的View-->
+    <ImageView
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:id="@+id/recycler_add_video"
+        android:src="@drawable/add_big"
+        android:id="@+id/imageview_add_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

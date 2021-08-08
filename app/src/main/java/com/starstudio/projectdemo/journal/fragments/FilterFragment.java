@@ -4,12 +4,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +19,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.huawei.hms.image.vision.bean.ImageVisionResult;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
@@ -46,6 +45,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
     private HmsImageService hmsImageService;
     private ArrayList<String> picturePaths;
     private int position;
+    private String originPath;
     private ImageVisionResult filterRes = null;
 
     @Nullable
@@ -59,6 +59,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
 
         picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
         position = ((JournalEditActivity)getActivity()).currentPostion;
+        originPath = picturePaths.get(position);
 
         binding = Fragment3FilterBinding.inflate(inflater, container, false);
         configView();
@@ -97,7 +98,11 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
             @Override
             public void onClick(View v) {
                 if (filterRes != null) {
-                    FileUtil.saveBitmap(filterRes.getImage());
+                    String newPath = FileUtil.saveBitmap(filterRes.getImage());
+                    if (newPath.endsWith(".jpg"))
+                        picturePaths.set(position, newPath);
+                    Toast.makeText(getActivity(), "已保存修改", Toast.LENGTH_SHORT).show();
+                    filterRes = null;
                 }
             }
         });
@@ -106,7 +111,6 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
             @Override
             public boolean handleMessage(@NonNull Message message) {
                 filterRes = (ImageVisionResult) message.obj;
-                Log.d("hms", "onFilterTypeClick: 返回结果是"+new Gson().toJson(filterRes));
                 binding.imageviewFilter.setImageBitmap(filterRes.getImage());
                 return true;
             }
@@ -120,7 +124,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
             public void run() {
                 Message message = new Message();
                 try {
-                    message.obj = hmsImageService.getFilterResult(type, picturePaths.get(position));
+                    message.obj = hmsImageService.getFilterResult(type, originPath);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
