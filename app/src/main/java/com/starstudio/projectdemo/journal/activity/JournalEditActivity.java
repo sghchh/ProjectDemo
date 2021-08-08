@@ -15,6 +15,7 @@ public class JournalEditActivity extends AppCompatActivity {
     Activity2JournalEditBinding binding;
     public ArrayList<String> picturePaths = new ArrayList<>();
     public int currentPostion = -1;
+    public String videoPath = null;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
