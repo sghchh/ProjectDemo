@@ -1,5 +1,7 @@
 package com.starstudio.projectdemo.journal.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,9 +26,11 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.FilterAdapter;
+import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
 import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.HandlerHelper;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -60,6 +64,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
         position = ((JournalEditActivity)getActivity()).currentPostion;
         originPath = picturePaths.get(position);
+        HmsClassificationService.classify(BitmapFactory.decodeFile(originPath));
 
         binding = Fragment3FilterBinding.inflate(inflater, container, false);
         configView();
@@ -93,7 +98,6 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         binding.recyclerFilter.setAdapter(adapter);
         binding.recyclerFilter.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         binding.imageviewFilter.setImageURI(Uri.fromFile(new File(picturePaths.get(position))));
-
         binding.saveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

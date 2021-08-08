@@ -85,6 +85,7 @@ public class ImagePreviewFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
         binding.pagerPreview.setAdapter(adapter);
+        binding.pagerPreview.setCurrentItem(((JournalEditActivity)getActivity()).currentPostion);
         binding.cropTx.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
