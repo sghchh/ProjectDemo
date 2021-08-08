@@ -1,9 +1,13 @@
 package com.starstudio.projectdemo.account.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,8 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.starstudio.projectdemo.account.adapter.AccoAdapter;
 import com.starstudio.projectdemo.databinding.FragmentAccoBinding;
 import com.starstudio.projectdemo.databinding.FragmentAccountBinding;
+import com.starstudio.projectdemo.utils.HandlerHelper;
 
 import org.jetbrains.annotations.NotNull;
+
+import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.ML_ASR_CAPTURE_CODE;
+import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.REAL_VOICE_SUCCESS_CODE;
 
 /**
  * 为“记账”页面的“账单”
@@ -36,6 +44,17 @@ public class AccoFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Toast.makeText(this.getContext(),"回调成功" + requestCode, Toast.LENGTH_SHORT).show();
+//        if ( requestCode == ML_ASR_CAPTURE_CODE) {
+////            realVoiceForResult(resultCode, data);
+//            Toast.makeText(this.getContext(),"回调成功", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
 
     @Override
     public void onDestroyView() {

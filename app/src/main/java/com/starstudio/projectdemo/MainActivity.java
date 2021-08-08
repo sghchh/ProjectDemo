@@ -3,25 +3,36 @@ package com.starstudio.projectdemo;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.huawei.hms.mlplugin.asr.MLAsrCaptureConstants;
 import com.huawei.hms.mlsdk.common.MLApplication;
+import com.huawei.hms.videoeditor.ui.mediaeditor.menu.M;
 import com.starstudio.projectdemo.Custom.HideInputActivity;
+import com.starstudio.projectdemo.account.fragments.AccoAddFragment;
+import com.starstudio.projectdemo.account.fragments.AccoFragment;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.FileUtil;
+import com.starstudio.projectdemo.utils.HandlerHelper;
 import com.starstudio.projectdemo.utils.RequestPermission;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
+
+import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.ML_ASR_CAPTURE_CODE;
+import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.REAL_VOICE_SUCCESS;
+import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.REAL_VOICE_SUCCESS_CODE;
 
 
 public class MainActivity extends HideInputActivity {
@@ -79,6 +90,8 @@ public class MainActivity extends HideInputActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -93,4 +106,6 @@ public class MainActivity extends HideInputActivity {
     private void config(){
         MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
     }
+
+
 }
