@@ -9,6 +9,8 @@ import com.huawei.hmf.tasks.Task;
 import com.huawei.hms.mlsdk.MLAnalyzerFactory;
 import com.huawei.hms.mlsdk.classification.MLImageClassification;
 import com.huawei.hms.mlsdk.classification.MLImageClassificationAnalyzer;
+import com.huawei.hms.mlsdk.classification.MLLocalClassificationAnalyzerSetting;
+import com.huawei.hms.mlsdk.classification.MLRemoteClassificationAnalyzerSetting;
 import com.huawei.hms.mlsdk.common.MLException;
 import com.huawei.hms.mlsdk.common.MLFrame;
 
@@ -19,7 +21,13 @@ public class HmsClassificationService {
     private static final String TAG = "classification";
     private static MLImageClassificationAnalyzer analyzer;
     public static void init() {
-        analyzer = MLAnalyzerFactory.getInstance().getLocalImageClassificationAnalyzer();
+        MLRemoteClassificationAnalyzerSetting setting =
+                new MLRemoteClassificationAnalyzerSetting.Factory()
+                        .setMinAcceptablePossibility(0.8f)
+                        .setLargestNumOfReturns(1)
+                        .create();
+        analyzer = MLAnalyzerFactory.getInstance().getRemoteImageClassificationAnalyzer(setting);
+        //analyzer = MLAnalyzerFactory.getInstance().getLocalImageClassificationAnalyzer();
     }
 
     public static void classify(Bitmap bitmap) {
