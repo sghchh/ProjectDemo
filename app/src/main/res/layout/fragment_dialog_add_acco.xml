@@ -117,12 +117,14 @@
             android:hint="     添加备注"/>
 
         <ImageView
+            android:id="@+id/iv_voice_add"
             android:layout_width="33dp"
             android:layout_height="33dp"
             android:scaleType="center"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="6dp"
-            android:src="@mipmap/add_voice"/>
+            android:src="@mipmap/add_voice"
+            android:background="#FFF1F1F1"/>
 
     </LinearLayout>
 

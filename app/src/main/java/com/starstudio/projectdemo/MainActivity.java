@@ -3,15 +3,16 @@ package com.starstudio.projectdemo;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.huawei.hms.mlsdk.common.MLApplication;
 import com.starstudio.projectdemo.Custom.HideInputActivity;
 import com.starstudio.projectdemo.databinding.ActivityMainBinding;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
@@ -19,8 +20,6 @@ import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
-
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +56,8 @@ public class MainActivity extends HideInputActivity {
         sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
 
         configView();
+
+        config();
     }
 
     /*
@@ -83,5 +84,9 @@ public class MainActivity extends HideInputActivity {
                     Toast.makeText(this, "相关权限未授权，无法使用~", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+    }
+
+    private void config(){
+        MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
     }
 }

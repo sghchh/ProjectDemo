@@ -93,4 +93,7 @@ dependencies {
     // https://mvnrepository.com/artifact/androidx.cardview/cardview
     implementation group: 'androidx.cardview', name: 'cardview', version: '1.0.0'
 
+    // 引入实时语音转写服务SDK
+    implementation 'com.huawei.hms:ml-computer-voice-realtimetranscription:3.0.0.301'
+
 }
