@@ -32,7 +32,7 @@ public class EditTextWithText extends androidx.appcompat.widget.AppCompatEditTex
         canvas.drawText("  "+getLeadText(),2,getHeight()/2+20,paint);
         int paddingLeft = (int) paint.measureText(getLeadText());
         //设置距离光标距离左侧的距离
-        setPadding(paddingLeft, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+        setPadding(paddingLeft * 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
         super.onDraw(canvas);
     }
     public void setLeadText(String s){

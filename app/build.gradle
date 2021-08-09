@@ -105,4 +105,7 @@ dependencies {
     // 引入实时语音转写服务SDK
     implementation 'com.huawei.hms:ml-computer-voice-realtimetranscription:3.0.0.301'
 
+    // Automatic speech recognition plugin.
+    implementation 'com.huawei.hms:ml-computer-voice-asr-plugin:2.2.0.300'
+
 }
