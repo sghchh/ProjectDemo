@@ -43,14 +43,10 @@ public class OtherUtil {
 
     public static Bitmap decodeBitmapSafe(String path) {
         Bitmap res = null;
-
-        res = BitmapFactory.decodeFile(path);
-        if (res != null)
-            return res;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         opts.inDither = true;
-        opts.inSampleSize = 2;
+        opts.inSampleSize = 8;
         res = BitmapFactory.decodeFile(path, opts);
 
         return res;

@@ -80,6 +80,9 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
         protected void loadData(String data, int last) {
             Bitmap bitmap = OtherUtil.decodeBitmapSafe(data);
             bitmap = OtherUtil.scaleSquare(bitmap);
+            // 强制item的大小，而不是复用缓存的recycler的尺寸
+            // https://blog.csdn.net/qq_36419317/article/details/54836142?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control
+            img.setAdjustViewBounds(true);
             img.setImageBitmap(bitmap);
             if (last > 0) {
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));

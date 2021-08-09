@@ -102,6 +102,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 return;
             }
 
+
+            this.imgGrid.setNestedScrollingEnabled(false);
             this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
             this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
