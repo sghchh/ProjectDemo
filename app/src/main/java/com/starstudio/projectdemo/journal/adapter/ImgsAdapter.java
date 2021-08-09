@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.journal.adapter;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -19,8 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * created by sgh
@@ -29,9 +33,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
-    String[] data;
+    private List<String> data;
 
-    public ImgsAdapter (String[] data) {
+    public ImgsAdapter (List<String> data) {
         this.data = data;
     }
     @NonNull
@@ -45,24 +49,21 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ImgsAdapter.ImgHolder holder, int position) {
-        if (data.length > 9 && position == 8)
-            holder.loadData(data[position], data.length - 9);
+        if (data.size() > 9 && position == 8)
+            holder.loadData(data.get(position), data.size() - 9);
         else
-            holder.loadData(data[position], 0);
+            holder.loadData(data.get(position), 0);
     }
 
     @Override
     public int getItemCount() {
-        return Math.min(data.length, 9);
+        return Math.min(data.size(), 9);
     }
 
     public void clear() {
         this.data = null;
     }
 
-    public void addData(String[] data) {
-        this.data = data;
-    }
 
     public static class ImgHolder extends RecyclerView.ViewHolder {
 
@@ -76,14 +77,15 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
 
         protected void loadData(String data, int last) {
+            Bitmap bitmap = BitmapFactory.decodeFile(data);
+            Log.e("传参之前", "loadData: bitmap是否是null："+(bitmap == null));
+            bitmap = OtherUtil.scaleSquare(bitmap);  //加上该调用，log为true，不加时上面log出为false
+            img.setImageBitmap(bitmap);
             if (last > 0) {
-                img.setImageResource(R.drawable.weather_overcast);
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
                 txt.setText("+" + last);
             }
-            else
-                img.setImageResource(R.drawable.weather_overcast);
         }
     }
 }
