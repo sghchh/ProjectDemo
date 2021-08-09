@@ -3,7 +3,8 @@ package com.starstudio.projectdemo;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
+
+
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,6 @@ public class MainActivity extends HideInputActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // 进行权限申请的操作
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();
@@ -71,13 +71,19 @@ public class MainActivity extends HideInputActivity {
         setContentView(binding.getRoot());
         sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
         configView();
+    }
 
-        config();
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
     /*
-        在该方法中对各种View添加点击事件、相互关联等配置
-     */
+            在该方法中对各种View添加点击事件、相互关联等配置
+         */
     private void configView() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 

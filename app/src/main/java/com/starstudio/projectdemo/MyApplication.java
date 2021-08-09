@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.huawei.hms.mlsdk.common.MLApplication;
+import com.starstudio.projectdemo.journal.api.JournalDatabase;
 
 
 public class MyApplication extends Application {
@@ -18,6 +19,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
+        JournalDatabase.init(this);
     }
 
 
