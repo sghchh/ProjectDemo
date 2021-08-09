@@ -1,6 +1,7 @@
 package com.starstudio.projectdemo.account.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,6 +53,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private EditTextWithText etwtKind, etwtMoney;
     private EditText etComment;
     private ImageView ivVoice, ivCancle;
+    private TextView tvExpense, tvIncome, tvCancel, tvSave;
     private MLSpeechRealTimeTranscription mSpeechRecognizer;
     private static final int AUDIO_PERMISSION_CODE = 1;
     // Permission
@@ -66,6 +69,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         View rootView = inflater.inflate(R.layout.fragment_dialog_add_acco, container, false);
         initView(rootView);
         setAllOnClickListener();
+        setDialogCancel();
         return rootView;
     }
 
@@ -98,6 +102,10 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         etComment = rootView.findViewById(R.id.et_comment);
         ivVoice = rootView.findViewById(R.id.iv_voice_add);
         ivCancle = rootView.findViewById(R.id.iv_cancel);
+        tvExpense = rootView.findViewById(R.id.tv_expense);
+        tvIncome = rootView.findViewById(R.id.tv_income);
+        tvCancel = rootView.findViewById(R.id.tv_cancel);
+        tvSave = rootView.findViewById(R.id.tv_save);
 
         etwtKind.setLeadText("分类选择");
         etwtKind.setLeadTextSize(17);
@@ -117,6 +125,17 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private void setAllOnClickListener(){
         ivVoice.setOnClickListener(this);
         ivCancle.setOnClickListener(this);
+        tvExpense.setOnClickListener(this);
+        tvIncome.setOnClickListener(this);
+        tvCancel.setOnClickListener(this);
+        tvSave.setOnClickListener(this);
+    }
+
+    private void setDialogCancel(){
+        Dialog dialog = getDialog();
+        //设置点击半透明区域, 无法关闭FragmentDialog
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
     }
 
     @Override
@@ -124,11 +143,25 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         switch (v.getId()){
             case R.id.iv_voice_add:
                 startRealTimeVoice();
-
                 Toast.makeText(this.getContext(), "点击了语音按钮", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_cancel:
-
+                dismiss();
+                Toast.makeText(this.getContext(), "点击了叉叉按钮", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_expense:
+                tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
+                tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
+                break;
+            case R.id.tv_income:
+                tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
+                tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
+                break;
+            case R.id.tv_cancel:
+                dismiss();
+                break;
+            case R.id.tv_save:
+                dismiss();
                 break;
         }
     }

@@ -43,7 +43,7 @@
         android:layout_marginTop="12dp">
 
         <TextView
-            android:id="@+id/button"
+            android:id="@+id/tv_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -63,7 +63,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/button2"
+            android:id="@+id/tv_income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -79,7 +79,7 @@
             android:textSize="12sp"
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button"
+            app:layout_constraintStart_toEndOf="@+id/tv_expense"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -133,7 +133,7 @@
         android:layout_height="80dp">
 
         <TextView
-            android:id="@+id/button3"
+            android:id="@+id/tv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
@@ -148,11 +148,12 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="@drawable/btn_acco_add"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button4" />
+            app:layout_constraintEnd_toStartOf="@+id/tv_save" />
 
         <TextView
-            android:id="@+id/button4"
+            android:id="@+id/tv_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -167,6 +168,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:background="@drawable/btn_acco_add_press"
+            android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
