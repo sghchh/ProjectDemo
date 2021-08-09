@@ -41,7 +41,11 @@ import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
+import com.starstudio.projectdemo.journal.api.HmsWeatherService;
+import com.starstudio.projectdemo.journal.api.JournalDatabase;
+import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
+import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
 
@@ -59,12 +63,14 @@ import java.util.List;
 public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemClickListener{
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
+    private JournalDatabase database;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        database = JournalDatabase.getInstance();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
         configView();
@@ -95,6 +101,25 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.send_jour) {
             Toast.makeText(getActivity(), "点击了发表按钮", Toast.LENGTH_SHORT).show();
+            JournalEntity journalEntity = new JournalEntity();
+            journalEntity.setPostTime(System.currentTimeMillis());
+            journalEntity.setLocation(HmsWeatherService.getLocation());
+            journalEntity.setMonth(OtherUtil.getSystemMonth()+"月"+OtherUtil.getSystemDay()+"日");
+            journalEntity.setWeek(OtherUtil.getSystemWeek());
+            journalEntity.setContent(binding.contentAdd.getText().toString());
+            journalEntity.setPictureArray(addImgAdapter.getData());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    database.journalDAO().insertJournal(journalEntity);
+                    Log.e("AddFragment", "run: 执行了插入数据操作");
+                }
+            }).start();
+
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+
         } else if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);

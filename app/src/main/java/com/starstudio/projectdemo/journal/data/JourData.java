@@ -10,6 +10,7 @@ import java.io.Serializable;
  * “心情日记”页面“日记”板块每一条日记对应的Java类型
  */
 public class JourData implements Serializable {
+    private long postTime;
     private String week;  // 日记发表的星期
     private String date; // 日记发表的日期
     private String weather;  // 日记发表时的天气信息

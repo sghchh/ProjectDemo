@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.data.JourData;
+import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +30,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
-    private final JourData[] data;
+    private final JournalEntity[] data;
     private OnJourItemClickListener listener;
 
-    public JourAdapter(JourData[] data) {
+    public JourAdapter(JournalEntity[] data) {
         this.data = data;
     }
 
@@ -77,15 +78,15 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         }
 
         // 通过data数据来加载控件内容
-        private void loadData(JourData data, OnJourItemClickListener listener) {
-            this.date.setText(data.getDate());
-            this.location.setText(data.getLoaction());
+        private void loadData(JournalEntity data, OnJourItemClickListener listener) {
+            this.date.setText(data.getMonth());
+            this.location.setText(data.getLocation());
             this.content.setText(data.getContent());
             this.week.setText(data.getWeek());
 
             // 计算所需要的列数，不同情境为：1/2/3列
-            int coloum = Math.min(data.getImgs().length, 3);
-            this.imgGrid.setAdapter(new ImgsAdapter(data.getImgs()));
+            int coloum = Math.min(data.getPictureArray().size(), 3);
+            this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
             this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
             this.content.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +106,6 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     }
 
     public static interface OnJourItemClickListener{
-        void onJourItemClick(View view, JourData data);
+        void onJourItemClick(View view, JournalEntity data);
     }
 }

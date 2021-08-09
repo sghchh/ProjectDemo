@@ -3,6 +3,7 @@ package com.starstudio.projectdemo;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,7 +33,6 @@ public class MainActivity extends HideInputActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // 进行权限申请的操作
         RequestPermission.init(this);
         permissionRequest = RequestPermission.getInstance();
@@ -64,9 +64,17 @@ public class MainActivity extends HideInputActivity {
         config();
     }
 
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
     /*
-        在该方法中对各种View添加点击事件、相互关联等配置
-     */
+            在该方法中对各种View添加点击事件、相互关联等配置
+         */
     private void configView() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
@@ -93,4 +101,5 @@ public class MainActivity extends HideInputActivity {
     private void config(){
         MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
     }
+
 }

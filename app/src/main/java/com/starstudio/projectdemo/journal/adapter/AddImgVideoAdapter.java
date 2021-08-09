@@ -64,6 +64,9 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
         return res;
     }
 
+    public ArrayList<String> getData(){
+        return data;
+    }
     @Override
     public void onBindViewHolder(@NonNull @NotNull AddImgVideoAdapter.AddHolder holder, int position) {
         holder.loadData(this.data.get(data.size() - 1 - position));

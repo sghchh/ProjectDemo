@@ -22,6 +22,8 @@ import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * created by sgh
  * 2021-7-31
@@ -29,9 +31,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
-    String[] data;
+    private List<String> data;
 
-    public ImgsAdapter (String[] data) {
+    public ImgsAdapter (List<String> data) {
         this.data = data;
     }
     @NonNull
@@ -45,22 +47,22 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull @NotNull ImgsAdapter.ImgHolder holder, int position) {
-        if (data.length > 9 && position == 8)
-            holder.loadData(data[position], data.length - 9);
+        if (data.size() > 9 && position == 8)
+            holder.loadData(data.get(position), data.size() - 9);
         else
-            holder.loadData(data[position], 0);
+            holder.loadData(data.get(position), 0);
     }
 
     @Override
     public int getItemCount() {
-        return Math.min(data.length, 9);
+        return Math.min(data.size(), 9);
     }
 
     public void clear() {
         this.data = null;
     }
 
-    public void addData(String[] data) {
+    public void addData(List<String> data) {
         this.data = data;
     }
 
