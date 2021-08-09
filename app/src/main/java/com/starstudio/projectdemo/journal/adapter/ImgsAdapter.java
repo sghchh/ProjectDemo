@@ -64,9 +64,6 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
         this.data = null;
     }
 
-    public void addData(List<String> data) {
-        this.data = data;
-    }
 
     public static class ImgHolder extends RecyclerView.ViewHolder {
 
@@ -80,15 +77,14 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
 
         protected void loadData(String data, int last) {
+            Bitmap bitmap = BitmapFactory.decodeFile(data);
+            Log.e("传参之前", "loadData: bitmap是否是null："+(bitmap == null));
+            bitmap = OtherUtil.scaleSquare(bitmap);  //加上该调用，log为true，不加时上面log出为false
+            img.setImageBitmap(bitmap);
             if (last > 0) {
-                img.setImageBitmap(OtherUtil.scaleSquare(BitmapFactory.decodeFile(data)));
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
                 txt.setText("+" + last);
-            }
-            else {
-                //Bitmap bitmap = BitmapFactory.decodeFile(data);
-                img.setImageBitmap(OtherUtil.scaleSquare(BitmapFactory.decodeFile(data)));
             }
         }
     }

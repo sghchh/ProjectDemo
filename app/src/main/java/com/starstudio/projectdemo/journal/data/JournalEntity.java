@@ -33,7 +33,7 @@ public class JournalEntity implements Serializable {
     private String week;     // 发表日及的星期
 
     @ColumnInfo(name = "picture_array")
-    private List<String> pictureArray;   // 日记中所包含的图片
+    private List<String> pictureArray = new ArrayList<>();   // 日记中所包含的图片
     private String video;         // 日记中所包含的视频
     private String audio;          // 日记中所包含的音频
 

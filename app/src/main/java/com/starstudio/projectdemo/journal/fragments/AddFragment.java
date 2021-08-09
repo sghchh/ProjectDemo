@@ -221,6 +221,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                     .openGallery(PictureMimeType.ofImage())
                     .imageEngine(GlideEngine.createGlideEngine())
                     .imageSpanCount(4)
+                    .filterMaxFileSize(5000)   // 单张图片上限 5MB
                     .selectionMode(PictureConfig.MULTIPLE)
                     .forResult(new OnResultCallbackListener<LocalMedia>() {
                         @Override

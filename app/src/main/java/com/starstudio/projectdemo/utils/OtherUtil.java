@@ -3,7 +3,9 @@ package com.starstudio.projectdemo.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -39,8 +41,23 @@ public class OtherUtil {
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-E");
 
+    public static Bitmap decodeBitmapSafe(String path) {
+        Bitmap res = null;
 
+        res = BitmapFactory.decodeFile(path);
+        if (res != null)
+            return res;
+        int sample = 8;
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inPreferredConfig = Bitmap.Config.RGB_565;
+        opts.inDither = true;
+        opts.inSampleSize = 8;
+        res = BitmapFactory.decodeFile(path, opts);
+
+        return res;
+    }
     public static Bitmap scaleSquare(Bitmap originBitmap) {
+        Log.e("传参之后", "loadData: bitmap是否是null："+(originBitmap == null));
         Bitmap res;
         int originWidth = originBitmap.getWidth();
         int originHeight = originBitmap.getHeight();

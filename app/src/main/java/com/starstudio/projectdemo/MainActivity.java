@@ -60,8 +60,6 @@ public class MainActivity extends HideInputActivity {
         setContentView(binding.getRoot());
         sharedPreferencesUtils = SharedPreferencesUtils.getInstance(this);
         configView();
-
-        config();
     }
 
 
@@ -96,10 +94,6 @@ public class MainActivity extends HideInputActivity {
                     Toast.makeText(this, "相关权限未通过,无法使用~", Toast.LENGTH_SHORT).show();
                 }
             }
-    }
-
-    private void config(){
-        MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");
     }
 
 }
