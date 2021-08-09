@@ -37,7 +37,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
 
     private EditTextWithText etwtKind, etwtMoney;
     private EditText etComment;
-    private ImageView ivVoice;
+    private ImageView ivVoice, ivCancle;
     private MLSpeechRealTimeTranscription mSpeechRecognizer;
     private static final int AUDIO_PERMISSION_CODE = 1;
 
@@ -67,7 +67,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         getActivity().getWindowManager().getDefaultDisplay().getMetrics( dm );
 
         WindowManager.LayoutParams params = win.getAttributes();
-        // 使用ViewGroup.LayoutParams，以便Dialog 宽度充满整个屏幕
+        // 使用ViewGroup.LayoutParams，以便 Dialog 宽度控制
         params.width =  dm.widthPixels - OtherUtil.dp2px(this.getContext(),16);
         params.height = OtherUtil.dp2px(this.getContext(),387);
         win.setAttributes(params);
@@ -78,6 +78,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         etwtMoney = rootView.findViewById(R.id.et_money);
         etComment = rootView.findViewById(R.id.et_comment);
         ivVoice = rootView.findViewById(R.id.iv_voice_add);
+        ivCancle = rootView.findViewById(R.id.iv_cancel);
 
         etwtKind.setLeadText("分类选择");
         etwtKind.setLeadTextSize(17);
@@ -96,6 +97,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
 
     private void setAllOnClickListener(){
         ivVoice.setOnClickListener(this);
+        ivCancle.setOnClickListener(this);
     }
 
     @Override
@@ -105,6 +107,9 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 requestCameraPermission();
                 speechRecognizer();
                 Toast.makeText(this.getContext(), "点击了语音按钮", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.iv_cancel:
+
                 break;
         }
     }
