@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,9 +78,8 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
 
         protected void loadData(String data, int last) {
-            Bitmap bitmap = BitmapFactory.decodeFile(data);
-            Log.e("传参之前", "loadData: bitmap是否是null："+(bitmap == null));
-            bitmap = OtherUtil.scaleSquare(bitmap);  //加上该调用，log为true，不加时上面log出为false
+            Bitmap bitmap = OtherUtil.decodeBitmapSafe(data);
+            bitmap = OtherUtil.scaleSquare(bitmap);
             img.setImageBitmap(bitmap);
             if (last > 0) {
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));

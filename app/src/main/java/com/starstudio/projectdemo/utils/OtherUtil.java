@@ -47,17 +47,15 @@ public class OtherUtil {
         res = BitmapFactory.decodeFile(path);
         if (res != null)
             return res;
-        int sample = 8;
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.RGB_565;
         opts.inDither = true;
-        opts.inSampleSize = 8;
+        opts.inSampleSize = 2;
         res = BitmapFactory.decodeFile(path, opts);
 
         return res;
     }
     public static Bitmap scaleSquare(Bitmap originBitmap) {
-        Log.e("传参之后", "loadData: bitmap是否是null："+(originBitmap == null));
         Bitmap res;
         int originWidth = originBitmap.getWidth();
         int originHeight = originBitmap.getHeight();

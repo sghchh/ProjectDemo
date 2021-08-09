@@ -23,6 +23,7 @@ import com.starstudio.projectdemo.utils.OtherUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,39 +38,26 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
     private ArrayList<String> data;
     private OnItemClickListener clickListener;
 
-    public AddImgVideoAdapter(OnItemClickListener clickListener) {
-        this.data = new ArrayList<>();
-        this.data.add(null);
+    public AddImgVideoAdapter(ArrayList<String> data, OnItemClickListener clickListener) {
+        this.data = data;
         this.clickListener = clickListener;
     }
 
     public void append(List<String> append) {
         data.addAll(append);
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
-    public void reset(List<String> data) {
-        this.data = new ArrayList();
-        this.data.add(null);
-        this.data.addAll(data);
-        this.notifyDataSetChanged();
-    }
-
-    public String[] getDataArray() {
-        if (data.size() == 1)
-            return null;
-        String[] res = new String[data.size() - 1];
-        for (int i = 0; i < res.length; i ++)
-            res[i] = data.get(i + 1);  // 去掉data中第一个占位图
-        return res;
-    }
 
     public ArrayList<String> getData(){
         return data;
     }
     @Override
     public void onBindViewHolder(@NonNull @NotNull AddImgVideoAdapter.AddHolder holder, int position) {
-        holder.loadData(this.data.get(data.size() - 1 - position));
+        if (position == data.size())
+            holder.loadData(null);
+        else
+            holder.loadData(this.data.get(data.size() - 1 - position));
         holder.setClickListener(clickListener, position);
     }
 
@@ -83,7 +71,7 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return data.size() + 1;
     }
 
     protected static class AddHolder extends RecyclerView.ViewHolder {

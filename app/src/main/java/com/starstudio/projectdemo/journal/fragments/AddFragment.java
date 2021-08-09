@@ -158,9 +158,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // 之后配置RecyclerView
-        addImgAdapter = new AddImgVideoAdapter(this::onItemClick);
-        if (((JournalEditActivity)getActivity()).picturePaths.size() > 0)
-            addImgAdapter.reset(((JournalEditActivity)getActivity()).picturePaths);
+        addImgAdapter = new AddImgVideoAdapter(((JournalEditActivity)getActivity()).picturePaths,this::onItemClick);
 
         binding.recyclerAddImg.setAdapter(addImgAdapter);
         binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
@@ -230,7 +228,6 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                             for (int i = 0; i < result.size(); i ++) {
                                 data.add(result.get(i).getRealPath());
                             }
-                            ((JournalEditActivity)getActivity()).picturePaths.addAll(data);
                             // 将选择好的图片添加到Adapter中
                             addImgAdapter.append(data);
                         }

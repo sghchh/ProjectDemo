@@ -97,6 +97,11 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getPictureArray().size(), 3);
+            if (coloum == 0) {
+                this.imgGrid.setVisibility(View.GONE);
+                return;
+            }
+
             this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
             this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
             this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
