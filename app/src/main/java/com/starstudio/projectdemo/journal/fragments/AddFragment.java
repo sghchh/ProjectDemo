@@ -42,6 +42,7 @@ import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
+import com.starstudio.projectdemo.journal.api.JournalDaoService;
 import com.starstudio.projectdemo.journal.api.JournalDatabase;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
@@ -55,6 +56,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.reactivex.CompletableObserver;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 /**
  * created by sgh
  * 2021-7-31
@@ -63,14 +71,15 @@ import java.util.List;
 public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemClickListener{
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
-    private JournalDatabase database;
+    private JournalDaoService daoService;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        database = JournalDatabase.getInstance();
+        daoService = JournalDaoService.getInstance();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
         configView();
@@ -108,17 +117,27 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             journalEntity.setWeek(OtherUtil.getSystemWeek());
             journalEntity.setContent(binding.contentAdd.getText().toString());
             journalEntity.setPictureArray(addImgAdapter.getData());
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    database.journalDAO().insertJournal(journalEntity);
-                    Log.e("AddFragment", "run: 执行了插入数据操作");
-                }
-            }).start();
 
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-            getActivity().finish();
+            daoService.insert(journalEntity)
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(@NotNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            Log.e("rxjava2", "onComplete: 插入数据执行完毕");
+                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+
+                        @Override
+                        public void onError(@NotNull Throwable e) {
+                            Log.e("rxjava2", "onError: 插入数据失败");
+                        }
+                    });
 
         } else if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent(getActivity(), MainActivity.class);

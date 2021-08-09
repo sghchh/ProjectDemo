@@ -7,6 +7,11 @@ import androidx.room.Query;
 
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 
+import java.util.List;
+
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
+
 /**
  * created by sgh
  * 2021-8-9
@@ -15,11 +20,11 @@ import com.starstudio.projectdemo.journal.data.JournalEntity;
 @Dao
 public interface JournalDAO {
     @Insert
-    public void insertJournal(JournalEntity jounal);     // 插入日记的方法
+    Completable insertJournal(JournalEntity jounal);     // 插入日记的方法
 
     @Delete
-    public void deleteJournal(JournalEntity journalEntity);     // 根据主键删除实体
+    Completable deleteJournal(JournalEntity journalEntity);     // 根据主键删除实体
 
     @Query("select * from journal_entity")
-    public JournalEntity[] loadAllJournal();
+    Flowable<List<JournalEntity>> loadAllJournal();
 }

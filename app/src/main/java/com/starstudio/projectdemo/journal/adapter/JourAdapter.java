@@ -22,6 +22,9 @@ import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * created by sgh
@@ -30,11 +33,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
-    private final JournalEntity[] data;
+    private final List<JournalEntity> data = new ArrayList();
     private OnJourItemClickListener listener;
 
-    public JourAdapter(JournalEntity[] data) {
-        this.data = data;
+    public JourAdapter() { }
+
+    public void append(List<JournalEntity> append) {
+        this.data.addAll(append);
+        this.notifyDataSetChanged();
+    }
+
+    public void append(JournalEntity append) {
+        this.data.add(append);
+        this.notifyDataSetChanged();
     }
 
     public void setListener(OnJourItemClickListener listener) {
@@ -51,14 +62,14 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JourAdapter.JourHolder holder, int position) {
-        holder.loadData(data[position], listener);
+        holder.loadData(data.get(position), listener);
     }
 
 
 
     @Override
     public int getItemCount() {
-        return data.length;
+        return data.size();
     }
 
     public static class JourHolder extends RecyclerView.ViewHolder {

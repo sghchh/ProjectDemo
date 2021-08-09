@@ -6,8 +6,10 @@ import android.media.Image;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import com.starstudio.projectdemo.journal.data.JournalEntity;
+import com.starstudio.projectdemo.journal.data.PictureArrayConverter;
 
 /**
  * created by sgh
@@ -15,6 +17,7 @@ import com.starstudio.projectdemo.journal.data.JournalEntity;
  * 用来获取JournalDAO实例的数据库
  */
 @Database(entities = {JournalEntity.class}, version = 1)
+@TypeConverters({PictureArrayConverter.class})
 public abstract class JournalDatabase extends RoomDatabase {
     public abstract JournalDAO journalDAO();
 

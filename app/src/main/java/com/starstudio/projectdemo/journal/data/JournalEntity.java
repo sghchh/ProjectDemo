@@ -21,7 +21,6 @@ import java.util.List;
  * "心情日记"每个日记对应的数据库表
  */
 @Entity(tableName = "journal_entity")
-@TypeConverters(PictureArrayConverter.class)
 public class JournalEntity implements Serializable {
     @PrimaryKey
     @ColumnInfo(name = "post_time")
@@ -34,7 +33,7 @@ public class JournalEntity implements Serializable {
     private String week;     // 发表日及的星期
 
     @ColumnInfo(name = "picture_array")
-    private ArrayList<String> pictureArray;   // 日记中所包含的图片
+    private List<String> pictureArray;   // 日记中所包含的图片
     private String video;         // 日记中所包含的视频
     private String audio;          // 日记中所包含的音频
 
@@ -101,11 +100,11 @@ public class JournalEntity implements Serializable {
         this.week = week;
     }
 
-    public ArrayList<String> getPictureArray() {
+    public List<String> getPictureArray() {
         return pictureArray;
     }
 
-    public void setPictureArray(ArrayList<String> pictureArray) {
+    public void setPictureArray(List<String> pictureArray) {
         this.pictureArray = pictureArray;
     }
 

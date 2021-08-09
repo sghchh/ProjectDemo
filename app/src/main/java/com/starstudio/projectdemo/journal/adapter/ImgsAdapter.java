@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.journal.adapter;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -79,13 +81,15 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
         protected void loadData(String data, int last) {
             if (last > 0) {
-                img.setImageResource(R.drawable.weather_overcast);
+                img.setImageBitmap(OtherUtil.scaleSquare(BitmapFactory.decodeFile(data)));
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
                 txt.setText("+" + last);
             }
-            else
-                img.setImageResource(R.drawable.weather_overcast);
+            else {
+                //Bitmap bitmap = BitmapFactory.decodeFile(data);
+                img.setImageBitmap(OtherUtil.scaleSquare(BitmapFactory.decodeFile(data)));
+            }
         }
     }
 }
