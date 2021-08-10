@@ -8,7 +8,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.huawei.hms.image.vision.A;
+import com.huawei.hms.videoeditor.sdk.p.S;
 import com.starstudio.projectdemo.journal.data.AlbumData;
+
+import org.luaj.vm2.ast.Str;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -17,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.PermissionCollection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,17 +94,25 @@ public class FileUtil {
         File directory = new File(PICTURE_FILE);
         List<AlbumData> res = new ArrayList<>();
         File[] albumFiles = directory.listFiles();
-        Log.e("FileUtil", "searchAlbumData: "+new Gson().toJson(albumFiles));
         for (int i = 0; i < albumFiles.length; i ++) {
             File album = albumFiles[i];
             AlbumData data = new AlbumData();
-            Log.e("FileUtil", "searchAlbumData: "+album);
             if (album.listFiles().length == 0)
                 data.setCover(null);
             else
                 data.setCover(album.listFiles()[0].getAbsolutePath());
             data.setName(album.getName());
             res.add(data);
+        }
+        return res;
+    }
+
+    public static String[] loadAlbumPictures(String albumName) {
+        File file = new File(PICTURE_FILE, albumName);
+        File[] files = file.listFiles();
+        String[] res = new String[files.length];
+        for (int i = 0; i < res.length; i ++) {
+            res[i] = files[i].getAbsolutePath();
         }
         return res;
     }

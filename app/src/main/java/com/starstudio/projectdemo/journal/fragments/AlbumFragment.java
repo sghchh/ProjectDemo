@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AlbumBinding;
 import com.starstudio.projectdemo.journal.adapter.AlbumAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
@@ -51,6 +53,9 @@ public class AlbumFragment extends Fragment implements AlbumAdapter.AlbumItemCli
 
     @Override
     public void OnAlbumItemClick(View view, AlbumData data) {
-
+        Bundle bundle = new Bundle();
+        bundle.putString("albumName", data.getName());
+        NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+        navHost.getNavController().navigate(R.id.action_JournalFragment_to_AlbumPictureFragment, bundle);
     }
 }

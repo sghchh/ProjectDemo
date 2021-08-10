@@ -10,7 +10,27 @@
         android:id="@+id/JournalFragment"
         android:name="com.starstudio.projectdemo.JournalFragment"
         android:label="journal_fragment"
-        tools:layout="@layout/fragment_journal"/>
+        tools:layout="@layout/fragment_journal">
+
+        <action
+            android:id="@+id/action_JournalFragment_to_AlbumPictureFragment"
+            app:destination="@id/nav_album" />
+    </fragment>
+
+    <navigation
+        android:id="@+id/nav_album"
+        app:startDestination="@id/AlbumPictureFragment">
+
+        <fragment android:id="@+id/AlbumPictureFragment"
+            android:name="com.starstudio.projectdemo.journal.fragments.AlbumPictureFragment"
+            android:label="album_picture_fragment"
+            tools:layout="@layout/fragment3_album_picture">
+            <action
+                android:id="@+id/action_AlbumPictureFragment_backto_JournalFragment"
+                app:destination="@id/JournalFragment"/>
+        </fragment>
+
+    </navigation>
 
     <fragment
         android:id="@+id/AccountFragment"
