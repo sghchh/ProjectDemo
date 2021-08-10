@@ -5,8 +5,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -47,6 +50,28 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return save.getAbsolutePath();
+    }
+
+    public static String copyFromPath(String path) throws IOException {
+        String[] _ss = path.split("/");
+        String finename = _ss[_ss.length - 1];
+        File save;
+        if (finename.endsWith(".mp4"))
+            save = new File(VIDEO_FILE, finename);
+        else
+            save = new File(PICTURE_FILE, finename);
+        BufferedInputStream inputStream;
+        BufferedOutputStream outputStream;
+        inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
+        outputStream = new BufferedOutputStream(new FileOutputStream(save));
+        byte[] cache = new byte[1024];
+        while(inputStream.read(cache) != -1) {
+            outputStream.write(cache);
+        }
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
         return save.getAbsolutePath();
     }
 }

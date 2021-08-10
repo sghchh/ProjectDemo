@@ -46,12 +46,14 @@ import com.starstudio.projectdemo.journal.api.JournalDaoService;
 import com.starstudio.projectdemo.journal.api.JournalDatabase;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
+import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,7 +111,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.send_jour) {
-            Toast.makeText(getActivity(), "点击了发表按钮", Toast.LENGTH_SHORT).show();
+            
             JournalEntity journalEntity = new JournalEntity();
             journalEntity.setPostTime(System.currentTimeMillis());
             journalEntity.setLocation(HmsWeatherService.getLocation());
@@ -117,7 +119,19 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             journalEntity.setMonth(OtherUtil.getSystemMonth()+"月"+OtherUtil.getSystemDay()+"日");
             journalEntity.setWeek(OtherUtil.getSystemWeek());
             journalEntity.setContent(binding.contentAdd.getText().toString());
-            journalEntity.setPictureArray(addImgAdapter.getData());
+
+            List<String> _data = addImgAdapter.getData();
+            List<String> destArray = new ArrayList<>();
+            try {
+                for (int i = 0; i < _data.size(); i ++)
+                    // 将图片数据拷贝到com.starstudio.projectdemo对应的目录下
+                    destArray.add(FileUtil.copyFromPath(_data.get(i)));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "IO错误，添加失败！", Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
+            }
+            journalEntity.setPictureArray(destArray);
 
             daoService.insert(journalEntity)
                     .subscribe(new CompletableObserver() {
