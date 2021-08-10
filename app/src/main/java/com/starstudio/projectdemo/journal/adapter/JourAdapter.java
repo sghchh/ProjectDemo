@@ -101,6 +101,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             if (coloum == 0) {
                 this.imgGrid.setVisibility(View.GONE);
                 return;
+            } else {
+                this.imgGrid.setVisibility(View.VISIBLE);
             }
 
 
