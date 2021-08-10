@@ -4,6 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.huawei.hms.image.vision.A;
+import com.starstudio.projectdemo.journal.data.AlbumData;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,7 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FileUtil {
     @SuppressLint("SimpleDateFormat")
@@ -53,14 +60,18 @@ public class FileUtil {
         return save.getAbsolutePath();
     }
 
-    public static String copyFromPath(String path) throws IOException {
+    public static String copyFromPath(String path, String type) throws IOException {
         String[] _ss = path.split("/");
         String finename = _ss[_ss.length - 1];
         File save;
         if (finename.endsWith(".mp4"))
             save = new File(VIDEO_FILE, finename);
-        else
-            save = new File(PICTURE_FILE, finename);
+        else {
+            save = new File(PICTURE_FILE + "/" + type);
+            if (!save.exists())
+                save.mkdir();   // 如果该类别的文件夹不存在，则先创建
+            save = new File(save.getAbsolutePath(), finename);
+        }
         BufferedInputStream inputStream;
         BufferedOutputStream outputStream;
         inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
@@ -73,5 +84,24 @@ public class FileUtil {
         outputStream.close();
         inputStream.close();
         return save.getAbsolutePath();
+    }
+
+    public static List<AlbumData> searchAlbumData() {
+        File directory = new File(PICTURE_FILE);
+        List<AlbumData> res = new ArrayList<>();
+        File[] albumFiles = directory.listFiles();
+        Log.e("FileUtil", "searchAlbumData: "+new Gson().toJson(albumFiles));
+        for (int i = 0; i < albumFiles.length; i ++) {
+            File album = albumFiles[i];
+            AlbumData data = new AlbumData();
+            Log.e("FileUtil", "searchAlbumData: "+album);
+            if (album.listFiles().length == 0)
+                data.setCover(null);
+            else
+                data.setCover(album.listFiles()[0].getAbsolutePath());
+            data.setName(album.getName());
+            res.add(data);
+        }
+        return res;
     }
 }

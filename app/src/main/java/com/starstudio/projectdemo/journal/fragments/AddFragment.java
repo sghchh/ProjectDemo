@@ -41,6 +41,7 @@ import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
+import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
 import com.starstudio.projectdemo.journal.api.JournalDatabase;
@@ -74,7 +75,6 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
     private JournalDaoService daoService;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -111,7 +111,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.send_jour) {
-            
+
             JournalEntity journalEntity = new JournalEntity();
             journalEntity.setPostTime(System.currentTimeMillis());
             journalEntity.setLocation(HmsWeatherService.getLocation());
@@ -125,7 +125,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             try {
                 for (int i = 0; i < _data.size(); i ++)
                     // 将图片数据拷贝到com.starstudio.projectdemo对应的目录下
-                    destArray.add(FileUtil.copyFromPath(_data.get(i)));
+                    destArray.add(FileUtil.copyFromPath(_data.get(i), ((JournalEditActivity)getActivity()).classifications.get(i)));
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "IO错误，添加失败！", Toast.LENGTH_SHORT).show();
@@ -241,7 +241,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                         public void onResult(List<LocalMedia> result) {
                             ArrayList<String> data = new ArrayList<>();
                             for (int i = 0; i < result.size(); i ++) {
-                                data.add(result.get(i).getRealPath());
+                                String path = result.get(i).getRealPath();
+                                data.add(path);
+                                HmsClassificationService.classify(path, ((JournalEditActivity)getActivity()).classifications);
                             }
                             // 将选择好的图片添加到Adapter中
                             addImgAdapter.append(data);

@@ -10,8 +10,7 @@
         android:id="@+id/JournalFragment"
         android:name="com.starstudio.projectdemo.JournalFragment"
         android:label="journal_fragment"
-        tools:layout="@layout/fragment_journal">
-    </fragment>
+        tools:layout="@layout/fragment_journal"/>
 
     <fragment
         android:id="@+id/AccountFragment"

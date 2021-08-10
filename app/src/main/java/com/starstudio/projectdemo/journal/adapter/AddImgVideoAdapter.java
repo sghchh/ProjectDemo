@@ -94,8 +94,6 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
                 imgView.setImageBitmap(bitmap);
                 imgView.setTag(ItemType.OTHER);
             }
-
-
         }
 
         protected void setClickListener(OnItemClickListener clickListener, int position) {

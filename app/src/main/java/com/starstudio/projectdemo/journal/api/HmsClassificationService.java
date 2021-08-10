@@ -1,6 +1,7 @@
 package com.starstudio.projectdemo.journal.api;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.huawei.hmf.tasks.OnFailureListener;
@@ -15,23 +16,43 @@ import com.huawei.hms.mlsdk.common.MLException;
 import com.huawei.hms.mlsdk.common.MLFrame;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
+/**
+ * created by sgh
+ * 2021-8-7
+ * 进行图像分类任务
+ */
 public class HmsClassificationService {
+    // 对相册识别分类
+    public static final HashMap<String,String> CORE_CLASSIFICATION = new HashMap(){{
+        put("Human", "人物");
+        put("Plant", "植物");
+        put("Wildlife", "动物");
+        put("Building", "建筑");
+        put("Food", "食物");
+        put("Landscape", "风景");
+        put("Screenshot", "截图");
+        put("Street", "街道");
+        put("Selfie", "自拍");
+        put("Other", "其他");
+    }};
     private static final String TAG = "classification";
     private static MLImageClassificationAnalyzer analyzer;
     public static void init() {
         MLRemoteClassificationAnalyzerSetting setting =
                 new MLRemoteClassificationAnalyzerSetting.Factory()
-                        .setMinAcceptablePossibility(0.8f)
-                        .setLargestNumOfReturns(1)
+                        .setMinAcceptablePossibility(0.8f)   // 设置置信度阈值
+                        .setLargestNumOfReturns(1)    // 设置返回的标签个数
                         .create();
         analyzer = MLAnalyzerFactory.getInstance().getRemoteImageClassificationAnalyzer(setting);
-        //analyzer = MLAnalyzerFactory.getInstance().getLocalImageClassificationAnalyzer();
     }
 
-    public static void classify(Bitmap bitmap) {
+    public static void classify(String path, List<String> collection) {
         Log.e(TAG, "classify: 调用了识别方法+++++++++++++++++++++++");
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
         MLFrame frame = MLFrame.fromBitmap(bitmap);
         Task<List<MLImageClassification>> task = analyzer.asyncAnalyseFrame(frame);
         task.addOnSuccessListener(new OnSuccessListener<List<MLImageClassification>>() {
@@ -43,6 +64,16 @@ public class HmsClassificationService {
                     Log.e(TAG, "----------识别的结果是"+classifications.get(i).getClassificationIdentity());
                     Log.e(TAG, "----------识别的结果是"+classifications.get(i).getName());
                 }
+                if (classifications.size() == 0)
+                    collection.add("其他");
+                else {
+                    String typeName = classifications.get(0).getName();
+                    if (CORE_CLASSIFICATION.containsKey(typeName))
+                        collection.add(CORE_CLASSIFICATION.get(typeName));
+                    else
+                        collection.add("其他");
+                }
+
                 if (analyzer != null) {
                     try {
                         analyzer.stop();
@@ -55,13 +86,10 @@ public class HmsClassificationService {
             @Override
             public void onFailure(Exception e) {
                 Log.e(TAG, "识别错误=============================");
-                // 识别失败。
-                // Recognition failure.
+                collection.add("其他");
                 try {
                     MLException mlException = (MLException)e;
-                    // 获取错误码，开发者可以对错误码进行处理，根据错误码进行差异化的页面提示。
                     int errorCode = mlException.getErrCode();
-                    // 获取报错信息，开发者可以结合错误码，快速定位问题。
                     String errorMessage = mlException.getMessage();
                 } catch (Exception error) {
                     // 转换错误处理。

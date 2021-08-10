@@ -22,7 +22,6 @@ import java.util.Map;
  * HMS获取天气与定位的简单封装
  */
 public class HmsWeatherService {
-
     private WeatherSituation weatherSituation;   // hms提供的类，封装天气请求返回结果
     private CaptureClient client;         // hms内部类，发起天气请求
     private volatile static HmsWeatherService serviceImpl;
