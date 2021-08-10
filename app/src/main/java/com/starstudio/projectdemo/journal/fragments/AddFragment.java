@@ -113,6 +113,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             JournalEntity journalEntity = new JournalEntity();
             journalEntity.setPostTime(System.currentTimeMillis());
             journalEntity.setLocation(HmsWeatherService.getLocation());
+            journalEntity.setWeather(HmsWeatherService.getWeather());
             journalEntity.setMonth(OtherUtil.getSystemMonth()+"月"+OtherUtil.getSystemDay()+"日");
             journalEntity.setWeek(OtherUtil.getSystemWeek());
             journalEntity.setContent(binding.contentAdd.getText().toString());
@@ -127,7 +128,6 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
                         @Override
                         public void onComplete() {
-                            Log.e("rxjava2", "onComplete: 插入数据执行完毕");
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
                             getActivity().finish();
@@ -135,7 +135,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
                         @Override
                         public void onError(@NotNull Throwable e) {
-                            Log.e("rxjava2", "onError: 插入数据失败");
+                            Toast.makeText(getContext(), "插入数据失败", Toast.LENGTH_SHORT).show();
                         }
                     });
 

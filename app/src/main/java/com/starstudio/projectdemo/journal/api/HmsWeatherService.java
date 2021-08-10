@@ -41,6 +41,9 @@ public class HmsWeatherService {
             }
         }
 
+        // 预获取地理信息、天气信息
+        HmsWeatherService.getWeather();
+        HmsWeatherService.getLocation();
     }
 
     public static String getWeather() {

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * created by sgh
  * 2021-8-5
- * 用来展示picture的页面
+ * 由“帖子详情“跳转过来用来展示picture的页面
  */
 public class ImageShowFragment extends Fragment {
     Fragment3JournalDetailImgShowBinding binding;
@@ -39,7 +39,7 @@ public class ImageShowFragment extends Fragment {
         binding.imageviewShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_item_detail);
                 navHost.getNavController().navigateUp();
             }
         });

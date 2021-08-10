@@ -2,8 +2,6 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,27 +14,18 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.hms.image.vision.B;
-import com.huawei.hms.videoeditor.sdk.p.H;
 import com.starstudio.projectdemo.databinding.Fragment2JourBinding;
 import com.starstudio.projectdemo.journal.activity.JournalItemDetailActivity;
 import com.starstudio.projectdemo.journal.adapter.JourAdapter;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
-import com.starstudio.projectdemo.journal.api.JournalDatabase;
-import com.starstudio.projectdemo.journal.data.JourData;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
-import com.starstudio.projectdemo.utils.HandlerHelper;
 
 import org.jetbrains.annotations.NotNull;
-import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.FlowableSubscriber;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * created by sgh 2021-7-29

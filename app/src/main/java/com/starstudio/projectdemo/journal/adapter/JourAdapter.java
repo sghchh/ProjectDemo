@@ -1,12 +1,9 @@
 package com.starstudio.projectdemo.journal.adapter;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.journal.data.JourData;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.ContextHolder;
 
@@ -74,13 +70,14 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     }
 
     public static class JourHolder extends RecyclerView.ViewHolder {
-
+        private View layout;
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
         private final TextView week, date, location, content;
         private final ImageView weather;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
+            layout = itemView;
             imgGrid = (RecyclerView) itemView.findViewById(R.id.imgs_recycler);
             week = (TextView)itemView.findViewById(R.id.week);
             date = (TextView)itemView.findViewById(R.id.date);
@@ -100,29 +97,21 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             int coloum = Math.min(data.getPictureArray().size(), 3);
             if (coloum == 0) {
                 this.imgGrid.setVisibility(View.GONE);
-                return;
             } else {
                 this.imgGrid.setVisibility(View.VISIBLE);
+                this.imgGrid.setNestedScrollingEnabled(false);
+                this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
+                this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
+                this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
             }
 
-
-            this.imgGrid.setNestedScrollingEnabled(false);
-            this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
-            this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
-            this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
-            this.content.setOnClickListener(new View.OnClickListener() {
+            this.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    listener.onJourItemClick(view, data);
+                public void onClick(View v) {
+                    listener.onJourItemClick(v, data);
                 }
             });
 
-            this.imgGrid.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onJourItemClick(view, data);
-                }
-            });
         }
     }
 

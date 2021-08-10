@@ -1,32 +1,25 @@
 package com.starstudio.projectdemo.journal.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.starstudio.projectdemo.databinding.Activity2JournalEditBinding;
-import com.starstudio.projectdemo.journal.data.JourData;
+import com.starstudio.projectdemo.databinding.Activity2JournalItemDetailBinding;
+import com.starstudio.projectdemo.journal.data.JournalEntity;
 
 
 public class JournalItemDetailActivity extends AppCompatActivity {
-    private Activity2JournalEditBinding binding;
-    public JourData data;
+    private Activity2JournalItemDetailBinding binding;
+    public JournalEntity data;
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = Activity2JournalEditBinding.inflate(getLayoutInflater());
-        configView();
+        data = (JournalEntity) getIntent().getBundleExtra("data").getSerializable("jourData");
+        binding = Activity2JournalItemDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-    }
-
-    private void configView() {
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setTitle("详情");
-        data = (JourData) getIntent().getBundleExtra("data").getSerializable("jourData");
-
     }
 
     @Override

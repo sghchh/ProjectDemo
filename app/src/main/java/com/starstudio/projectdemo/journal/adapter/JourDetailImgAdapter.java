@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.journal.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +11,22 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdapter.DetailImgHolder> {
 
-    private String[] pictures;
+    private List<String> pictures;
     private OnDetailItemClickListener listener;
 
-    public JourDetailImgAdapter(String[] data) {
+    public JourDetailImgAdapter(List<String> data) {
         this.pictures = data;
+        Log.e("JourDetailImgAdapter", "JourDetailImgAdapter: 详情页面获取到的图片为"+new Gson().toJson(data));
     }
 
     public void setItemClickListener(OnDetailItemClickListener listener){
@@ -38,12 +43,12 @@ public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdap
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JourDetailImgAdapter.DetailImgHolder holder, int position) {
-        holder.loadData(pictures[position], listener);
+        holder.loadData(pictures.get(position), listener);
     }
 
     @Override
     public int getItemCount() {
-        return pictures.length;
+        return pictures.size();
     }
 
 
@@ -52,12 +57,13 @@ public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdap
 
         DetailImgHolder(@NonNull @NotNull View itemView) {
             super(itemView);
-            imageView = (ImageView)itemView.getTag(R.id.img);
+            imageView = (ImageView)itemView.findViewById(R.id.img);
         }
 
         protected void loadData(String path, OnDetailItemClickListener listener) {
             Bitmap bitmap = BitmapFactory.decodeFile(path);
             imageView.setImageBitmap(OtherUtil.scaleSquare(bitmap));
+            imageView.setAdjustViewBounds(true);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
