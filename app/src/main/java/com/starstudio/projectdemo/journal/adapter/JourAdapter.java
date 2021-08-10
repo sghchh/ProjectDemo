@@ -38,7 +38,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     public JourAdapter() { }
 
-    public void append(List<JournalEntity> append) {
+    public void reset(List<JournalEntity> append) {
+        this.data.clear();
         this.data.addAll(append);
         this.notifyDataSetChanged();
     }

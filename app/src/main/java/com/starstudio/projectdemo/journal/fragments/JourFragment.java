@@ -63,7 +63,8 @@ public class JourFragment extends Fragment implements JourAdapter.OnJourItemClic
                     @Override
                     public void onNext(List<JournalEntity> journalEntities) {
                         Log.e("RxJava2", "onNext: 执行了RxJava的onNext方法");
-                        adapter.append(journalEntities);
+                        adapter.reset(journalEntities);
+                        binding.recycler.scrollToPosition(journalEntities.size() - 1);
                     }
 
                     @Override
