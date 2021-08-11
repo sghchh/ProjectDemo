@@ -19,16 +19,21 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.MainActivity;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3JournalItemDetailBinding;
+import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.activity.JournalItemDetailActivity;
+import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.JourDetailImgAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
@@ -106,15 +111,46 @@ public class JournalItemDetailFragment extends Fragment implements JourDetailImg
         binding.date.setText(data.getMonth());
         binding.location.setText(data.getLocation());
         binding.week.setText(data.getWeek());
-        binding.content.setText(data.getContent());
-        if (data.getPictureArray().size() == 0)
+
+        // 展示文本内容
+        if (data.getContent() != null) {
+            binding.content.setVisibility(View.VISIBLE);
+            binding.content.setText(data.getContent());
+        }
+
+        // 展示图片内容
+        if (data.getPictureArray().size() != 0) {
+            binding.imgRecycler.setVisibility(View.VISIBLE);
+            int columns = Math.min(data.getPictureArray().size(), 3);
+            JourDetailImgAdapter adapter = new JourDetailImgAdapter(data.getPictureArray());
+            adapter.setItemClickListener(this::onItemClick);
+            binding.imgRecycler.setAdapter(adapter);
+            binding.imgRecycler.setLayoutManager(new GridLayoutManager(getActivity(), columns, RecyclerView.VERTICAL, false));
+            binding.imgRecycler.addItemDecoration(new RecyclerGridDivider(10));
             return;
-        int columns = Math.min(data.getPictureArray().size(), 3);
-        JourDetailImgAdapter adapter = new JourDetailImgAdapter(data.getPictureArray());
-        adapter.setItemClickListener(this::onItemClick);
-        binding.imgRecycler.setAdapter(adapter);
-        binding.imgRecycler.setLayoutManager(new GridLayoutManager(getActivity(), columns, RecyclerView.VERTICAL, false));
-        binding.imgRecycler.addItemDecoration(new RecyclerGridDivider(10));
+        }
+
+        // 展示视频预览
+        if (data.getVideo() != null) {
+            binding.journalDetailVideoRoot.setVisibility(View.VISIBLE);
+            File pic = new File(data.getVideo());
+            GlideEngine.createGlideEngine().loadImage(getActivity(), data.getVideo(), binding.journalDetailVideoPre);
+            //Glide.with(binding.journalDetailVideoPre.getContext()).load(pic).centerInside().load(binding.journalDetailVideoPre);
+            binding.journalDetailVideoPre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), JournalVideoActivity.class);
+                    intent.putExtra("videoPath", data.getVideo());
+                    startActivity(intent);
+                }
+            });
+        }
+
+        //展示音频
+        if (data.getAudio() != null) {
+
+        }
+
     }
 
     @Override

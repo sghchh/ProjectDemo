@@ -2,10 +2,11 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,8 +36,7 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment2AddJourBinding;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
-import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
-import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
+import com.starstudio.projectdemo.journal.adapter.AddPictureAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
@@ -62,11 +63,12 @@ import io.reactivex.disposables.Disposable;
  * 2021-7-31
  * “写日记”页面
  */
-public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemClickListener{
+public class AddFragment extends Fragment implements AddPictureAdapter.OnItemClickListener{
     private Fragment2AddJourBinding binding;
-    private AddImgVideoAdapter addImgAdapter;
+    private AddPictureAdapter addImgAdapter;
     private JournalDaoService daoService;
     private JournalEditActivityData editActivityData;
+    private PopupWindow pop;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -170,96 +172,117 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // 之后配置RecyclerView
-        addImgAdapter = new AddImgVideoAdapter(editActivityData.getPictures(),this::onItemClick);
+        addImgAdapter = new AddPictureAdapter(editActivityData.getPictures(),this::onItemClick);
 
         binding.recyclerAddImg.setAdapter(addImgAdapter);
-        binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
         binding.recyclerAddImg.setLayoutManager(new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false));
         binding.recyclerAddImg.addItemDecoration(new RecyclerGridDivider(5));
 
-        // 添加点击事件选择视频文件
-        binding.imageviewAddVideo.setOnClickListener(new View.OnClickListener() {
+        binding.imageviewAddMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editActivityData.getVideoPath() != null) {
-                    NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
-                    navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_VideoPreviewFragment);
-                    return;
-                }
-                PictureSelector.create(getActivity())
-                        .openGallery(PictureMimeType.ofVideo())
-                        .selectionMode(PictureConfig.SINGLE)
-                        .imageEngine(GlideEngine.createGlideEngine())
-                        .maxVideoSelectNum(1)
-                        .filterMaxFileSize(100000)  // 视频上限100MB
-                        .imageSpanCount(3)
-                        .forResult(new OnResultCallbackListener<LocalMedia>() {
-                            @Override
-                            public void onResult(List<LocalMedia> result) {
-                                String videoPath = result.get(0).getRealPath();
-                                editActivityData.setVideoPath(videoPath);
-                                binding.imageviewAddVideo.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
-                                binding.imageviewAddVideo.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                                GlideEngine.createGlideEngine().loadImage(getActivity(), videoPath, binding.imageviewAddVideo);
+                showPop();
+            }
+        });
 
-                                // 添加了视频，所以需要关闭一些页面元素
-                                cloasAddMedia();
-                            }
-
-                            @Override
-                            public void onCancel() {
-
-                            }
-                        });
+        binding.addJournalVideoPre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+                navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_VideoPreviewFragment);
             }
         });
     }
 
     /**
-     * 为RecyclerView中的每一个item添加点击事件
-     * @param view
+     * 调用PictureSelector选择图片
      */
-    @Override
-    public void onItemClick(View view, int curPosition) {
+    private void selectPicture(){
         // 首先检查并申请sd卡权限
         RequestPermission.getInstance().checkPermissions(RequestPermission.CODE_SIMPLE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA);
 
-        if (((AddImgVideoAdapter.ItemType)view.getTag()).equals(AddImgVideoAdapter.ItemType.FIRST)) {
+        // 选择图片或者拍照
+        PictureSelector.create(getActivity())
+                .openGallery(PictureMimeType.ofImage())
+                .imageEngine(GlideEngine.createGlideEngine())
+                .imageSpanCount(4)
+                .maxSelectNum(Integer.MAX_VALUE)
+                .filterMaxFileSize(5000)   // 单张图片上限 5MB
+                .selectionMode(PictureConfig.MULTIPLE)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        ArrayList<JournalEditActivityData.PictureWithCategory> data = new ArrayList<>();
+                        for (int i = 0; i < result.size(); i ++) {
+                            String path = result.get(i).getRealPath();
+                            data.add(new JournalEditActivityData.PictureWithCategory());
+                            data.get(i).setPicturePath(path);
+
+                            HmsClassificationService.classify(data.get(i));
+
+                        }
+                        // 将选择好的图片添加到Adapter中
+                        addImgAdapter.append(data);
+
+                        // 如果添加了图片，那么不可再“添加视频”与“添加音频”
+                        checkAddMediaVisibility();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+    }
+
+    /**
+     * 调用PictureSelector选择视频文件
+     */
+    private void selectVideo() {
+        PictureSelector.create(getActivity())
+                .openGallery(PictureMimeType.ofVideo())
+                .selectionMode(PictureConfig.SINGLE)
+                .imageEngine(GlideEngine.createGlideEngine())
+                .maxVideoSelectNum(1)
+                .filterMaxFileSize(100000)  // 视频上限100MB
+                .imageSpanCount(3)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        String videoPath = result.get(0).getRealPath();
+                        editActivityData.setVideoPath(videoPath);
+                        GlideEngine.createGlideEngine().loadImage(getActivity(), videoPath, binding.addJournalVideoPre);
+
+                        // 添加了视频，所以需要关闭一些页面元素
+                        checkAddMediaVisibility();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+    }
+
+    /**
+     * 调用PictureSelector选择音频文件
+     */
+    private void selectAudio() {
+
+    }
+
+    /**
+     * 为展示图片的RecyclerView中的每一个item添加点击事件
+     * @param view
+     */
+    @Override
+    public void onItemClick(View view, int curPosition) {
+        if (((AddPictureAdapter.ItemType)view.getTag()).equals(AddPictureAdapter.ItemType.FIRST)) {
             // 选择图片或者拍照
-            PictureSelector.create(getActivity())
-                    .openGallery(PictureMimeType.ofImage())
-                    .imageEngine(GlideEngine.createGlideEngine())
-                    .imageSpanCount(4)
-                    .maxSelectNum(Integer.MAX_VALUE)
-                    .filterMaxFileSize(5000)   // 单张图片上限 5MB
-                    .selectionMode(PictureConfig.MULTIPLE)
-                    .forResult(new OnResultCallbackListener<LocalMedia>() {
-                        @Override
-                        public void onResult(List<LocalMedia> result) {
-                            ArrayList<JournalEditActivityData.PictureWithCategory> data = new ArrayList<>();
-                            for (int i = 0; i < result.size(); i ++) {
-                                String path = result.get(i).getRealPath();
-                                data.add(new JournalEditActivityData.PictureWithCategory());
-                                data.get(i).setPicturePath(path);
-
-                                HmsClassificationService.classify(data.get(i));
-
-                            }
-                            // 将选择好的图片添加到Adapter中
-                            addImgAdapter.append(data);
-
-                            // 如果添加了图片，那么不可再“添加视频”与“添加音频”
-                            cloasAddMedia();
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    });
+            selectPicture();
         } else {
             // 添加点击事件，跳转到ImagePreviewFragment
             editActivityData.setCurrentPostion(editActivityData.getPictures().size() - 1 - curPosition);  // 因为显示的顺序是反的，所以要反过来
@@ -268,42 +291,117 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         }
     }
 
-    // 根据JournalEditActivity中数据的状态来确定关闭一些view
-    private void cloasAddMedia() {
-        if (editActivityData.getPictures().size() > 0) { // 说明添加了图片，则禁止再添加视频与音频
-            binding.addJourAddVideoTxt.setVisibility(View.GONE);
-            binding.addJourAddAudioTxt.setVisibility(View.GONE);
-            binding.imageviewAddVideo.setVisibility(View.GONE);
-        } else if (editActivityData.getVideoPath() != null) {   // 说明添加了视频，则禁止再添加图片与音频
-            binding.addJourAddPicTxt.setVisibility(View.GONE);
-            binding.recyclerAddImg.setVisibility(View.GONE);
-            binding.addJourAddAudioTxt.setVisibility(View.GONE);
-        } else if (editActivityData.getAudioPath() != null){                               // 说明添加了音频，则禁止再添加视频与图片
-            binding.addJourAddVideoTxt.setVisibility(View.GONE);
-            binding.imageviewAddVideo.setVisibility(View.GONE);
-            binding.addJourAddPicTxt.setVisibility(View.GONE);
-            binding.recyclerAddImg.setVisibility(View.GONE);
+
+    private void showPop() {
+        View bottomView = View.inflate(getActivity(), R.layout.layout_bottom_dialog, null);
+        TextView mAlbum = bottomView.findViewById(R.id.tv_album);
+        TextView mVideo = bottomView.findViewById(R.id.tv_video);
+        TextView mAudio = bottomView.findViewById(R.id.tv_audio);
+        TextView mCancel = bottomView.findViewById(R.id.tv_cancel);
+
+        pop = new PopupWindow(bottomView, -1, -2);
+        pop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pop.setOutsideTouchable(true);
+        pop.setFocusable(true);
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = 0.5f;
+        getActivity().getWindow().setAttributes(lp);
+        pop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+                lp.alpha = 1f;
+                getActivity().getWindow().setAttributes(lp);
+            }
+        });
+        pop.setAnimationStyle(R.style.main_menu_photo_anim);
+        pop.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.tv_album:   // 图片
+                        selectPicture();
+                        break;
+                    case R.id.tv_video:    //视频
+                        selectVideo();
+                        break;
+                    case R.id.tv_audio:    // 音频
+                        selectAudio();
+                        break;
+                }
+                closePopupWindow();
+            }
+        };
+
+        mAlbum.setOnClickListener(clickListener);
+        mVideo.setOnClickListener(clickListener);
+        mAudio.setOnClickListener(clickListener);
+        mCancel.setOnClickListener(clickListener);
+    }
+
+    // 关闭弹窗
+    public void closePopupWindow() {
+        if (pop != null && pop.isShowing()) {
+            pop.dismiss();
+            pop = null;
         }
     }
 
     /**
-     * 当从各个媒体内容编辑页面返回来时，可能存在删除添加媒体内容的操作
+     * 1. 当从各个媒体内容编辑页面返回来时，可能存在删除添加媒体内容的操作
      * 该方法检查是否需要重新show一些View元素
      * 在onStart中被调用
+     * 2. 当添加完某一种媒体文件之后，可能会存在需要重新更改显示内容的情况
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void checkAddMediaVisibility() {
-        JournalEditActivity activity = (JournalEditActivity) getActivity();
-        if (editActivityData.getPictures().size() == 0 && editActivityData.getVideoPath() == null && editActivityData.getAudioPath() == null) {
-            binding.addJourAddVideoTxt.setVisibility(View.VISIBLE);
-            binding.addJourAddAudioTxt.setVisibility(View.VISIBLE);
-            binding.imageviewAddVideo.setVisibility(View.VISIBLE);
-            binding.addJourAddPicTxt.setVisibility(View.VISIBLE);
+        if(editActivityData.getPictures().size() > 0) {  // 说明添加了图片，则其他的设置为GONE
+            binding.addJourPicTxt.setVisibility(View.VISIBLE);
             binding.recyclerAddImg.setVisibility(View.VISIBLE);
 
-            binding.imageviewAddVideo.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            binding.imageviewAddVideo.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            binding.imageviewAddVideo.setImageDrawable(activity.getDrawable(R.drawable.add_big));
+            binding.imageviewAddMedia.setVisibility(View.GONE);
+            binding.addJourMediaTxt.setVisibility(View.GONE);
+
+            binding.addJournalVideoRoot.setVisibility(View.GONE);
+            binding.addJourVideoTxt.setVisibility(View.GONE);
+
+            binding.addJourAudioTxt.setVisibility(View.GONE);
+        } else if (editActivityData.getVideoPath() != null) {
+            binding.addJournalVideoRoot.setVisibility(View.VISIBLE);
+            binding.addJourVideoTxt.setVisibility(View.VISIBLE);
+
+            binding.imageviewAddMedia.setVisibility(View.GONE);
+            binding.addJourMediaTxt.setVisibility(View.GONE);
+
+            binding.addJourPicTxt.setVisibility(View.GONE);
+            binding.recyclerAddImg.setVisibility(View.GONE);
+
+            binding.addJourAudioTxt.setVisibility(View.GONE);
+        } else if (editActivityData.getAudioPath() != null) {
+            binding.addJourAudioTxt.setVisibility(View.VISIBLE);
+
+            binding.imageviewAddMedia.setVisibility(View.GONE);
+            binding.addJourMediaTxt.setVisibility(View.GONE);
+
+            binding.addJourPicTxt.setVisibility(View.GONE);
+            binding.recyclerAddImg.setVisibility(View.GONE);
+
+            binding.addJournalVideoRoot.setVisibility(View.GONE);
+            binding.addJourVideoTxt.setVisibility(View.GONE);
+        } else {
+            binding.imageviewAddMedia.setVisibility(View.VISIBLE);
+            binding.addJourMediaTxt.setVisibility(View.VISIBLE);
+
+            binding.addJourPicTxt.setVisibility(View.GONE);
+            binding.recyclerAddImg.setVisibility(View.GONE);
+
+            binding.addJournalVideoRoot.setVisibility(View.GONE);
+            binding.addJourVideoTxt.setVisibility(View.GONE);
+
+            binding.addJourAudioTxt.setVisibility(View.GONE);
         }
     }
 }

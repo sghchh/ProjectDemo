@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,12 +13,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
+import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.ContextHolder;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +81,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
         private final TextView week, date, location, content;
-        private final ImageView weather;
+        private final ImageView weather, videoImg;
+        private final FrameLayout videoRoot;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             layout = itemView;
@@ -87,6 +92,9 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             weather = (ImageView) itemView.findViewById(R.id.weather);
             content = (TextView)itemView.findViewById(R.id.content);
             location = (TextView)itemView.findViewById(R.id.location);
+
+            videoImg = (ImageView)itemView.findViewById(R.id.journal_video_pre);
+            videoRoot = (FrameLayout) itemView.findViewById(R.id.journal_video_root);
         }
 
         public void setListener(OnJourItemClickListener listener) {
@@ -109,6 +117,13 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
                 this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
                 this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
+            }
+
+            if (data.getVideo() == null) {
+                videoRoot.setVisibility(View.GONE);
+            } else {
+                videoRoot.setVisibility(View.VISIBLE);
+                GlideEngine.createGlideEngine().loadImage(videoImg.getContext(), data.getVideo(), videoImg);
             }
 
             this.layout.setOnClickListener(new View.OnClickListener() {

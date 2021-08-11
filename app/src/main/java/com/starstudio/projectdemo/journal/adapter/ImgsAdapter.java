@@ -86,7 +86,7 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
             // https://blog.csdn.net/qq_36419317/article/details/54836142?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control
             img.setAdjustViewBounds(true);
             if (last > 0) {
-                img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
+                img.setForeground(img.getContext().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
                 txt.setText("+" + last);
             }
