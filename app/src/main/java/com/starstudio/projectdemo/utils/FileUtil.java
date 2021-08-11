@@ -4,24 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.util.Log;
 
-import com.google.gson.Gson;
-import com.huawei.hms.image.vision.A;
-import com.huawei.hms.videoeditor.sdk.p.S;
 import com.starstudio.projectdemo.journal.data.AlbumData;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
-import org.luaj.vm2.ast.Str;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.PermissionCollection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

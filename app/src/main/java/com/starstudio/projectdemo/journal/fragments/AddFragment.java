@@ -43,7 +43,6 @@ import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
-import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;

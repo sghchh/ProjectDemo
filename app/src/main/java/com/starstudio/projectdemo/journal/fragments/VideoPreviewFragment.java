@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.databinding.Activity2JournalVideoBinding;
 import com.starstudio.projectdemo.databinding.Fragment3PreviewVideoBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;

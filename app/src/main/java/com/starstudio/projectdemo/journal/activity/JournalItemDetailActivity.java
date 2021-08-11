@@ -1,7 +1,6 @@
 package com.starstudio.projectdemo.journal.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

@@ -1,7 +1,6 @@
 package com.starstudio.projectdemo.journal.adapter;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PagerPreviewAdapter extends PagerAdapter {

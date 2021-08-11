@@ -4,29 +4,17 @@ import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.huawei.hms.image.vision.C;
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.databinding.Activity2JournalVideoBinding;
-import com.starstudio.projectdemo.journal.api.HmsVideoService;
+import com.starstudio.projectdemo.databinding.Activity3JournalVideoBinding;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 /**
@@ -42,7 +30,7 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
         MediaPlayer.OnSeekCompleteListener,
         MediaPlayer.OnVideoSizeChangedListener,
         SeekBar.OnSeekBarChangeListener{
-    private Activity2JournalVideoBinding binding;
+    private Activity3JournalVideoBinding binding;
     private String videoPath;
 
     private MediaPlayer mPlayer;
@@ -262,7 +250,7 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
 
 
     private void configView() {
-        binding = Activity2JournalVideoBinding.inflate(getLayoutInflater());
+        binding = Activity3JournalVideoBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
     }

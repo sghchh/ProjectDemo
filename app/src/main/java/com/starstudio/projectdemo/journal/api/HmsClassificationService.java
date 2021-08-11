@@ -10,7 +10,6 @@ import com.huawei.hmf.tasks.Task;
 import com.huawei.hms.mlsdk.MLAnalyzerFactory;
 import com.huawei.hms.mlsdk.classification.MLImageClassification;
 import com.huawei.hms.mlsdk.classification.MLImageClassificationAnalyzer;
-import com.huawei.hms.mlsdk.classification.MLLocalClassificationAnalyzerSetting;
 import com.huawei.hms.mlsdk.classification.MLRemoteClassificationAnalyzerSetting;
 import com.huawei.hms.mlsdk.common.MLException;
 import com.huawei.hms.mlsdk.common.MLFrame;
@@ -18,7 +17,6 @@ import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /**

@@ -5,14 +5,12 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.huawei.hms.image.vision.A;
 import com.starstudio.projectdemo.databinding.Activity2JournalEditBinding;
 import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
-import java.util.ArrayList;
 
 public class JournalEditActivity extends AppCompatActivity {
     Activity2JournalEditBinding binding;
