@@ -149,7 +149,7 @@ public class AccoFragment extends BaseFragment {
 
     }
 
-    public void classifyData(ArrayList<AccoEntity> data){
+    private void classifyData(ArrayList<AccoEntity> data){
         mClassifyData.clear();
         String year = "", month = "", day = "";
         monthIncome = "0";

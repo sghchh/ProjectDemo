@@ -12,7 +12,9 @@ public class SharedPreferencesUtils {
     private static final String FILENAME="qrcode";
 
     public static enum Key{
-        KEY_IVINFO("ivInfo");
+        KEY_IVINFO("ivInfo"), KEY_BUDGET_EAT("budgetEat"), KEY_BUDGET_LEARN("budgetLearn"),
+        KEY_BUDGET_CLOTHES("budgetClothes"), KEY_BUDGET_COMMUN_TRANS("budgetCommunTrans"),
+        KEY_BUDGET_RELAX("budgetRelax"), KEY_BUDGET_OTHER("budgetOther");
         private final String text;
         private Key(final String text){
             this.text = text;
