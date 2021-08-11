@@ -7,7 +7,6 @@ import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.huawei.hms.videoeditor.sdk.p.S;
 
 import java.io.Serializable;

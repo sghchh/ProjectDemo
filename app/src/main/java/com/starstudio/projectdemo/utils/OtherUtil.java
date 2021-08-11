@@ -39,7 +39,7 @@ public class OtherUtil {
     }};
     private static final Gson gson = new Gson();
     @SuppressLint("SimpleDateFormat")
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-E");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-E");
 
     public static Bitmap decodeBitmapSafe(String path) {
         Bitmap res = null;
@@ -75,19 +75,168 @@ public class OtherUtil {
         return gson.toJson(json);
     }
 
+    public static String getSystemYear() {
+        String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
+        return ss[0];
+    }
+
+    public static String getSystemMonthToNumber() {
+        String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
+        return Integer.valueOf(ss[1]).toString();
+    }
+
     public static String getSystemMonth() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return monthToEng.get(Integer.valueOf(ss[0]));
+        return monthToEng.get(Integer.valueOf(ss[1]));
     }
 
     public static String getSystemDay() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return ss[1];
+        return ss[2];
     }
 
     public static String getSystemWeek() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return weekToEng.get(ss[2]);
+        return weekToEng.get(ss[3]);
+    }
+
+    /**
+     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
+     */
+    public static String bigNumberAdd(String f, String s){
+        System.out.print("加法:" + f + "+" + s + "=");
+        // 翻转两个字符串，并转换成数组
+        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+
+        // f 和 s 均为 0 时的特殊情况
+        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
+            return "0";
+        }
+
+        // 计算两个长字符串中的较长字符串的长度
+        int len = lenA > lenB ? lenA : lenB;
+        int[] result = new int[len + 1];
+        for (int i = 0; i < len + 1; i++) {
+            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            result[i] = aint + bint;
+        }
+        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+        for (int i = 0; i < result.length; i++) {
+            if (result[i] >= 10) {
+                result[i + 1] += result[i] / 10;
+                result[i] %= 10;
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        // 该字段用于标识是否有前置0，如果有就不要存储
+        boolean flag = true;
+        // 注意从后往前
+        for (int i = len; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+        // 结果
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+
+    /**
+     * 将用字符串表示的两个数字进行相减 (该方法默认字符串中不包含 "+" 或 ”-“ 号)，
+     */
+    public static String bigNumberSub(String f, String s) {
+        // 将字符串翻转并转换成字符数组
+        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+        // 找到最大长度
+        int len = lenA > lenB ? lenA : lenB;
+        int[] result = new int[len];
+        // 表示结果的正负
+        char sign = '+';
+        // 判断最终结果的正负
+        if (lenA < lenB) {
+            sign = '-';
+        } else if (lenA == lenB) {
+            int i = lenA - 1;
+            while (i > 0 && a[i] == b[i]) {
+                i--;
+            }
+            if (a[i] < b[i]) {
+                sign = '-';
+            }
+        }
+        // 计算结果集，如果最终结果为正，那么就a-b否则的话就b-a
+        for (int i = 0; i < len; i++) {
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            if (sign == '+') {
+                result[i] = aint - bint;
+            } else {
+                result[i] = bint - aint;
+            }
+        }
+        // 如果结果集合中的某一位小于零，那么就向前一位借一，然后将本位加上10。其实就相当于借位做减法
+        for (int i = 0; i < result.length - 1; i++) {
+            if (result[i] < 0) {
+                result[i + 1] -= 1;
+                result[i] += 10;
+            }
+        }
+
+        StringBuffer sb = new StringBuffer();
+        // 如果最终结果为负值，就将负号放在最前面，正号则不需要
+        if (sign == '-') {
+            sb.append('-');
+        }
+        // 判断是否有前置0
+        boolean flag = true;
+        for (int i = len - 1; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+        // 如果最终结果集合中没有值，就说明是两值相等，最终返回0
+        if (sb.toString().equals("")) {
+            sb.append("0");
+        }
+        // 返回值
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    /**
+     * 将用字符串表示的两个数字相加减进行整合为一个方法便于调用 (该方法默认字符串中正数前面不带符号，负数第一位用"-"代表)
+     */
+    public static String bigNumberOperation(String f, String s){
+        String ans = "";
+
+        if(f == null || s == null){
+            return ans;
+        }
+        if(f.charAt(0) != '-' && s.charAt(0) != '-'){
+            ans =  bigNumberAdd(f,s);
+        }else if(f.charAt(0) == '-' && s.charAt(0) != '-'){
+            ans =  bigNumberSub(s,f.substring(1));
+        }else if(f.charAt(0) != '-' && s.charAt(0) == '-'){
+            ans =  bigNumberSub(f, s.substring(1));
+        }else if(f.charAt(0) == '-' && s.charAt(0) == '-'){
+            ans =  "-" + bigNumberAdd(f.substring(1),s.substring(1));
+        }
+        return ans;
     }
 
     /**

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +19,7 @@ import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.room.Room;
 
 import com.huawei.hms.mlplugin.asr.MLAsrCaptureActivity;
 import com.huawei.hms.mlplugin.asr.MLAsrCaptureConstants;
@@ -40,6 +44,9 @@ import com.huawei.hms.mlsdk.common.MLApplication;
 import com.huawei.hms.mlsdk.speechrtt.MLSpeechRealTimeTranscription;
 import com.starstudio.projectdemo.Custom.EditTextWithText;
 import com.starstudio.projectdemo.R;
+import com.starstudio.projectdemo.account.api.AccoDao;
+import com.starstudio.projectdemo.account.api.AccoDatabase;
+import com.starstudio.projectdemo.account.data.AccoEntity;
 import com.starstudio.projectdemo.utils.HandlerHelper;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
@@ -48,6 +55,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+
 public class AccoAddFragment extends DialogFragment implements View.OnClickListener {
 
     private EditTextWithText etwtKind, etwtMoney;
@@ -55,21 +63,48 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private ImageView ivVoice, ivCancle;
     private TextView tvExpense, tvIncome, tvCancel, tvSave;
     private MLSpeechRealTimeTranscription mSpeechRecognizer;
+    private AccoDatabase mAccoDatabase;
+    private AccoDao mAccoDao;
+    private LocalBroadcastManager mLocalBroadcastManager ;
+
     private static final int AUDIO_PERMISSION_CODE = 1;
     // Permission
-    private static final String[] ALL_PERMISSION = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final String[] ALL_PERMISSION = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     private static final int WRITE_PERMISSION_CODE = 0;
     public static final int ML_ASR_CAPTURE_CODE = 2;
     public static final String REAL_VOICE_SUCCESS = "success";
     public static final int REAL_VOICE_SUCCESS_CODE = 0;
+    private boolean isExpend = true;
+    private static final int HANDLE_INSERT_FINISH = 3;
 
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(@NonNull Message msg) {
+            switch (msg.what){
+                case HANDLE_INSERT_FINISH:
+//                    Log.e(getClass().getSimpleName(),"接收到了 HANDLE_INSERT_FINISH");
+                    Intent intent = new Intent("insert");
+                    mLocalBroadcastManager.sendBroadcast(intent);
+                    dismiss();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dialog_add_acco, container, false);
+        mAccoDatabase = Room.databaseBuilder(this.getContext(), AccoDatabase.class,"acco_database").build();
+        mAccoDao = mAccoDatabase.getAccoDao();
         initView(rootView);
         setAllOnClickListener();
         setDialogCancel();
+
+        //注册广播接收器
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext()) ;
+
+
         return rootView;
     }
 
@@ -143,17 +178,19 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         switch (v.getId()){
             case R.id.iv_voice_add:
                 startRealTimeVoice();
-                Toast.makeText(this.getContext(), "点击了语音按钮", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this.getContext(), "点击了语音按钮", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_cancel:
                 dismiss();
-                Toast.makeText(this.getContext(), "点击了叉叉按钮", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this.getContext(), "点击了叉叉按钮", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_expense:
+                isExpend = true;
                 tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
                 tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
                 break;
             case R.id.tv_income:
+                isExpend = false;
                 tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
                 tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
                 break;
@@ -161,15 +198,51 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 dismiss();
                 break;
             case R.id.tv_save:
-                dismiss();
+                saveData();
                 break;
         }
     }
 
+    private void saveData(){
+        final String kind = "";
+        final String kindDetail = "";
+        final String money = String.valueOf(etwtMoney.getText());
+        final String comment = String.valueOf(etComment.getText());
+
+//        if(kind.equals("")){
+//            Toast.makeText(getContext(),"请选择种类",Toast.LENGTH_LONG);
+//            return;
+//        }else if(money.equals("")){
+//            Toast.makeText(getContext(),"请填写金额",Toast.LENGTH_LONG);
+//            return;
+//        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(isExpend){
+                    mAccoDao.insertAccos(new AccoEntity(System.currentTimeMillis(),
+                            OtherUtil.getSystemYear(),OtherUtil.getSystemMonthToNumber(),OtherUtil.getSystemDay(),
+                            kind,kindDetail,comment,"-" + money));
+                }else{
+                    mAccoDao.insertAccos(new AccoEntity(System.currentTimeMillis(),
+                            OtherUtil.getSystemYear(),OtherUtil.getSystemMonthToNumber(),OtherUtil.getSystemDay(),
+                            kind,kindDetail,comment,money));
+                }
+
+                Message msg = new Message();
+                msg.what = HANDLE_INSERT_FINISH;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+
     private void startRealTimeVoice() {
         //                requestCameraPermission();
 //                speechRecognizer();
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
         }else{
             MLApplication.getInstance().setApiKey("CgB6e3x9c2tIlXQZdvRg9VeCfngxvAwbW5FpKsYs/7eW39cdgYZ90pxu2gM85yEp+f2zCFSTXy4CebF3cdcULMzc");

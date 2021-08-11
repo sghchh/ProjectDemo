@@ -114,6 +114,8 @@
             android:layout_weight="1"
             android:layout_marginLeft="16dp"
             android:background="@drawable/et_acco_add_comment"
+            android:inputType="text"
+            android:maxLines="1"
             android:hint="     添加备注"/>
 
         <ImageView

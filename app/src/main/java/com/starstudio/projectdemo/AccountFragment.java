@@ -18,13 +18,14 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.starstudio.projectdemo.account.BaseFragment;
 import com.starstudio.projectdemo.account.fragments.AccoAddFragment;
 import com.starstudio.projectdemo.account.fragments.PagerAdapter;
 import com.starstudio.projectdemo.databinding.FragmentAccountBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends BaseFragment {
     private final String[] TAGS = {"记账", "预算"};
     FragmentAccountBinding binding;
 
@@ -32,6 +33,7 @@ public class AccountFragment extends Fragment {
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container,savedInstanceState);
         binding = FragmentAccountBinding.inflate(inflater, container, false);
         configToolbar();
         return binding.getRoot();

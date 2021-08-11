@@ -1,8 +1,10 @@
 package com.starstudio.projectdemo.account.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.account.data.AccoData;
+import com.starstudio.projectdemo.account.data.AccoEntity;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,27 +41,34 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AccoAdapter.AccoHolder holder, int position) {
-        holder.loadData(null);
+        Log.e(getClass().getSimpleName(), "mData.get(position) = " + mData.get(position));
+        holder.loadData(mData.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        Log.e(getClass().getSimpleName(),"mData.size() = " + mData.size());
+        return mData.size();
     }
+
 
     static class AccoHolder extends RecyclerView.ViewHolder{
 
         private final RecyclerView recyclerDaily;
+        private final TextView tvDailyDate, tvCount;
 
         public AccoHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             recyclerDaily = (RecyclerView)itemView.findViewById(R.id.recycler_daily);
+            tvDailyDate = itemView.findViewById(R.id.tv_daily_date);
+            tvCount = itemView.findViewById(R.id.tv_count);
         }
 
         private void loadData(AccoData data){
-            this.recyclerDaily.setAdapter(new AccoDailyAdapter());
+            this.recyclerDaily.setAdapter(new AccoDailyAdapter(data));
             this.recyclerDaily.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-
+            tvDailyDate.setText(data.getmMonth() + "月" + data.getmDay() + "日");
+            tvCount.setText(data.getmCount());
         }
     }
 

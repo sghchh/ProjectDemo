@@ -14,6 +14,7 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/tv_daily_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="7月21日"
@@ -27,6 +28,7 @@
             android:layout_weight="1"/>
 
         <TextView
+            android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-200"
