@@ -1,40 +1,42 @@
-package com.starstudio.projectdemo.journal.activity;
+package com.starstudio.projectdemo.journal.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
-import com.huawei.hms.image.vision.C;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Activity2JournalVideoBinding;
-import com.starstudio.projectdemo.journal.api.HmsVideoService;
+import com.starstudio.projectdemo.databinding.Fragment3PreviewVideoBinding;
+import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.utils.OtherUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * created by sgh
  * 2021-8-11
- * 由“帖子详情”跳转过来观看video的界面
+ * 由“写日记”页面添加的视频跳转过来进行预览
  */
-public class JournalVideoActivity extends AppCompatActivity implements SurfaceHolder.Callback,
+public class VideoPreviewFragment extends Fragment implements SurfaceHolder.Callback,
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener,
         MediaPlayer.OnErrorListener,
@@ -42,9 +44,9 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
         MediaPlayer.OnSeekCompleteListener,
         MediaPlayer.OnVideoSizeChangedListener,
         SeekBar.OnSeekBarChangeListener{
-    private Activity2JournalVideoBinding binding;
-    private String videoPath;
 
+    private Fragment3PreviewVideoBinding binding;
+    private JournalEditActivityData data;
     private MediaPlayer mPlayer;
     private boolean isShow = false;
 
@@ -65,14 +67,19 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
             }
         }
     };
+
+    @Nullable
+    @org.jetbrains.annotations.Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        videoPath = getIntent().getStringExtra("videoPath");
+    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        data = ((JournalEditActivity)getActivity()).getEditActivityData();
+        setHasOptionsMenu(true);
+        binding = Fragment3PreviewVideoBinding.inflate(inflater, container, false);
         configView();
         initSurfaceView();
         initPlayer();
         initEvent();
+        return binding.getRoot();
     }
 
     private void initEvent() {
@@ -99,7 +106,7 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
         mPlayer.setOnVideoSizeChangedListener(this);
         try {
             //使用手机本地视频
-            mPlayer.setDataSource(videoPath);
+            mPlayer.setDataSource(data.getVideoPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -259,12 +266,32 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        inflater.inflate(R.menu.preview_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // 点击返回按钮，则返回上一级Fragment
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+            navHost.getNavController().navigateUp();
+        } else if (item.getItemId() == R.id.image_preview_delete) {
+            // 先删除，然后返回上一级Fragment
+            data.setVideoPath(null);
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+            navHost.getNavController().navigateUp();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void configView() {
-        binding = Activity2JournalVideoBinding.inflate(getLayoutInflater());
-
-        setContentView(binding.getRoot());
+        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
     }
 
     //改变视频的尺寸自适应。
@@ -294,5 +321,4 @@ public class JournalVideoActivity extends AppCompatActivity implements SurfaceHo
         params.addRule(RelativeLayout.CENTER_VERTICAL, binding.rlVideo.getId());
         binding.surfaceView.setLayoutParams(params);
     }
-
 }

@@ -64,7 +64,7 @@ public class JournalItemDetailFragment extends Fragment implements JourDetailImg
 
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
-        inflater.inflate(R.menu.image_preview_menu, menu);
+        inflater.inflate(R.menu.preview_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

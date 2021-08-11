@@ -1,8 +1,6 @@
 package com.starstudio.projectdemo.journal.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.huawei.hms.image.vision.B;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3PreviewImgsBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
@@ -67,7 +64,7 @@ public class ImagePreviewFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
-        inflater.inflate(R.menu.image_preview_menu, menu);
+        inflater.inflate(R.menu.preview_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

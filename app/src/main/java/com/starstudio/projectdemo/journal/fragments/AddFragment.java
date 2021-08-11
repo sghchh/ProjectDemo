@@ -128,6 +128,8 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                 return super.onOptionsItemSelected(item);
             }
             journalEntity.setPictureArray(destArray);
+            journalEntity.setVideo(editActivityData.getVideoPath());
+            journalEntity.setAudio(editActivityData.getAudioPath());
 
             daoService.insert(journalEntity)
                     .subscribe(new CompletableObserver() {
@@ -180,9 +182,8 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             @Override
             public void onClick(View v) {
                 if (editActivityData.getVideoPath() != null) {
-                    Intent intent = new Intent(getActivity(), JournalVideoActivity.class);
-                    intent.putExtra("videoPath", editActivityData.getVideoPath());
-                    startActivity(intent);
+                    NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+                    navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_VideoPreviewFragment);
                     return;
                 }
                 PictureSelector.create(getActivity())
