@@ -4,13 +4,27 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
+import com.google.gson.Gson;
+import com.huawei.hms.image.vision.A;
+import com.huawei.hms.videoeditor.sdk.p.S;
+import com.starstudio.projectdemo.journal.data.AlbumData;
+
+import org.luaj.vm2.ast.Str;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.PermissionCollection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FileUtil {
     @SuppressLint("SimpleDateFormat")
@@ -48,5 +62,58 @@ public class FileUtil {
             e.printStackTrace();
         }
         return save.getAbsolutePath();
+    }
+
+    public static String copyFromPath(String path, String type) throws IOException {
+        String[] _ss = path.split("/");
+        String finename = _ss[_ss.length - 1];
+        File save;
+        if (finename.endsWith(".mp4"))
+            save = new File(VIDEO_FILE, finename);
+        else {
+            save = new File(PICTURE_FILE + "/" + type);
+            if (!save.exists())
+                save.mkdir();   // 如果该类别的文件夹不存在，则先创建
+            save = new File(save.getAbsolutePath(), finename);
+        }
+        BufferedInputStream inputStream;
+        BufferedOutputStream outputStream;
+        inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
+        outputStream = new BufferedOutputStream(new FileOutputStream(save));
+        byte[] cache = new byte[1024];
+        while(inputStream.read(cache) != -1) {
+            outputStream.write(cache);
+        }
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+        return save.getAbsolutePath();
+    }
+
+    public static List<AlbumData> searchAlbumData() {
+        File directory = new File(PICTURE_FILE);
+        List<AlbumData> res = new ArrayList<>();
+        File[] albumFiles = directory.listFiles();
+        for (int i = 0; i < albumFiles.length; i ++) {
+            File album = albumFiles[i];
+            AlbumData data = new AlbumData();
+            if (album.listFiles().length == 0)
+                data.setCover(null);
+            else
+                data.setCover(album.listFiles()[0].getAbsolutePath());
+            data.setName(album.getName());
+            res.add(data);
+        }
+        return res;
+    }
+
+    public static String[] loadAlbumPictures(String albumName) {
+        File file = new File(PICTURE_FILE, albumName);
+        File[] files = file.listFiles();
+        String[] res = new String[files.length];
+        for (int i = 0; i < res.length; i ++) {
+            res[i] = files[i].getAbsolutePath();
+        }
+        return res;
     }
 }

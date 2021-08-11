@@ -1,13 +1,9 @@
 package com.starstudio.projectdemo.journal.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,8 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +21,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.bumptech.glide.Glide;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -41,27 +34,24 @@ import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.activity.JournalVideoActivity;
 import com.starstudio.projectdemo.journal.adapter.AddImgVideoAdapter;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
+import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
-import com.starstudio.projectdemo.journal.api.JournalDatabase;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
+import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.RequestPermission;
 
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.CompletableObserver;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * created by sgh
@@ -72,7 +62,6 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
     private JournalDaoService daoService;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -109,14 +98,27 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.send_jour) {
-            Toast.makeText(getActivity(), "点击了发表按钮", Toast.LENGTH_SHORT).show();
+
             JournalEntity journalEntity = new JournalEntity();
             journalEntity.setPostTime(System.currentTimeMillis());
             journalEntity.setLocation(HmsWeatherService.getLocation());
+            journalEntity.setWeather(HmsWeatherService.getWeather());
             journalEntity.setMonth(OtherUtil.getSystemMonth()+"月"+OtherUtil.getSystemDay()+"日");
             journalEntity.setWeek(OtherUtil.getSystemWeek());
             journalEntity.setContent(binding.contentAdd.getText().toString());
-            journalEntity.setPictureArray(addImgAdapter.getData());
+
+            List<String> _data = addImgAdapter.getData();
+            List<String> destArray = new ArrayList<>();
+            try {
+                for (int i = 0; i < _data.size(); i ++)
+                    // 将图片数据拷贝到com.starstudio.projectdemo对应的目录下
+                    destArray.add(FileUtil.copyFromPath(_data.get(i), ((JournalEditActivity)getActivity()).classifications.get(i)));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "IO错误，添加失败！", Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
+            }
+            journalEntity.setPictureArray(destArray);
 
             daoService.insert(journalEntity)
                     .subscribe(new CompletableObserver() {
@@ -127,7 +129,6 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
                         @Override
                         public void onComplete() {
-                            Log.e("rxjava2", "onComplete: 插入数据执行完毕");
                             Intent intent = new Intent(getActivity(), MainActivity.class);
                             startActivity(intent);
                             getActivity().finish();
@@ -135,7 +136,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
 
                         @Override
                         public void onError(@NotNull Throwable e) {
-                            Log.e("rxjava2", "onError: 插入数据失败");
+                            Toast.makeText(getContext(), "插入数据失败", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -227,7 +228,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                         public void onResult(List<LocalMedia> result) {
                             ArrayList<String> data = new ArrayList<>();
                             for (int i = 0; i < result.size(); i ++) {
-                                data.add(result.get(i).getRealPath());
+                                String path = result.get(i).getRealPath();
+                                data.add(path);
+                                HmsClassificationService.classify(path, ((JournalEditActivity)getActivity()).classifications);
                             }
                             // 将选择好的图片添加到Adapter中
                             addImgAdapter.append(data);

@@ -64,7 +64,6 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
         position = ((JournalEditActivity)getActivity()).currentPostion;
         originPath = picturePaths.get(position);
-        HmsClassificationService.classify(BitmapFactory.decodeFile(originPath));
 
         binding = Fragment3FilterBinding.inflate(inflater, container, false);
         configView();

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
@@ -88,14 +89,10 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
-                Bitmap bitmap = BitmapFactory.decodeFile(data);
-                // 预览时将bitmap切成正方形来美化界面
-                bitmap = OtherUtil.scaleSquare(bitmap);
-                imgView.setImageBitmap(bitmap);
+                File pic = new File(data);
+                Glide.with(imgView).load(pic).override(200,200).centerCrop().into(imgView);
                 imgView.setTag(ItemType.OTHER);
             }
-
-
         }
 
         protected void setClickListener(OnItemClickListener clickListener, int position) {

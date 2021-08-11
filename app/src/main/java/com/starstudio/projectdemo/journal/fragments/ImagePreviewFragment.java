@@ -69,6 +69,8 @@ public class ImagePreviewFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.image_preview_delete) {
             adapter.remove(binding.pagerPreview.getCurrentItem());
+            // 把对应的分类结果也删除掉
+            ((JournalEditActivity)getActivity()).classifications.remove(binding.pagerPreview.getCurrentItem());
         } else if (item.getItemId() == android.R.id.home) {
             // 添加点击事件，跳转到ImagePreviewFragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
