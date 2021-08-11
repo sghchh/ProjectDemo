@@ -32,12 +32,14 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     @Override
     public FilterHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.filter_item, parent, false);
-        return new FilterHolder(view);
+        FilterHolder holder = new FilterHolder(view);
+        holder.setListener(this.listener);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull FilterAdapter.FilterHolder holder, int position) {
-        holder.loadData(data[position], listener);
+        holder.loadData(data[position]);
     }
 
     @Override
@@ -46,14 +48,18 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     }
 
     static class FilterHolder extends RecyclerView.ViewHolder {
-
+        private OnFilterTypeClickListener listener;
         private TextView txt;
         public FilterHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             txt = itemView.findViewById(R.id.filter_item_txt);
         }
 
-        void loadData(String data, OnFilterTypeClickListener listener) {
+        protected void setListener(OnFilterTypeClickListener listener) {
+            this.listener = listener;
+        }
+
+        protected void loadData(String data) {
             txt.setText(data);
             txt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

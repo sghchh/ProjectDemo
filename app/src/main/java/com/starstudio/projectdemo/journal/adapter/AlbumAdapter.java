@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.huawei.hms.image.vision.A;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.data.AlbumData;
 import com.starstudio.projectdemo.utils.FileUtil;
@@ -19,6 +21,7 @@ import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -43,13 +46,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumHolder>
     @Override
     public AlbumHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
-        return new AlbumHolder(view);
+        AlbumHolder holder = new AlbumHolder(view);
+        holder.setListener(this.listener);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AlbumAdapter.AlbumHolder holder, int position) {
         holder.loadData(data.get(position));
-        holder.setListener(listener);
     }
 
     @Override
@@ -72,9 +76,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumHolder>
 
         public void loadData(AlbumData data) {
             mdata = data;
-            Bitmap bitmap = BitmapFactory.decodeFile(data.getCover());
-            bitmap = OtherUtil.scaleSquare(bitmap);
-            cover.setImageBitmap(bitmap);
+            File pic = new File(data.getCover());
+            Glide.with(cover).load(pic).override(200,200).centerCrop().into(cover);
             name.setText(data.getName());
         }
 

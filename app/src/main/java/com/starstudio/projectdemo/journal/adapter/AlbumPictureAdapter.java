@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class AlbumPictureAdapter extends RecyclerView.Adapter<AlbumPictureAdapter.AlbumPictureHolder> {
     private String[] paths;
@@ -47,8 +50,10 @@ public class AlbumPictureAdapter extends RecyclerView.Adapter<AlbumPictureAdapte
         }
 
         public void loadData(String path) {
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            pic.setImageBitmap(OtherUtil.scaleSquare(bitmap));
+            File p = new File(path);
+            Glide.with(pic).load(p).override(200,200).centerCrop().into(pic);
+            //Bitmap bitmap = BitmapFactory.decodeFile(path);
+            //pic.setImageBitmap(OtherUtil.scaleSquare(bitmap));
             pic.setAdjustViewBounds(true);
         }
     }

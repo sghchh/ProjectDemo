@@ -11,12 +11,14 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdapter.DetailImgHolder> {
@@ -26,7 +28,6 @@ public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdap
 
     public JourDetailImgAdapter(List<String> data) {
         this.pictures = data;
-        Log.e("JourDetailImgAdapter", "JourDetailImgAdapter: 详情页面获取到的图片为"+new Gson().toJson(data));
     }
 
     public void setItemClickListener(OnDetailItemClickListener listener){
@@ -61,8 +62,8 @@ public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdap
         }
 
         protected void loadData(String path, OnDetailItemClickListener listener) {
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            imageView.setImageBitmap(OtherUtil.scaleSquare(bitmap));
+            File pic = new File(path);
+            Glide.with(imageView).load(pic).override(200,200).centerCrop().into(imageView);
             imageView.setAdjustViewBounds(true);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

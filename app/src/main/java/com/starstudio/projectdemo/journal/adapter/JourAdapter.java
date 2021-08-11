@@ -54,12 +54,14 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     @Override
     public JourAdapter.JourHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.journal_item, parent, false);
-        return new JourHolder(view);
+        JourHolder holder = new JourHolder(view);
+        holder.setListener(listener);
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull JourAdapter.JourHolder holder, int position) {
-        holder.loadData(data.get(position), listener);
+        holder.loadData(data.get(position));
     }
 
 
@@ -70,6 +72,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     }
 
     public static class JourHolder extends RecyclerView.ViewHolder {
+        private OnJourItemClickListener listener;
         private View layout;
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
@@ -86,8 +89,11 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             location = (TextView)itemView.findViewById(R.id.location);
         }
 
+        public void setListener(OnJourItemClickListener listener) {
+            this.listener = listener;
+        }
         // 通过data数据来加载控件内容
-        private void loadData(JournalEntity data, OnJourItemClickListener listener) {
+        private void loadData(JournalEntity data) {
             this.date.setText(data.getMonth());
             this.location.setText(data.getLocation());
             this.content.setText(data.getContent());

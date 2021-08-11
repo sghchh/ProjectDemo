@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
@@ -25,6 +26,7 @@ import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -78,12 +80,11 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
 
 
         protected void loadData(String data, int last) {
-            Bitmap bitmap = OtherUtil.decodeBitmapSafe(data);
-            bitmap = OtherUtil.scaleSquare(bitmap);
+            File pic = new File(data);
+            Glide.with(img).load(pic).override(200,200).centerCrop().into(img);
             // 强制item的大小，而不是复用缓存的recycler的尺寸
             // https://blog.csdn.net/qq_36419317/article/details/54836142?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control
             img.setAdjustViewBounds(true);
-            img.setImageBitmap(bitmap);
             if (last > 0) {
                 img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
