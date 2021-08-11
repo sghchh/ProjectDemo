@@ -45,25 +45,21 @@ public class JourFragment extends Fragment implements JourAdapter.OnJourItemClic
         service.loadAll().subscribe(new FlowableSubscriber<List<JournalEntity>>() {
                     @Override
                     public void onSubscribe(Subscription s) {
-                        Log.e("RxJava2", "onSubscribe: 执行了RxJava的onSubscribe方法");
                         s.request(Integer.MAX_VALUE);
                     }
 
                     @Override
                     public void onNext(List<JournalEntity> journalEntities) {
-                        Log.e("RxJava2", "onNext: 执行了RxJava的onNext方法");
                         adapter.reset(journalEntities);
                         binding.recycler.scrollToPosition(journalEntities.size() - 1);
                     }
 
                     @Override
                     public void onError(Throwable t) {
-                        Log.e("RxJava2", "onError: 执行了RxJava的方法" + t.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Log.e("RxJava2", "onComplete: 执行了RxJava的方法");
                     }
                 });
 

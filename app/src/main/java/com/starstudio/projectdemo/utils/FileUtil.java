@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.huawei.hms.image.vision.A;
 import com.huawei.hms.videoeditor.sdk.p.S;
 import com.starstudio.projectdemo.journal.data.AlbumData;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import org.luaj.vm2.ast.Str;
 
@@ -52,7 +53,10 @@ public class FileUtil {
     }
 
     public static String saveBitmap(Bitmap bitmap) {
-        File save = new File(PICTURE_FILE, formatter.format(new Date()) + ".jpg");
+        File save = new File(PICTURE_FILE + "/" + "filter");
+        if (!save.exists())
+            save.mkdir();   // 如果该类别的文件夹不存在，则先创建
+        save = new File(save.getAbsolutePath(), formatter.format(new Date()) + ".jpg");
         try {
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(save));
             bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
@@ -64,21 +68,21 @@ public class FileUtil {
         return save.getAbsolutePath();
     }
 
-    public static String copyFromPath(String path, String type) throws IOException {
-        String[] _ss = path.split("/");
+    public static String copyFromPath(JournalEditActivityData.PictureWithCategory picture) throws IOException {
+        String[] _ss = picture.getPicturePath().split("/");
         String finename = _ss[_ss.length - 1];
         File save;
         if (finename.endsWith(".mp4"))
             save = new File(VIDEO_FILE, finename);
         else {
-            save = new File(PICTURE_FILE + "/" + type);
+            save = new File(PICTURE_FILE + "/" + picture.getCategory());
             if (!save.exists())
                 save.mkdir();   // 如果该类别的文件夹不存在，则先创建
             save = new File(save.getAbsolutePath(), finename);
         }
         BufferedInputStream inputStream;
         BufferedOutputStream outputStream;
-        inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
+        inputStream = new BufferedInputStream(new FileInputStream(new File(picture.getPicturePath())));
         outputStream = new BufferedOutputStream(new FileOutputStream(save));
         byte[] cache = new byte[1024];
         while(inputStream.read(cache) != -1) {
@@ -96,6 +100,8 @@ public class FileUtil {
         File[] albumFiles = directory.listFiles();
         for (int i = 0; i < albumFiles.length; i ++) {
             File album = albumFiles[i];
+            if (album.listFiles() == null)
+                continue;
             AlbumData data = new AlbumData();
             if (album.listFiles().length == 0)
                 data.setCover(null);

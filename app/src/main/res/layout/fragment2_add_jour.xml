@@ -39,6 +39,7 @@
 
     <TextView
         android:text="添加图片"
+        android:id="@+id/add_jour_add_pic_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -57,6 +58,7 @@
 
     <TextView
         android:text="添加视频"
+        android:id="@+id/add_jour_add_video_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -71,11 +73,12 @@
         android:layout_marginEnd="5dp"
         android:src="@drawable/add_big"
         android:id="@+id/imageview_add_video"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:text="添加音频"
+        android:id="@+id/add_jour_add_audio_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"

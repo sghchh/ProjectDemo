@@ -14,6 +14,7 @@ import com.huawei.hms.mlsdk.classification.MLLocalClassificationAnalyzerSetting;
 import com.huawei.hms.mlsdk.classification.MLRemoteClassificationAnalyzerSetting;
 import com.huawei.hms.mlsdk.common.MLException;
 import com.huawei.hms.mlsdk.common.MLFrame;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,30 +51,24 @@ public class HmsClassificationService {
         analyzer = MLAnalyzerFactory.getInstance().getRemoteImageClassificationAnalyzer(setting);
     }
 
-    public static void classify(String path, List<String> collection) {
-        Log.e(TAG, "classify: 调用了识别方法+++++++++++++++++++++++");
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
+    public static void classify(JournalEditActivityData.PictureWithCategory pic) {
+        Bitmap bitmap = BitmapFactory.decodeFile(pic.getPicturePath());
         MLFrame frame = MLFrame.fromBitmap(bitmap);
         Task<List<MLImageClassification>> task = analyzer.asyncAnalyseFrame(frame);
         task.addOnSuccessListener(new OnSuccessListener<List<MLImageClassification>>() {
             @Override
             public void onSuccess(List<MLImageClassification> classifications) {
                 // 识别成功。
-                Log.e(TAG, "onSuccess: 识别成功----------------");
-                for (int i = 0; i < classifications.size(); i ++) {
-                    Log.e(TAG, "----------识别的结果是"+classifications.get(i).getClassificationIdentity());
-                    Log.e(TAG, "----------识别的结果是"+classifications.get(i).getName());
-                }
                 if (classifications.size() == 0)
-                    collection.add("其他");
+                    pic.setCategory("其他");
                 else {
                     String typeName = classifications.get(0).getName();
                     if (CORE_CLASSIFICATION.containsKey(typeName))
-                        collection.add(CORE_CLASSIFICATION.get(typeName));
+                        pic.setCategory(CORE_CLASSIFICATION.get(typeName));
                     else
-                        collection.add("其他");
+                        pic.setCategory("其他");
                 }
-
+                Log.e(TAG, "onSuccess: 调用了识别方法，识别成功，分类为"+pic.getCategory());
                 if (analyzer != null) {
                     try {
                         analyzer.stop();
@@ -85,8 +80,7 @@ public class HmsClassificationService {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(Exception e) {
-                Log.e(TAG, "识别错误=============================");
-                collection.add("其他");
+                pic.setCategory("其他");
                 try {
                     MLException mlException = (MLException)e;
                     int errorCode = mlException.getErrCode();
@@ -94,6 +88,7 @@ public class HmsClassificationService {
                 } catch (Exception error) {
                     // 转换错误处理。
                 }
+                Log.e(TAG, "onFailure: 调用了识别方法，识别失败，分类为"+pic.getCategory());
                 if (analyzer != null) {
                     try {
                         analyzer.stop();
@@ -103,5 +98,7 @@ public class HmsClassificationService {
                 }
             }
         });
+
+
     }
 }

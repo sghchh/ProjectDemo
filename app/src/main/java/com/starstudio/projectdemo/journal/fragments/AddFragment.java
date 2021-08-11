@@ -1,6 +1,8 @@
 package com.starstudio.projectdemo.journal.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,6 +40,7 @@ import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.api.JournalDaoService;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.FileUtil;
@@ -62,12 +66,16 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     private Fragment2AddJourBinding binding;
     private AddImgVideoAdapter addImgAdapter;
     private JournalDaoService daoService;
+    private JournalEditActivityData editActivityData;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        // 获取位于JournalEditActivity中的共享数据
+        editActivityData = ((JournalEditActivity)getActivity()).getEditActivityData();
+
         daoService = JournalDaoService.getInstance();
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         binding = Fragment2AddJourBinding.inflate(inflater, container, false);
@@ -77,9 +85,10 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         this.addImgAdapter.notifyDataSetChanged();
+        checkAddMediaVisibility();
     }
 
     @Override
@@ -107,12 +116,12 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
             journalEntity.setWeek(OtherUtil.getSystemWeek());
             journalEntity.setContent(binding.contentAdd.getText().toString());
 
-            List<String> _data = addImgAdapter.getData();
+            List<JournalEditActivityData.PictureWithCategory> _data = addImgAdapter.getData();
             List<String> destArray = new ArrayList<>();
             try {
                 for (int i = 0; i < _data.size(); i ++)
                     // 将图片数据拷贝到com.starstudio.projectdemo对应的目录下
-                    destArray.add(FileUtil.copyFromPath(_data.get(i), ((JournalEditActivity)getActivity()).classifications.get(i)));
+                    destArray.add(FileUtil.copyFromPath(_data.get(i)));
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(getContext(), "IO错误，添加失败！", Toast.LENGTH_SHORT).show();
@@ -159,7 +168,7 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // 之后配置RecyclerView
-        addImgAdapter = new AddImgVideoAdapter(((JournalEditActivity)getActivity()).picturePaths,this::onItemClick);
+        addImgAdapter = new AddImgVideoAdapter(editActivityData.getPictures(),this::onItemClick);
 
         binding.recyclerAddImg.setAdapter(addImgAdapter);
         binding.recyclerAddImg.getLayoutParams().height = (int)(DisplayMetricsUtil.getDisplayWidthPxiels(getActivity()) / 3);
@@ -170,9 +179,9 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
         binding.imageviewAddVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((JournalEditActivity)getActivity()).videoPath != null) {
+                if (editActivityData.getVideoPath() != null) {
                     Intent intent = new Intent(getActivity(), JournalVideoActivity.class);
-                    intent.putExtra("videoPath", ((JournalEditActivity)getActivity()).videoPath);
+                    intent.putExtra("videoPath", editActivityData.getVideoPath());
                     startActivity(intent);
                     return;
                 }
@@ -186,11 +195,14 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                         .forResult(new OnResultCallbackListener<LocalMedia>() {
                             @Override
                             public void onResult(List<LocalMedia> result) {
-                                Log.d("pictureselector", "onResult: 视频地址为"+result.get(0).getRealPath());
                                 String videoPath = result.get(0).getRealPath();
-                                ((JournalEditActivity)getActivity()).videoPath = videoPath;
-                                binding.imageviewAddVideo.getLayoutParams().width = DisplayMetricsUtil.getDisplayWidthPxiels(getActivity());
+                                editActivityData.setVideoPath(videoPath);
+                                binding.imageviewAddVideo.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+                                binding.imageviewAddVideo.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                 GlideEngine.createGlideEngine().loadImage(getActivity(), videoPath, binding.imageviewAddVideo);
+
+                                // 添加了视频，所以需要关闭一些页面元素
+                                cloasAddMedia();
                             }
 
                             @Override
@@ -226,14 +238,20 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                     .forResult(new OnResultCallbackListener<LocalMedia>() {
                         @Override
                         public void onResult(List<LocalMedia> result) {
-                            ArrayList<String> data = new ArrayList<>();
+                            ArrayList<JournalEditActivityData.PictureWithCategory> data = new ArrayList<>();
                             for (int i = 0; i < result.size(); i ++) {
                                 String path = result.get(i).getRealPath();
-                                data.add(path);
-                                HmsClassificationService.classify(path, ((JournalEditActivity)getActivity()).classifications);
+                                data.add(new JournalEditActivityData.PictureWithCategory());
+                                data.get(i).setPicturePath(path);
+
+                                HmsClassificationService.classify(data.get(i));
+
                             }
                             // 将选择好的图片添加到Adapter中
                             addImgAdapter.append(data);
+
+                            // 如果添加了图片，那么不可再“添加视频”与“添加音频”
+                            cloasAddMedia();
                         }
 
                         @Override
@@ -243,10 +261,48 @@ public class AddFragment extends Fragment implements AddImgVideoAdapter.OnItemCl
                     });
         } else {
             // 添加点击事件，跳转到ImagePreviewFragment
-            ((JournalEditActivity)getActivity()).currentPostion = ((JournalEditActivity)getActivity()).picturePaths.size() - 1 - curPosition;  // 因为显示的顺序是反的，所以要反过来
+            editActivityData.setCurrentPostion(editActivityData.getPictures().size() - 1 - curPosition);  // 因为显示的顺序是反的，所以要反过来
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_ImagePreviewFragment);
         }
     }
 
+    // 根据JournalEditActivity中数据的状态来确定关闭一些view
+    private void cloasAddMedia() {
+        if (editActivityData.getPictures().size() > 0) { // 说明添加了图片，则禁止再添加视频与音频
+            binding.addJourAddVideoTxt.setVisibility(View.GONE);
+            binding.addJourAddAudioTxt.setVisibility(View.GONE);
+            binding.imageviewAddVideo.setVisibility(View.GONE);
+        } else if (editActivityData.getVideoPath() != null) {   // 说明添加了视频，则禁止再添加图片与音频
+            binding.addJourAddPicTxt.setVisibility(View.GONE);
+            binding.recyclerAddImg.setVisibility(View.GONE);
+            binding.addJourAddAudioTxt.setVisibility(View.GONE);
+        } else if (editActivityData.getAudioPath() != null){                               // 说明添加了音频，则禁止再添加视频与图片
+            binding.addJourAddVideoTxt.setVisibility(View.GONE);
+            binding.imageviewAddVideo.setVisibility(View.GONE);
+            binding.addJourAddPicTxt.setVisibility(View.GONE);
+            binding.recyclerAddImg.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 当从各个媒体内容编辑页面返回来时，可能存在删除添加媒体内容的操作
+     * 该方法检查是否需要重新show一些View元素
+     * 在onStart中被调用
+     */
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void checkAddMediaVisibility() {
+        JournalEditActivity activity = (JournalEditActivity) getActivity();
+        if (editActivityData.getPictures().size() == 0 && editActivityData.getVideoPath() == null && editActivityData.getAudioPath() == null) {
+            binding.addJourAddVideoTxt.setVisibility(View.VISIBLE);
+            binding.addJourAddAudioTxt.setVisibility(View.VISIBLE);
+            binding.imageviewAddVideo.setVisibility(View.VISIBLE);
+            binding.addJourAddPicTxt.setVisibility(View.VISIBLE);
+            binding.recyclerAddImg.setVisibility(View.VISIBLE);
+
+            binding.imageviewAddVideo.getLayoutParams().width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            binding.imageviewAddVideo.getLayoutParams().height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            binding.imageviewAddVideo.setImageDrawable(activity.getDrawable(R.drawable.add_big));
+        }
+    }
 }

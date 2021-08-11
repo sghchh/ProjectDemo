@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.journal.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,7 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3PreviewImgsBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerPreviewAdapter;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +36,7 @@ public class ImagePreviewFragment extends Fragment {
 
     private Fragment3PreviewImgsBinding binding;
     private PagerPreviewAdapter adapter;
+    private JournalEditActivityData editActivityData;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -41,8 +44,11 @@ public class ImagePreviewFragment extends Fragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        editActivityData = ((JournalEditActivity)getActivity()).getEditActivityData();
+
         binding = Fragment3PreviewImgsBinding.inflate(inflater, container, false);
-        adapter = new PagerPreviewAdapter(((JournalEditActivity)getActivity()).picturePaths);
+        adapter = new PagerPreviewAdapter(editActivityData.getPictures());
+
         configView();
         return binding.getRoot();
     }
@@ -69,8 +75,6 @@ public class ImagePreviewFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.image_preview_delete) {
             adapter.remove(binding.pagerPreview.getCurrentItem());
-            // 把对应的分类结果也删除掉
-            ((JournalEditActivity)getActivity()).classifications.remove(binding.pagerPreview.getCurrentItem());
         } else if (item.getItemId() == android.R.id.home) {
             // 添加点击事件，跳转到ImagePreviewFragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
@@ -87,7 +91,7 @@ public class ImagePreviewFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
         binding.pagerPreview.setAdapter(adapter);
-        binding.pagerPreview.setCurrentItem(((JournalEditActivity)getActivity()).currentPostion);
+        binding.pagerPreview.setCurrentItem(editActivityData.getCurrentPostion());
         binding.cropTx.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,7 +103,7 @@ public class ImagePreviewFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 int position = binding.pagerPreview.getCurrentItem();
-                ((JournalEditActivity)getActivity()).currentPostion = position;
+                editActivityData.setCurrentPostion(position);
                 NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
                 navHost.getNavController().navigate(R.id.action_ImagePreviewFragment_to_FilterFragment);
             }

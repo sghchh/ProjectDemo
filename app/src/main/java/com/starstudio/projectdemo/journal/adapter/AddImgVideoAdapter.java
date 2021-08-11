@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.starstudio.projectdemo.R;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
@@ -36,21 +37,21 @@ import java.util.List;
  */
 public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.AddHolder> {
 
-    private ArrayList<String> data;
+    private ArrayList<JournalEditActivityData.PictureWithCategory> data;
     private OnItemClickListener clickListener;
 
-    public AddImgVideoAdapter(ArrayList<String> data, OnItemClickListener clickListener) {
+    public AddImgVideoAdapter(ArrayList<JournalEditActivityData.PictureWithCategory> data, OnItemClickListener clickListener) {
         this.data = data;
         this.clickListener = clickListener;
     }
 
-    public void append(List<String> append) {
+    public void append(List<JournalEditActivityData.PictureWithCategory> append) {
         data.addAll(append);
         notifyDataSetChanged();
     }
 
 
-    public ArrayList<String> getData(){
+    public ArrayList<JournalEditActivityData.PictureWithCategory> getData(){
         return data;
     }
     @Override
@@ -84,12 +85,12 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
             this.imgView.getLayoutParams().height = DisplayMetricsUtil.getDisplayWidthPxiels((Activity) itemView.getContext()) / 3;
         }
 
-        protected void loadData(String data) {
+        protected void loadData(JournalEditActivityData.PictureWithCategory data) {
             if (data == null) {
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
-                File pic = new File(data);
+                File pic = new File(data.getPicturePath());
                 Glide.with(imgView).load(pic).override(200,200).centerCrop().into(imgView);
                 imgView.setTag(ItemType.OTHER);
             }
