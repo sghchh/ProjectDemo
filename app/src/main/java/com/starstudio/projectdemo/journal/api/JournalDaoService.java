@@ -1,14 +1,10 @@
 package com.starstudio.projectdemo.journal.api;
 
-import android.support.v4.app.INotificationSideChannel;
-
-import com.huawei.hms.image.vision.C;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class JournalDaoService {
