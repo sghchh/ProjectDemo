@@ -13,8 +13,6 @@ import com.huawei.hms.kit.awareness.CaptureClient;
 import com.huawei.hms.kit.awareness.capture.WeatherStatusResponse;
 import com.huawei.hms.kit.awareness.status.weather.WeatherSituation;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * created by sgh

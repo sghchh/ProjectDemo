@@ -13,30 +13,10 @@
         android:layout_height="30dp"
         android:background="@color/black"/>
 
-    <com.google.android.material.appbar.AppBarLayout
-        app:layout_constraintTop_toBottomOf="@id/status_view"
-        android:id="@+id/toolbar_filter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/bar_padding_bottom"
-            android:paddingEnd="@dimen/bar_padding_end"
-            android:paddingStart="@dimen/bar_padding_start"
-            android:paddingTop="@dimen/bar_padding_top"
-            android:id="@+id/toolbar">
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
         android:id="@+id/imageview_show"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_filter"
+        app:layout_constraintTop_toBottomOf="@id/status_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

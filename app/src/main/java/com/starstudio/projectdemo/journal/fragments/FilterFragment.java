@@ -1,7 +1,5 @@
 package com.starstudio.projectdemo.journal.fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,17 +24,15 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.Fragment3FilterBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.FilterAdapter;
-import com.starstudio.projectdemo.journal.api.HmsClassificationService;
 import com.starstudio.projectdemo.journal.api.HmsImageService;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.HandlerHelper;
-import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * creted by sgh
@@ -47,8 +43,7 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
 
     private Fragment3FilterBinding binding;
     private HmsImageService hmsImageService;
-    private ArrayList<String> picturePaths;
-    private int position;
+    private JournalEditActivityData editActivityData;
     private String originPath;
     private ImageVisionResult filterRes = null;
 
@@ -59,11 +54,10 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         setHasOptionsMenu(true);
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
+        editActivityData = ((JournalEditActivity)getActivity()).getEditActivityData();
         hmsImageService = HmsImageService.getInstance();
 
-        picturePaths = ((JournalEditActivity)getActivity()).picturePaths;
-        position = ((JournalEditActivity)getActivity()).currentPostion;
-        originPath = picturePaths.get(position);
+        originPath = editActivityData.getPictures().get(editActivityData.getCurrentPostion()).getPicturePath();
 
         binding = Fragment3FilterBinding.inflate(inflater, container, false);
         configView();
@@ -96,14 +90,14 @@ public class FilterFragment extends Fragment implements FilterAdapter.OnFilterTy
         adapter.setListener(this::onFilterTypeClick);
         binding.recyclerFilter.setAdapter(adapter);
         binding.recyclerFilter.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        binding.imageviewFilter.setImageURI(Uri.fromFile(new File(picturePaths.get(position))));
+        binding.imageviewFilter.setImageURI(Uri.fromFile(new File(editActivityData.getPictures().get(editActivityData.getCurrentPostion()).getPicturePath())));
         binding.saveText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (filterRes != null) {
                     String newPath = FileUtil.saveBitmap(filterRes.getImage());
                     if (newPath.endsWith(".jpg"))
-                        picturePaths.set(position, newPath);
+                        editActivityData.getPictures().get(editActivityData.getCurrentPostion()).setPicturePath(newPath);
                     Toast.makeText(getActivity(), "已保存修改", Toast.LENGTH_SHORT).show();
                     filterRes = null;
                 }

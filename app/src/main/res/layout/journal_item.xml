@@ -74,12 +74,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <!--如果日记中含有图片的话，该RecyclerView负责展示图片-->
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:id="@+id/imgs_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!--如果日记中含有视频的话，该布局负责展示视频预览图-->
+    <FrameLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/journal_video_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:foreground="#80716F6F"
+            android:id="@+id/journal_video_pre"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_media_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </FrameLayout>
+
+    <!--如果日记中含有音频的话，该布局负责展示音频-->
+    <FrameLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <View
+        android:id="@+id/status_view"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/black"/>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_video"
+        app:layout_constraintTop_toBottomOf="@id/status_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/bar_padding_bottom"
+            android:paddingEnd="@dimen/bar_padding_end"
+            android:paddingStart="@dimen/bar_padding_start"
+            android:paddingTop="@dimen/bar_padding_top"
+            android:id="@+id/toolbar">
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        app:layout_constraintTop_toBottomOf="@id/appbar_video"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/rl_video"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:background="#000000">
+
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:id="@+id/playOrPause_video"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:src="@android:drawable/ic_media_play"/>
+        <LinearLayout
+            android:id="@+id/control_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:id="@+id/video_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="30dp"
+                    android:text="00.00"
+                    android:textColor="#ffffff"/>
+                <TextView
+                    android:id="@+id/video_separate_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/video_start_time"
+                    android:layout_marginStart="1dp"
+                    android:text="/"
+                    android:textColor="#ffffff"/>
+                <TextView
+                    android:id="@+id/video_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/video_separate_time"
+                    android:layout_marginStart="1dp"
+                    android:text="00.00"
+                    android:textColor="#ffffff"/>
+                <ImageView
+                    android:id="@+id/video_backward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/video_start_time"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="1dp"
+                    android:src="@android:drawable/ic_media_rew"/>
+
+                <SeekBar
+                    android:id="@+id/video_progess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/video_backward"
+                    android:layout_toStartOf="@+id/video_forward"
+                    android:layout_below="@+id/video_start_time"/>
+
+                <ImageView
+                    android:id="@+id/video_forward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/video_start_time"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="1dp"
+                    android:src="@android:drawable/ic_media_ff"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

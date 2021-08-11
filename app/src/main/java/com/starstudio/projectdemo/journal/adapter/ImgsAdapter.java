@@ -1,16 +1,9 @@
 package com.starstudio.projectdemo.journal.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PorterDuff;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,9 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.utils.ContextHolder;
-import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
-import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -86,7 +76,7 @@ public class ImgsAdapter extends RecyclerView.Adapter<ImgsAdapter.ImgHolder> {
             // https://blog.csdn.net/qq_36419317/article/details/54836142?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-3.control
             img.setAdjustViewBounds(true);
             if (last > 0) {
-                img.setForeground(ContextHolder.context().getDrawable(R.drawable.img_mask));
+                img.setForeground(img.getContext().getDrawable(R.drawable.img_mask));
                 txt.setVisibility(View.VISIBLE);
                 txt.setText("+" + last);
             }

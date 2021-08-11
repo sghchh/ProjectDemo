@@ -1,12 +1,5 @@
 package com.starstudio.projectdemo.journal.adapter;
 
-import android.app.Activity;
-import android.content.ClipData;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
-import android.text.method.CharacterPickerDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.luck.picture.lib.entity.LocalMedia;
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
-import com.starstudio.projectdemo.utils.OtherUtil;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,27 +23,27 @@ import java.util.List;
  * 2021-8-1
  * 写日记板块中添加图片对应的适配器
  */
-public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.AddHolder> {
+public class AddPictureAdapter extends RecyclerView.Adapter<AddPictureAdapter.AddHolder> {
 
-    private ArrayList<String> data;
+    private ArrayList<JournalEditActivityData.PictureWithCategory> data;
     private OnItemClickListener clickListener;
 
-    public AddImgVideoAdapter(ArrayList<String> data, OnItemClickListener clickListener) {
+    public AddPictureAdapter(ArrayList<JournalEditActivityData.PictureWithCategory> data, OnItemClickListener clickListener) {
         this.data = data;
         this.clickListener = clickListener;
     }
 
-    public void append(List<String> append) {
+    public void append(List<JournalEditActivityData.PictureWithCategory> append) {
         data.addAll(append);
         notifyDataSetChanged();
     }
 
 
-    public ArrayList<String> getData(){
+    public ArrayList<JournalEditActivityData.PictureWithCategory> getData(){
         return data;
     }
     @Override
-    public void onBindViewHolder(@NonNull @NotNull AddImgVideoAdapter.AddHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull AddPictureAdapter.AddHolder holder, int position) {
         if (position == data.size())
             holder.loadData(null);
         else
@@ -66,7 +55,7 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
     @NotNull
     @Override
     public AddHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_img_video_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_picture_item, parent, false);
         return new AddHolder(view);
     }
 
@@ -81,15 +70,14 @@ public class AddImgVideoAdapter extends RecyclerView.Adapter<AddImgVideoAdapter.
         public AddHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             this.imgView = (ImageView) itemView.findViewById(R.id.add_img_video);
-            this.imgView.getLayoutParams().height = DisplayMetricsUtil.getDisplayWidthPxiels((Activity) itemView.getContext()) / 3;
         }
 
-        protected void loadData(String data) {
+        protected void loadData(JournalEditActivityData.PictureWithCategory data) {
             if (data == null) {
                 imgView.setImageResource(R.drawable.add_big);
                 imgView.setTag(ItemType.FIRST);
             } else {
-                File pic = new File(data);
+                File pic = new File(data.getPicturePath());
                 Glide.with(imgView).load(pic).override(200,200).centerCrop().into(imgView);
                 imgView.setTag(ItemType.OTHER);
             }

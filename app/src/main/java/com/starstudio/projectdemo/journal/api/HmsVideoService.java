@@ -1,7 +1,6 @@
 package com.starstudio.projectdemo.journal.api;
 
 import android.content.Context;
-import android.view.View;
 
 import com.huawei.hms.videoeditor.ui.api.MediaApplication;
 import com.huawei.hms.videoeditor.ui.api.MediaExportCallBack;

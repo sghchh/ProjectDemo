@@ -49,7 +49,7 @@ public class HmsImageService {
 
             @Override
             public void onFailure(int i) {
-                Log.d("hms", "onSuccess:hms滤镜服务初始化结果 "+i);
+                Log.d("hms", "onFailure:hms滤镜服务初始化结果 "+i);
             }
         });
         // 初始化滤镜服务的code与type对应表
@@ -89,6 +89,7 @@ public class HmsImageService {
         taskJson.setFilterType(typeCode);
         HMSImageServiceJson.RequestJson requestJson = new HMSImageServiceJson.RequestJson(typeCode + "", taskJson);
         String jsonString = OtherUtil.decodeObject(requestJson);
+        Log.e("HmsImageService", "getFilterResult: 请求参数为"+jsonString);
         return imageVision.getColorFilter(new JSONObject(jsonString), initBitmap);
     }
 }

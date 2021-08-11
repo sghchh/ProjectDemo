@@ -1,8 +1,5 @@
 package com.starstudio.projectdemo.journal.adapter;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.huawei.hms.image.vision.A;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.data.AlbumData;
 import com.starstudio.projectdemo.utils.FileUtil;
-import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -3,7 +3,6 @@ package com.starstudio.projectdemo.utils;
 import android.os.Handler;
 import android.os.Message;
 
-import androidx.annotation.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;

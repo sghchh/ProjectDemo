@@ -38,7 +38,29 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:text="添加媒体文件"
+        android:id="@+id/add_jour_media_txt"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:visibility="gone"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/add_big"
+        android:id="@+id/imageview_add_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
         android:text="添加图片"
+        android:visibility="gone"
+        android:id="@+id/add_jour_pic_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -48,15 +70,18 @@
 
     <!--添加图片的RecyclerView-->
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:id="@+id/recycler_add_img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:text="添加视频"
+        android:visibility="gone"
+        android:id="@+id/add_jour_video_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -64,18 +89,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!--添加视频的View-->
-    <ImageView
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:src="@drawable/add_big"
-        android:id="@+id/imageview_add_video"
+    <!--如果日记中含有视频的话，该布局负责展示视频预览图-->
+    <FrameLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/add_journal_video_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:foreground="#80716F6F"
+            android:id="@+id/add_journal_video_pre"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_media_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+    </FrameLayout>
 
     <TextView
+        android:visibility="gone"
         android:text="添加音频"
+        android:id="@+id/add_jour_audio_txt"
         android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
@@ -83,5 +120,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!--如果日记中含有音频的话，该布局负责展示音频-->
+    <FrameLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -72,7 +72,7 @@
         <activity
             android:launchMode="singleTask"
             android:name=".journal.activity.JournalVideoActivity"
-            android:theme="@style/Theme.ProjectDemo.NoActionBar"/>
+            android:theme="@style/Theme.ProjectDemo.MediaPlay"/>
     </application>
 
     <queries>

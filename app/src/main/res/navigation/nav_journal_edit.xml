@@ -15,6 +15,18 @@
         <action
             android:id="@+id/action_JournalAddFragment_to_ImagePreviewFragment"
             app:destination="@id/ImagePreviewFragment"/>
+
+        <action
+            android:id="@+id/action_JournalAddFragment_to_VideoPreviewFragment"
+            app:destination="@id/VideoPreviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/VideoPreviewFragment"
+        android:name="com.starstudio.projectdemo.journal.fragments.VideoPreviewFragment"
+        android:label="video_preview_fragment"
+        tools:layout="@layout/fragment3_preview_video">
+
     </fragment>
 
     <fragment
@@ -22,9 +34,6 @@
         android:name="com.starstudio.projectdemo.journal.fragments.ImagePreviewFragment"
         android:label="image_preview_fragment"
         tools:layout="@layout/fragment3_preview_imgs">
-        <action
-            android:id="@+id/action_ImagePreviewFragment_backto_JourAddFragment"
-            app:destination="@id/JourAddFragment" />
 
         <action
             android:id="@+id/action_ImagePreviewFragment_to_FilterFragment"

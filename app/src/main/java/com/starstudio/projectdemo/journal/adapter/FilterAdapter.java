@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.journal.api.HmsImageService;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;

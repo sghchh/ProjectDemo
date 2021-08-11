@@ -8,10 +8,12 @@ import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.huawei.hms.videoeditor.sdk.p.S;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 public class OtherUtil {
     private static final HashMap<String, String> weekToEng = new HashMap(){{
@@ -98,6 +100,17 @@ public class OtherUtil {
     public static String getSystemWeek() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
         return weekToEng.get(ss[3]);
+    }
+
+    /**
+     * 将传递的毫秒时长解析为“时：分：秒”的格式
+     * @param time
+     * @return
+     */
+    public static String formatLongToTime(int time) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
+        return format.format(time);
     }
 
     /**
