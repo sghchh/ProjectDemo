@@ -19,6 +19,7 @@
         app:layout_constraintBottom_toBottomOf="@id/dialog_title"
         app:layout_constraintTop_toTopOf="@id/dialog_title"
         app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/dialog_close"
         android:src="@drawable/close_icon"
         android:layout_width="8dp"
         android:layout_height="8dp" />
@@ -70,7 +71,7 @@
         android:gravity="end|center_vertical">
 
         <Button
-            android:id="@+id/dialog_todo_update_cancel"
+            android:id="@+id/dialog_todo_update_delete"
             android:text="删除"
             android:textColor="@color/red_login_color"
             android:backgroundTint="#DADADA"

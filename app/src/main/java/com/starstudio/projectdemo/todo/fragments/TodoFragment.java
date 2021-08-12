@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
@@ -51,8 +52,10 @@ public class TodoFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.todo_chart) {
+            Bundle bundle = new Bundle();
             // 跳转到完成度分析页面
-
+            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
+            navHost.getNavController().navigate(R.id.action_TodoFragment_to_TodoAnalyseFragment, bundle);
         }
         return super.onOptionsItemSelected(item);
     }

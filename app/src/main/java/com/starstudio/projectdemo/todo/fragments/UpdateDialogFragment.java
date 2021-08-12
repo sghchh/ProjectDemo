@@ -29,11 +29,14 @@ import io.reactivex.disposables.Disposable;
 public class UpdateDialogFragment extends DialogFragment {
     private TodoDaoService todoDaoService;
     private FragmentDialogUpdateTodoBinding binding;
+    private TodoEntity originTodoEntity;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        assert getArguments() != null;
+        originTodoEntity = (TodoEntity) getArguments().getBundle("TodoEntity").get("originTodoEntity");
         todoDaoService = TodoDaoService.getInstance();
         binding = FragmentDialogUpdateTodoBinding.inflate(inflater, container, false);
         configView();
@@ -47,10 +50,36 @@ public class UpdateDialogFragment extends DialogFragment {
     }
 
     private void configView() {
-        // 执行取消
-        binding.dialogTodoUpdateCancel.setOnClickListener(new View.OnClickListener() {
+        // 执行关闭窗口操作
+        binding.dialogClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                closeDialog();
+            }
+        });
+
+        // 执行删除操作
+        binding.dialogTodoUpdateDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                todoDaoService.delte(originTodoEntity)
+                        .subscribe(new CompletableObserver() {
+                            @Override
+                            public void onSubscribe(@NotNull Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+
+                            @Override
+                            public void onError(@NotNull Throwable e) {
+                                Toast.makeText(getContext(), "添加失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                // 关闭页面
                 closeDialog();
             }
         });
@@ -67,22 +96,19 @@ public class UpdateDialogFragment extends DialogFragment {
                         .subscribe(new CompletableObserver() {
                             @Override
                             public void onSubscribe(@NotNull Disposable d) {
-
                             }
 
                             @Override
                             public void onComplete() {
-                                // 关闭页面
-                                closeDialog();
                             }
 
                             @Override
                             public void onError(@NotNull Throwable e) {
                                 Toast.makeText(getContext(), "添加失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                // 关闭页面
-                                closeDialog();
                             }
                         });
+                // 关闭页面
+                closeDialog();
             }
         });
     }
@@ -91,7 +117,7 @@ public class UpdateDialogFragment extends DialogFragment {
      * 关闭该弹窗
      */
     private void closeDialog() {
-        FragmentTransaction transaction=getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.remove(this);
         transaction.commit();
     }

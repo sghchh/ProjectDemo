@@ -42,7 +42,17 @@
         android:id="@+id/TodoFragment"
         android:name="com.starstudio.projectdemo.todo.fragments.TodoFragment"
         android:label="todo_fragment"
-        tools:layout="@layout/fragment_todo" />
+        tools:layout="@layout/fragment_todo">
+
+        <action android:id="@+id/action_TodoFragment_to_TodoAnalyseFragment"
+            app:destination="@id/TodoAnalyseFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/TodoAnalyseFragment"
+        android:name="com.starstudio.projectdemo.todo.fragments.AnalyseFragment"
+        tools:layout="@layout/fragment2_todo_analyse"
+        android:label="todo_analyse_fragment"/>
 
     <fragment
         android:id="@+id/InfoFragment"
