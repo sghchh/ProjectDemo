@@ -238,6 +238,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                     etwtMoney.setText("0" + s);
                     etwtMoney.setSelection(etwtMoney.getText().length());
                 }
+                deleteLastChar = false;
             }
         });
         etwtMoney.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -367,9 +368,6 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         final String comment = String.valueOf(etComment.getText()).trim();
 
         if(kind.equals("")){
-//            SpannableString ss = new SpannableString("     添加备注");//定义hint的值
-//            AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12,true);//设置字体大小 true表示单位是sp
-//            ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             etwtKind.setHint("        请选择种类");
             etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
             return;
@@ -377,12 +375,11 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
             etwtMoney.setHint("                  请填写金额");
             etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
             return;
+        }else if(!OtherUtil.isStringToNum(money)){
+            etwtMoney.setText("");
+            etwtMoney.setHint("                请填写正确金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
         }
-//        else if(!OtherUtil.isStringToNum(money)){
-//            etwtMoney.setText("");
-//            etwtMoney.setHint("                请填写正确金额");
-//            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-//        }
 
         new Thread(new Runnable() {
             @Override

@@ -172,9 +172,9 @@ public class AccoFragment extends BaseFragment {
                     data.get(i).getMoney()));
             if(data.get(i).getMonth().equals(OtherUtil.getSystemMonthToNumber())){
                 if(data.get(i).getMoney().charAt(0) == '-'){
-                    monthExpend = OtherUtil.bigNumberAdd(monthExpend, data.get(i).getMoney().substring(1));
+                    monthExpend = OtherUtil.bigNumberOperation(monthExpend, data.get(i).getMoney().substring(1));
                 }else{
-                    monthIncome = OtherUtil.bigNumberAdd(monthIncome, data.get(i).getMoney());
+                    monthIncome = OtherUtil.bigNumberOperation(monthIncome, data.get(i).getMoney());
                 }
             }
         }

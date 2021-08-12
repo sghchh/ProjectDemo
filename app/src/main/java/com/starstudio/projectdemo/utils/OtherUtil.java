@@ -117,54 +117,51 @@ public class OtherUtil {
         return format.format(time);
     }
 
-    /**
-     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
-     */
-    public static String bigNumberAdd(String f, String s){
-        System.out.print("加法:" + f + "+" + s + "=");
-        // 翻转两个字符串，并转换成数组
-        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
-        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
-        int lenA = a.length;
-        int lenB = b.length;
-
-        // f 和 s 均为 0 时的特殊情况
-        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
-            return "0";
-        }
-
-        // 计算两个长字符串中的较长字符串的长度
-        int len = lenA > lenB ? lenA : lenB;
-        int[] result = new int[len + 1];
-        for (int i = 0; i < len + 1; i++) {
-            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
-            int aint = i < lenA ? (a[i] - '0') : 0;
-            int bint = i < lenB ? (b[i] - '0') : 0;
-            result[i] = aint + bint;
-        }
-        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
-        for (int i = 0; i < result.length; i++) {
-            if (result[i] >= 10) {
-                result[i + 1] += result[i] / 10;
-                result[i] %= 10;
-            }
-        }
-        StringBuffer sb = new StringBuffer();
-        // 该字段用于标识是否有前置0，如果有就不要存储
-        boolean flag = true;
-        // 注意从后往前
-        for (int i = len; i >= 0; i--) {
-            if (result[i] == 0 && flag) {
-                continue;
-            } else {
-                flag = false;
-            }
-            sb.append(result[i]);
-        }
-        // 结果
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
+//    /**
+//     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
+//     */
+//    public static String bigNumberAdd(String f, String s){
+//        // 翻转两个字符串，并转换成数组
+//        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+//        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+//        int lenA = a.length;
+//        int lenB = b.length;
+//
+//        // f 和 s 均为 0 时的特殊情况
+//        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
+//            return "0";
+//        }
+//
+//        // 计算两个长字符串中的较长字符串的长度
+//        int len = lenA > lenB ? lenA : lenB;
+//        int[] result = new int[len + 1];
+//        for (int i = 0; i < len + 1; i++) {
+//            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
+//            int aint = i < lenA ? (a[i] - '0') : 0;
+//            int bint = i < lenB ? (b[i] - '0') : 0;
+//            result[i] = aint + bint;
+//        }
+//        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+//        for (int i = 0; i < result.length; i++) {
+//            if (result[i] >= 10) {
+//                result[i + 1] += result[i] / 10;
+//                result[i] %= 10;
+//            }
+//        }
+//        StringBuffer sb = new StringBuffer();
+//        // 该字段用于标识是否有前置0，如果有就不要存储
+//        boolean flag = true;
+//        // 注意从后往前
+//        for (int i = len; i >= 0; i--) {
+//            if (result[i] == 0 && flag) {
+//                continue;
+//            } else {
+//                flag = false;
+//            }
+//            sb.append(result[i]);
+//        }
+//        return sb.toString();
+//    }
 
 
     /**
@@ -230,9 +227,238 @@ public class OtherUtil {
         if (sb.toString().equals("")) {
             sb.append("0");
         }
+        return sb.toString();
+    }
+
+    public static String bigNumberAdd(String f, String s){
+        System.out.print("加法:" + f + "+" + s + "=");
+        // 翻转两个字符串，并转换成数组
+        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+
+        // f 和 s 均为 0 时的特殊情况
+        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
+            return "0";
+        }
+
+        // 计算两个长字符串中的较长字符串的长度
+        int len = lenA > lenB ? lenA : lenB;
+        int[] result = new int[len + 1];
+        for (int i = 0; i < len + 1; i++) {
+            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            result[i] = aint + bint;
+        }
+        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+        for (int i = 0; i < result.length; i++) {
+            if (result[i] >= 10) {
+                result[i + 1] += result[i] / 10;
+                result[i] %= 10;
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        // 该字段用于标识是否有前置0，如果有就不要存储
+        boolean flag = true;
+        // 注意从后往前
+        for (int i = len; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+        // 结果
+        System.out.println(sb.toString());
+        return sb.toString();
+    }
+
+    public static  String decimalAdd(String f,String s){
+        // 两个字符串转换成数组,不翻转
+        char[] a = new StringBuffer(f).toString().toCharArray();
+        char[] b = new StringBuffer(s).toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+        //找到最大长度
+        int len = lenA > lenB ? lenA : lenB;
+        if(len==0)
+            return  "0";
+        // f 和 s 均为 0 时的特殊情况
+        if(len==0 && a[0] == '0' && b[0] == '0'){
+            return "0";
+        }
+        //设置进位标志，若有进位为1
+        int flg=0;
+        int[] result = new int[len];
+        for (int i = len-1; i >=0; i--) {
+            // 如果当前i所指向数为空，就用0代替，和另一个字符数组中的数字相加
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            result[i] = aint + bint;
+        }
+        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+        for (int i = len-1; i >=1; i--) {
+            if (result[i] >= 10) {
+                result[i-1] += 1;
+                result[i] %= 10;
+            }
+        }
+        if(result[0]>=10){
+            flg=1;
+            result[0]-=10;
+        }
+        StringBuffer sb=new StringBuffer();
+
+        // 判断是否有后置0，若有则抛弃
+        boolean flag = true;
+        for (int i = len - 1; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+
+        if (sb.toString().equals("")) {
+            sb.append("0");
+        }
+
+        //如果有进位，将进位放在结果的最后一位，与数值用.分隔
+        if(flg==1){
+            sb.append(".1");
+        }
+        return sb.toString();
+    }
+
+    public static String decimalSub(String f, String s) {
+        System.out.print("小数减法:" + f + "-" + s + "=");
+        // 将字符串转换成字符数组,不反转
+        if(f=="" && s=="")
+            return  "0";
+        char[] a = new StringBuffer(f).toString().toCharArray();
+        char[] b = new StringBuffer(s).toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+        // 找到最大长度
+        int len = lenA > lenB ? lenA : lenB;
+        int[] result = new int[len];
+       /* // 表示结果的正负
+        char sign = '+';
+        // 判断最终结果的正负
+        if (lenA < lenB) {
+            sign = '-';
+        } else if (lenA == lenB) {
+            int i = lenA - 1;
+            while (i > 0 && a[i] == b[i]) {
+                i--;
+            }
+            if (a[i] < b[i]) {
+                sign = '-';
+            }
+        }*/
+        // 计算结果集，如果最终结果为正，那么就a-b否则的话就b-a
+        for (int i = len-1; i >=0; i--) {
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            result[i]=aint-bint;
+        }
+        // 如果结果集合中的某一位小于零，那么就向前一位借一，然后将本位加上10。其实就相当于借位做减法
+        for (int i = len-1; i >0; i--) {
+            if (result[i] < 0) {
+                result[i - 1] -= 1;
+                result[i] += 10;
+            }
+        }
+
+        //设置借位标志
+        int flg=0;
+        if(result[0]<0){
+            flg=1;
+            result[0]+=10;
+        }
+        StringBuffer sb = new StringBuffer();
+
+//        // 如果最终结果为负值，就将负号放在最前面，正号则不需要
+//        if (sign == '-') {
+//            sb.append('-');
+//        }
+
+
+        // 判断是否有后置0，若有则抛弃
+        boolean flag = true;
+        for (int i = len - 1; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+
+        // 如果最终结果集合中没有值，就说明是两值相等，最终返回0
+        if (sb.toString().equals("")) {
+            sb.append("0");
+        }
+        //加上借位
+        if(flg==1)
+            sb.append(".1");
+
         // 返回值
         System.out.println(sb.toString());
         return sb.toString();
+    }
+
+    //输入的第一个数如果比第二个大，则为true
+    public static int compareBigNum(String f,String s){
+        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+        int lenA=f.length();
+        int lenB=s.length();
+        // 判断最终结果的正负
+        if(lenA>lenB)
+            return  1;
+        if (lenA < lenB) {
+            return  -1;
+        } else if (lenA == lenB) {
+            int i = 0;
+            while (i < lenA && a[i] == b[i]) {
+                i++;
+            }
+            if(i==lenA)
+                return  0;
+            if (a[i] < b[i])
+                return  -1;
+            if(a[i]>b[i])
+                return  1;
+            if(i==lenA-1)
+                return 0;
+        }
+        return 1;
+    }
+
+    public static int compareDecimalNum(String f,String s){
+        char[] a = new StringBuffer(f).toString().toCharArray();
+        char[] b = new StringBuffer(s).toString().toCharArray();
+        int lenA=f.length();
+        int lenB=s.length();
+        //判断结果正负
+        int i=0;
+        while(i<lenA && i<lenB){
+            if(a[i]<b[i])
+                return -1;
+            if(a[i]>b[i])
+                return 1;
+            i++;
+        }
+        if(i==lenA && lenA<lenB)
+            return  -1;
+        if(i==lenA && lenA==lenB)
+            return  0;
+        return 1;
     }
 
     /**
@@ -244,33 +470,166 @@ public class OtherUtil {
         if(f == null || s == null){
             return ans;
         }
-        if(f.charAt(0) != '-' && s.charAt(0) != '-'){
-            ans =  bigNumberAdd(f,s);
-        }else if(f.charAt(0) == '-' && s.charAt(0) != '-'){
-            ans =  bigNumberSub(s,f.substring(1));
-        }else if(f.charAt(0) != '-' && s.charAt(0) == '-'){
-            ans =  bigNumberSub(f, s.substring(1));
-        }else if(f.charAt(0) == '-' && s.charAt(0) == '-'){
-            ans =  "-" + bigNumberAdd(f.substring(1),s.substring(1));
+
+        String[] first=f.split("\\.");
+        String[] second=s.split("\\.");
+        int num_first=first.length;
+        int num_second=second.length;
+        //分开整数和小数部分
+        String first_integer=first[0];
+        String second_integer=second[0];
+        //判断是否有小数部分
+        String first_decimal="";
+        String second_decimal="";
+        if(num_first==2){
+            first_decimal=first[1];
+        }
+        if(num_second==2){
+            second_decimal=second[1];
+        }
+        if(first_integer.charAt(0) != '-' && second_integer.charAt(0) != '-'){
+            String ans_decimal=decimalAdd(first_decimal,second_decimal);
+            String[] arr=ans_decimal.split("\\.");
+            String ans_integer=bigNumberAdd(first_integer,second_integer);
+            if(arr.length==2){
+                ans_integer=bigNumberAdd(ans_integer,"1");
+                ans=ans_integer+"."+arr[0];
+            }
+            else{
+                ans=ans_integer+"."+arr[0];
+            }
+        }else if(first_integer.charAt(0) == '-' && second_integer.charAt(0) != '-'){
+            //比较两数大小
+            if(compareBigNum(second_integer,first_integer.substring(1))==1){
+                String ans_decimal=decimalSub(second_decimal,first_decimal);
+                String[] arr=ans_decimal.split("\\.");
+                String ans_integer=bigNumberSub(second_integer,first_integer.substring(1));
+                if(arr.length==2){
+                    ans_integer=bigNumberSub(ans_integer,"1");
+                    ans=ans_integer+"."+arr[0];
+                }
+                else{
+                    ans=ans_integer+"."+arr[0];
+                }
+            }else if (compareBigNum(second_integer,first_integer.substring(1))==-1){
+                String ans_decimal=decimalSub(first_decimal,second_decimal);
+                String[] arr=ans_decimal.split("\\.");
+                String ans_integer=bigNumberSub(first_integer.substring(1),second_integer);
+                if(arr.length==2){
+                    ans_integer=bigNumberSub(ans_integer,"1");
+                    ans="-"+ans_integer+"."+arr[0];
+                }else{
+                    ans="-"+ans_integer+"."+arr[0];
+                }
+            }
+            else{
+                if(compareDecimalNum(second_decimal,first_decimal)==1){
+                    String ans_decimal=decimalSub(second_decimal,first_decimal);
+                    String[] arr=ans_decimal.split("\\.");
+                    String ans_integer=bigNumberSub(second_integer,first_integer.substring(1));
+                    if(arr.length==2){
+                        ans_integer=bigNumberSub(ans_integer,"1");
+                        ans=ans_integer+"."+arr[0];
+                    }
+                    else{
+                        ans=ans_integer+"."+arr[0];
+                    }
+                }
+                else if(compareDecimalNum(second_decimal,first_decimal)==-1){
+                    String ans_decimal=decimalSub(first_decimal,second_decimal);
+                    String[] arr=ans_decimal.split("\\.");
+                    String ans_integer=bigNumberSub(first_integer.substring(1),second_integer);
+                    if(arr.length==2){
+                        ans_integer=bigNumberSub(ans_integer,"1");
+                        ans="-"+ans_integer+"."+arr[0];
+                    }else{
+                        ans="-"+ans_integer+"."+arr[0];
+                    }
+                }
+                else{
+                    ans="0";
+                }
+            }
+        }else if(first_integer.charAt(0) != '-' && second_integer.charAt(0) == '-'){
+            //比较两数大小
+            if(compareBigNum(first_integer,second_integer.substring(1))==1){
+                String ans_decimal=decimalSub(first_decimal,second_decimal);
+                String[] arr=ans_decimal.split("\\.");
+                String ans_integer=bigNumberSub(first_integer,second_integer.substring(1));
+                if(arr.length==2){
+                    ans_integer=bigNumberSub(ans_integer,"1");
+                    ans=ans_integer+"."+arr[0];
+                }
+                else{
+                    ans=ans_integer+"."+arr[0];
+                }
+            }else if (compareBigNum(first_integer,second_integer.substring(1))==-1){
+                String ans_decimal=decimalSub(second_decimal,first_decimal);
+                String[] arr=ans_decimal.split("\\.");
+                String ans_integer=bigNumberSub(second_integer.substring(1),first_integer);
+                if(arr.length==2){
+                    ans_integer=bigNumberSub(ans_integer,"1");
+                    ans="-"+ans_integer+"."+arr[0];
+                }else{
+                    ans="-"+ans_integer+"."+arr[0];
+                }
+            }
+            else{
+                if(compareDecimalNum(first_decimal,second_decimal)==0){
+                    String ans_decimal=decimalSub(first_decimal,second_decimal);
+                    String[] arr=ans_decimal.split("\\.");
+                    String ans_integer=bigNumberSub(first_integer,second_integer.substring(1));
+                    if(arr.length==2){
+                        ans_integer=bigNumberSub(ans_integer,"1");
+                        ans=ans_integer+"."+arr[0];
+                    }
+                    else{
+                        ans=ans_integer+"."+arr[0];
+                    }
+                }
+                if(compareDecimalNum(first_decimal,second_decimal)==-1){
+                    String ans_decimal=decimalSub(second_decimal,first_decimal);
+                    String[] arr=ans_decimal.split("\\.");
+                    String ans_integer=bigNumberSub(second_integer.substring(1),first_integer);
+                    if(arr.length==2){
+                        ans_integer=bigNumberSub(ans_integer,"1");
+                        ans="-"+ans_integer+"."+arr[0];
+                    }else{
+                        ans="-"+ans_integer+"."+arr[0];
+                    }
+                }
+                else{
+                    ans="0";
+                }
+            }
+        }else if(first_integer.charAt(0) == '-' && second_integer.charAt(0) == '-'){
+            String ans_decimal=decimalAdd(first_decimal,second_decimal);
+            String[] arr=ans_decimal.split("\\.");
+            String ans_integer=bigNumberAdd(first_integer.substring(1),second_integer.substring(1));
+            if(arr.length==2){
+                ans_integer=bigNumberAdd(ans_integer,"1");
+                ans="-"+ans_integer+"."+arr[0];
+            }
+            else{
+                ans="-"+ans_integer+"."+arr[0];
+            }
         }
         return ans;
     }
 
 
     public static Boolean isStringToNum(String s){
-//        if(s == null){
-//            return false;
-//        }
-//
-//        try {
-//                // parseInt 是将字符串转换为整数类型，返回一个int类型，如果字符串中有非数字类型字符，则会抛出一个NumberFormatException的异常
-//            Double.parseDouble(s);
-//            return true;
-//        } catch (NumberFormatException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-        return true;
+        char[] a=new StringBuffer(s).toString().toCharArray();
+        int len=a.length;
+        int num=0;
+        for(int i=0;i<len;i++){
+            if(a[i]=='.'){
+                num++;
+                if(num>1)
+                    return  false;
+            }
+        }
+        return  true;
     }
 
     /**
