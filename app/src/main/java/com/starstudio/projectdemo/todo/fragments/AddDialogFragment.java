@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.starstudio.projectdemo.databinding.FragmentDialogAddTodoBinding;
 import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,27 +62,23 @@ public class AddDialogFragment extends DialogFragment {
                 TodoEntity todoEntity = new TodoEntity();
                 todoEntity.setCondition("未完成");
                 todoEntity.setContent(binding.dialogTodoNameEdit.getText().toString());
-                todoEntity.setTodoTime(System.currentTimeMillis());
+                // 将选择的标准日期格式，转化为时间戳形式进行存储
+                todoEntity.setTodoTime(OtherUtil.time2Timestamp(binding.dialogTodoTimeEdit.getText().toString()));
                 todoDaoService.insert(todoEntity)
                         .subscribe(new CompletableObserver() {
                             @Override
-                            public void onSubscribe(@NotNull Disposable d) {
-
-                            }
+                            public void onSubscribe(@NotNull Disposable d) {}
 
                             @Override
-                            public void onComplete() {
-                                // 关闭页面
-                                closeDialog();
-                            }
+                            public void onComplete() {}
 
                             @Override
                             public void onError(@NotNull Throwable e) {
                                 Toast.makeText(getContext(), "添加失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                // 关闭页面
-                                closeDialog();
                             }
                         });
+                // 关闭页面
+                closeDialog();
             }
         });
     }

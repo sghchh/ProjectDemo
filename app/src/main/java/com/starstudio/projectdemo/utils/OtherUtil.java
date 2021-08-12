@@ -13,6 +13,7 @@ import com.huawei.hms.framework.common.StringUtils;
 import com.huawei.hms.videoeditor.sdk.p.S;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,17 +32,17 @@ public class OtherUtil {
     }};
     private static final HashMap<Integer, String> monthToEng = new HashMap(){{
        put(1, "January");
-       put(2, "Fi");
-       put(3, "3");
-       put(4, "4");
-       put(5, "5");
-       put(6, "6");
-       put(7, "7");
-       put(8, "Fi");
-       put(9, "9");
-       put(10, "10");
-       put(11, "11");
-       put(12, "12");
+       put(2, "February");
+       put(3, "March");
+       put(4, "April");
+       put(5, "May");
+       put(6, "June");
+       put(7, "July");
+       put(8, "August");
+       put(9, "September");
+       put(10, "October");
+       put(11, "November");
+       put(12, "December");
     }};
     private static final Gson gson = new Gson();
     @SuppressLint("SimpleDateFormat")
@@ -108,13 +109,79 @@ public class OtherUtil {
 
     /**
      * 将传递的毫秒时长解析为“时：分：秒”的格式
-     * @param time
+     * @param time 为时间长度，单位为毫秒
      * @return
      */
     public static String formatLongToTime(int time) {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
         return format.format(time);
+    }
+
+    /**
+     * 将标准时间格式的字符串，转化为时间戳
+     * @param time 标准格式的时间字符串  yyyy-MM-dd HH:mm:ss
+     * @return 转换后的时间戳
+     */
+    public static String time2Timestamp(String time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return String.valueOf(sdf.parse(time).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 将时间戳转化为标准的时间格式字符串
+     * @param timestamp 字符串给出的时间戳
+     * @return yyyy-MM-dd HH:mm:ss格式的时间字符串
+     */
+    public static String timestamp2Time(String timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(timestamp);
+    }
+
+    /**
+     * 检查两个时间是否位于同一天
+     * @param time1
+     * @param time2
+     * @return 0:代表长度小于一天；1：代表长度大于一天，小于两天；2：代表长度大于等于两天
+     */
+    public static int checkTimeLength(long time1, long time2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String t1 = sdf.format(time1);
+        String t2 = sdf.format(time2);
+        String[] time1s = t1.split("-");
+        String[] time2s = t2.split("-");
+        if (time1s[0] != time2s[0] || time1s[1] != time2s[1])
+            return 2;
+        if (time1s[2] == time2s[2])
+            return 0;
+        return Math.min(Math.abs(Integer.valueOf(time1s[2]) - Integer.valueOf(time2s[2])), 2);
+    }
+
+    /**
+     * 根据时间戳得到标准钟表时间 HH:mm
+     * @param timestamp 时间戳
+     * @return 钟表时间
+     */
+    public static String getClockTime(String timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String time = sdf.format(timestamp);
+        return time.split(" ")[1];
+    }
+
+    /**
+     * 根据时间戳得到年月日
+     * @param timestamp 时间戳
+     * @return yyyy-MM-dd
+     */
+    public static String getYearMonth(String timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String time = sdf.format(timestamp);
+        return time.split(" ")[1];
     }
 
 //    /**

@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.todo;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -72,8 +74,25 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
         }
 
         public void loadData(TodoEntity data) {
-            time.setText(""+data.getTodoTime());
+            time.setText(OtherUtil.getClockTime(data.getTodoTime()));
             content.setText(data.getContent());
+
+            long now = System.currentTimeMillis();
+            long todotime = Long.parseLong(data.getTodoTime());
+            switch (OtherUtil.checkTimeLength(todotime, now)) {
+                case 0:
+                    time2now.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    time2now.setText(OtherUtil.getYearMonth(data.getTodoTime()));
+                    break;
+                default:
+                    if (todotime > now)
+                        time2now.setText("Tomorrow");
+                    else
+                        time2now.setText("Yesterday");
+            }
+
         }
     }
 

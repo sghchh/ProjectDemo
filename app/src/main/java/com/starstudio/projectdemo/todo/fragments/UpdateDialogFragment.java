@@ -15,6 +15,7 @@ import com.starstudio.projectdemo.databinding.FragmentDialogAddTodoBinding;
 import com.starstudio.projectdemo.databinding.FragmentDialogUpdateTodoBinding;
 import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +77,7 @@ public class UpdateDialogFragment extends DialogFragment {
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-                                Toast.makeText(getContext(), "添加失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "删除失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 // 关闭页面
@@ -91,7 +92,7 @@ public class UpdateDialogFragment extends DialogFragment {
                 TodoEntity todoEntity = new TodoEntity();
                 todoEntity.setCondition("未完成");
                 todoEntity.setContent(binding.dialogTodoNameEdit.getText().toString());
-                todoEntity.setTodoTime(System.currentTimeMillis());
+                todoEntity.setTodoTime(OtherUtil.time2Timestamp(binding.dialogTodoTimeEdit.getText().toString()));
                 todoDaoService.insert(todoEntity)
                         .subscribe(new CompletableObserver() {
                             @Override

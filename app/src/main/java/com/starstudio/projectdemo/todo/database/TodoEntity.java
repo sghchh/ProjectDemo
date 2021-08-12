@@ -14,7 +14,7 @@ public class TodoEntity {
 
     @PrimaryKey
     @ColumnInfo(name = "todo_time")
-    private long todoTime;         // 所选择的待办时间
+    private String todoTime;         // 所选择的待办时间
 
     private String content;        // 待办的内容
 
@@ -29,11 +29,11 @@ public class TodoEntity {
                 '}';
     }
 
-    public long getTodoTime() {
+    public String getTodoTime() {
         return todoTime;
     }
 
-    public void setTodoTime(long todoTime) {
+    public void setTodoTime(String todoTime) {
         this.todoTime = todoTime;
     }
 
