@@ -15,7 +15,7 @@ import com.starstudio.projectdemo.journal.data.PictureArrayConverter;
  * 2021-8-9
  * 用来获取JournalDAO实例的数据库
  */
-@Database(entities = {JournalEntity.class}, version = 1)
+@Database(entities = {JournalEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({PictureArrayConverter.class})
 public abstract class JournalDatabase extends RoomDatabase {
     public abstract JournalDAO journalDAO();

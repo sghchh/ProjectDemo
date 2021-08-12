@@ -117,54 +117,51 @@ public class OtherUtil {
         return format.format(time);
     }
 
-    /**
-     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
-     */
-    public static String bigNumberAdd(String f, String s){
-        System.out.print("加法:" + f + "+" + s + "=");
-        // 翻转两个字符串，并转换成数组
-        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
-        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
-        int lenA = a.length;
-        int lenB = b.length;
-
-        // f 和 s 均为 0 时的特殊情况
-        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
-            return "0";
-        }
-
-        // 计算两个长字符串中的较长字符串的长度
-        int len = lenA > lenB ? lenA : lenB;
-        int[] result = new int[len + 1];
-        for (int i = 0; i < len + 1; i++) {
-            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
-            int aint = i < lenA ? (a[i] - '0') : 0;
-            int bint = i < lenB ? (b[i] - '0') : 0;
-            result[i] = aint + bint;
-        }
-        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
-        for (int i = 0; i < result.length; i++) {
-            if (result[i] >= 10) {
-                result[i + 1] += result[i] / 10;
-                result[i] %= 10;
-            }
-        }
-        StringBuffer sb = new StringBuffer();
-        // 该字段用于标识是否有前置0，如果有就不要存储
-        boolean flag = true;
-        // 注意从后往前
-        for (int i = len; i >= 0; i--) {
-            if (result[i] == 0 && flag) {
-                continue;
-            } else {
-                flag = false;
-            }
-            sb.append(result[i]);
-        }
-        // 结果
-        System.out.println(sb.toString());
-        return sb.toString();
-    }
+//    /**
+//     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
+//     */
+//    public static String bigNumberAdd(String f, String s){
+//        // 翻转两个字符串，并转换成数组
+//        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+//        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+//        int lenA = a.length;
+//        int lenB = b.length;
+//
+//        // f 和 s 均为 0 时的特殊情况
+//        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
+//            return "0";
+//        }
+//
+//        // 计算两个长字符串中的较长字符串的长度
+//        int len = lenA > lenB ? lenA : lenB;
+//        int[] result = new int[len + 1];
+//        for (int i = 0; i < len + 1; i++) {
+//            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
+//            int aint = i < lenA ? (a[i] - '0') : 0;
+//            int bint = i < lenB ? (b[i] - '0') : 0;
+//            result[i] = aint + bint;
+//        }
+//        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+//        for (int i = 0; i < result.length; i++) {
+//            if (result[i] >= 10) {
+//                result[i + 1] += result[i] / 10;
+//                result[i] %= 10;
+//            }
+//        }
+//        StringBuffer sb = new StringBuffer();
+//        // 该字段用于标识是否有前置0，如果有就不要存储
+//        boolean flag = true;
+//        // 注意从后往前
+//        for (int i = len; i >= 0; i--) {
+//            if (result[i] == 0 && flag) {
+//                continue;
+//            } else {
+//                flag = false;
+//            }
+//            sb.append(result[i]);
+//        }
+//        return sb.toString();
+//    }
 
 
     /**
@@ -230,13 +227,56 @@ public class OtherUtil {
         if (sb.toString().equals("")) {
             sb.append("0");
         }
-        // 返回值
+        return sb.toString();
+    }
+
+    public static String bigNumberAdd(String f, String s){
+        System.out.print("加法:" + f + "+" + s + "=");
+        // 翻转两个字符串，并转换成数组
+        char[] a = new StringBuffer(f).reverse().toString().toCharArray();
+        char[] b = new StringBuffer(s).reverse().toString().toCharArray();
+        int lenA = a.length;
+        int lenB = b.length;
+
+        // f 和 s 均为 0 时的特殊情况
+        if(lenA == 1 && lenB == 1 && a[0] == '0' && b[0] == '0'){
+            return "0";
+        }
+
+        // 计算两个长字符串中的较长字符串的长度
+        int len = lenA > lenB ? lenA : lenB;
+        int[] result = new int[len + 1];
+        for (int i = 0; i < len + 1; i++) {
+            // 如果当前的i超过了其中的一个，就用0代替，和另一个字符数组中的数字相加
+            int aint = i < lenA ? (a[i] - '0') : 0;
+            int bint = i < lenB ? (b[i] - '0') : 0;
+            result[i] = aint + bint;
+        }
+        // 处理结果集合，如果大于10的就向前一位进位，本身进行除10取余
+        for (int i = 0; i < result.length; i++) {
+            if (result[i] >= 10) {
+                result[i + 1] += result[i] / 10;
+                result[i] %= 10;
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        // 该字段用于标识是否有前置0，如果有就不要存储
+        boolean flag = true;
+        // 注意从后往前
+        for (int i = len; i >= 0; i--) {
+            if (result[i] == 0 && flag) {
+                continue;
+            } else {
+                flag = false;
+            }
+            sb.append(result[i]);
+        }
+        // 结果
         System.out.println(sb.toString());
         return sb.toString();
     }
 
     public static  String decimalAdd(String f,String s){
-        System.out.print("小数加法:" + f + "+" + s + "=");
         // 两个字符串转换成数组,不翻转
         char[] a = new StringBuffer(f).toString().toCharArray();
         char[] b = new StringBuffer(s).toString().toCharArray();
@@ -291,14 +331,14 @@ public class OtherUtil {
         if(flg==1){
             sb.append(".1");
         }
-        // 结果
-        System.out.println(sb.toString());
         return sb.toString();
     }
 
     public static String decimalSub(String f, String s) {
         System.out.print("小数减法:" + f + "-" + s + "=");
         // 将字符串转换成字符数组,不反转
+        if(f=="" && s=="")
+            return  "0";
         char[] a = new StringBuffer(f).toString().toCharArray();
         char[] b = new StringBuffer(s).toString().toCharArray();
         int lenA = a.length;
@@ -333,6 +373,7 @@ public class OtherUtil {
                 result[i] += 10;
             }
         }
+
         //设置借位标志
         int flg=0;
         if(result[0]<0){
@@ -419,6 +460,7 @@ public class OtherUtil {
             return  0;
         return 1;
     }
+
     /**
      * 将用字符串表示的两个数字相加减进行整合为一个方法便于调用 (该方法默认字符串中正数前面不带符号，负数第一位用"-"代表)
      */
@@ -574,7 +616,6 @@ public class OtherUtil {
         }
         return ans;
     }
-
 
 
     public static Boolean isStringToNum(String s){

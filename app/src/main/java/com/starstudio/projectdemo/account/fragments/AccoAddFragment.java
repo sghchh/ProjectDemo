@@ -238,6 +238,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                     etwtMoney.setText("0" + s);
                     etwtMoney.setSelection(etwtMoney.getText().length());
                 }
+                deleteLastChar = false;
             }
         });
         etwtMoney.setOnFocusChangeListener(new View.OnFocusChangeListener() {

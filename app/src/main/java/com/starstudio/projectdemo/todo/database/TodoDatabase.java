@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase;
  * 2021-8-12
  * todo页面的数据库支持
  */
-@Database(entities = {TodoEntity.class}, version = 1)
+@Database(entities = {TodoEntity.class}, version = 1, exportSchema = false)
 public abstract class TodoDatabase extends RoomDatabase {
     public abstract TodoDao todoDAO();
 
