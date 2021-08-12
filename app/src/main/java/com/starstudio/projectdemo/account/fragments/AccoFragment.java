@@ -164,9 +164,9 @@ public class AccoFragment extends BaseFragment {
                 year = data.get(i).getYear();
                 month = data.get(i).getMonth();
                 day = data.get(i).getDay();
-                mClassifyData.add(new AccoData(month,day, data.get(i).getMoney(),new ArrayList<AccoData.AccoDailyData>()));
+                mClassifyData.add(new AccoData(year,month,day, data.get(i).getMoney(),new ArrayList<AccoData.AccoDailyData>()));
             }
-            mClassifyData.get(mClassifyData.size() - 1).getmDailyData().add(new AccoData.AccoDailyData(data.get(i).getKind(),
+            mClassifyData.get(mClassifyData.size() - 1).getmDailyData().add(new AccoData.AccoDailyData(data.get(i).getPostTime(),data.get(i).getKind(),
                     data.get(i).getKindDetail(),
                     data.get(i).getComment(),
                     data.get(i).getMoney()));

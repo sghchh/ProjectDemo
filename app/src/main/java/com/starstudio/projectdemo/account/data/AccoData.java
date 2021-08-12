@@ -3,12 +3,14 @@ package com.starstudio.projectdemo.account.data;
 import java.util.ArrayList;
 
 public class AccoData {
+    private String mYear;
     private String mMonth;
     private String mDay;
     private String mCount;  // 账单总支出
     private ArrayList<AccoDailyData> mDaily;    //账单每日收支详情
 
-    public AccoData(String mMonth, String mDay, String mCount, ArrayList<AccoDailyData> mDaily) {
+    public AccoData(String mYear, String mMonth, String mDay, String mCount, ArrayList<AccoDailyData> mDaily) {
+        this.mYear = mYear;
         this.mMonth = mMonth;
         this.mDay = mDay;
         this.mCount = mCount;
@@ -47,14 +49,24 @@ public class AccoData {
         this.mDaily = mDailyData;
     }
 
+    public String getmYear() {
+        return mYear;
+    }
+
+    public void setmYear(String mYear) {
+        this.mYear = mYear;
+    }
+
 
     public static class AccoDailyData{
+        private long postTime;  // 日记发表时间戳
         private String mKind;   //账单详情类别
         private String mKindDetail;   //账单详情细分类别
         private String mComment;    //账单详情备注
         private String mMoney;  //账单详情支出金额
 
-        public AccoDailyData(String mKind, String mKindDetail, String mComment, String mMoney) {
+        public AccoDailyData(long postTime, String mKind, String mKindDetail, String mComment, String mMoney) {
+            this.postTime = postTime;
             this.mKind = mKind;
             this.mKindDetail = mKindDetail;
             this.mComment = mComment;
@@ -91,6 +103,14 @@ public class AccoData {
 
         public void setmMoney(String mMoney) {
             this.mMoney = mMoney;
+        }
+
+        public long getPostTime() {
+            return postTime;
+        }
+
+        public void setPostTime(long postTime) {
+            this.postTime = postTime;
         }
     }
 

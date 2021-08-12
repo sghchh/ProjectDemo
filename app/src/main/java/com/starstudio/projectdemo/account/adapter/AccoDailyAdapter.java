@@ -9,10 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.account.data.AccoData;
+import com.starstudio.projectdemo.account.fragments.AccoAddFragment;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +41,13 @@ public class AccoDailyAdapter extends RecyclerView.Adapter<AccoDailyAdapter.Acco
     @Override
     public void onBindViewHolder(@NonNull @NotNull AccoDailyAdapter.AccoDailyHolder holder, int position) {
         holder.loadData(mAccoData.getmDailyData().get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialogFragment = new AccoAddFragment(mAccoData.getmDailyData().get(position), mAccoData.getmYear(), mAccoData.getmMonth(), mAccoData.getmDay());
+                dialogFragment.show(((AppCompatActivity) holder.itemView.getContext()).getSupportFragmentManager(),"修改");
+            }
+        });
     }
 
     @Override

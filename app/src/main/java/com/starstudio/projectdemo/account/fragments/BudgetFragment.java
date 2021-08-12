@@ -38,15 +38,14 @@ public class BudgetFragment extends Fragment {
     private AccoDao mAccoDao;
     private ArrayList<BudgetData>  mBudgetData;
     private SharedPreferencesUtils mSharedPreferencesUtils;
-    private String mBudgetCount = "0";
+    private String mBudgetCount;
     private static final HashMap<String,Integer> kindToNum = new HashMap(){{
         put("饮食",0);
         put("学习进修",1);
         put("衣服饰品",2);
         put("通讯交通",3);
         put("休闲娱乐",4);
-//        put("其他项目",5);
-        put("",5);
+        put("其他杂项",5);
     }};
     private static final int HADNLE_INIT = 1;
 
@@ -81,21 +80,37 @@ public class BudgetFragment extends Fragment {
                 if(mBudgetData != null){
                     mBudgetData.clear();
                 }
+                Log.e(getClass().getSimpleName(), "测试SP存储: " + (mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ? "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString())));
                 mBudgetData = new ArrayList<BudgetData>(){{
-//                    add(new BudgetData("饮食", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()), "0"));
-//                    add(new BudgetData("学习进修", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString()), "0"));
-//                    add(new BudgetData("衣服饰品", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString()), "0"));
-//                    add(new BudgetData("通讯交通", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString()), "0"));
-//                    add(new BudgetData("休闲娱乐", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString()), "0"));
-//                    add(new BudgetData("其他项目", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString().equals("") ? "0" : SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString()), "0"));
-                    add(new BudgetData("饮食", "0", "0"));
-                    add(new BudgetData("学习进修", "0", "0"));
-                    add(new BudgetData("衣服饰品", "0", "0"));
-                    add(new BudgetData("通讯交通", "0", "0"));
-                    add(new BudgetData("休闲娱乐", "0", "0"));
-                    add(new BudgetData("其他项目", "0", "0"));
+                    add(new BudgetData("饮食", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString())));
+                    add(new BudgetData("学习进修", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_LEARN.toString())));
+                    add(new BudgetData("衣服饰品", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_CLOTHES.toString())));
+                    add(new BudgetData("通讯交通", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_COMMUN_TRANS.toString())));
+                    add(new BudgetData("休闲娱乐", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_RELAX.toString())));
+                    add(new BudgetData("其他杂项", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString()),
+                            mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString()).equals("") ?
+                            "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString())));
                 }};
+                mBudgetCount = "0";
                 for(int i = 0; i < mBudgetData.size(); i++){
+                    Log.e(getClass().getSimpleName(), "mBudgetCount的值: " + mBudgetCount);
+                    Log.e(getClass().getSimpleName(), "每项的预算: " + mBudgetData.get(i).getBudget());
                     mBudgetCount = OtherUtil.bigNumberOperation(mBudgetCount, mBudgetData.get(i).getBudget());
                 }
                 classifyData((ArrayList<AccoEntity>) mAccoDao.getPreAccos());
@@ -110,14 +125,17 @@ public class BudgetFragment extends Fragment {
     private void classifyData(ArrayList<AccoEntity> data){
         for(int i = 0; i < data.size(); i++){
             if(data.get(i).getMonth().equals(OtherUtil.getSystemMonthToNumber()) && data.get(i).getYear().equals(OtherUtil.getSystemYear())){
+                Log.e(getClass().getSimpleName(), "计算余额为中第一个数: " + mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance());
+                Log.e(getClass().getSimpleName(), "计算余额为中第二个数: " + data.get(i).getMoney());
+                Log.e(getClass().getSimpleName(), "计算余额为: " + OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(), data.get(i).getMoney()));
                 mBudgetData.get(kindToNum.get(data.get(i).getKind())).
                         setBalance(OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(), data.get(i).getMoney()));
             }else{
-                for(int j = 0; j < mBudgetData.size(); j++){
-                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).
-                            setBalance(OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(),
-                                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBudget()));
-                }
+//                for(int j = 0; j < mBudgetData.size(); j++){
+//                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).
+//                            setBalance(OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(),
+//                                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBudget()));
+//                }
                 break;
             }
         }
