@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.account.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,9 +14,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -198,7 +203,54 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         etwtMoney.setLeadText("￥");
         etwtMoney.setLeadTextSize(23);
         etwtMoney.setLeadTextColor("#FF646A73");
-        etwtMoney.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
+        etwtMoney.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etwtMoney.addTextChangedListener(new TextWatcher() {
+            boolean deleteLastChar;// 是否需要删除末尾
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().contains(".")) {
+                    // 如果点后面有超过三位数值,则删掉最后一位
+                    int length = s.length() - s.toString().lastIndexOf(".");
+                    // 说明后面有三位数值
+                    deleteLastChar = length >= 4;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s == null) {
+                    return;
+                }
+                if (deleteLastChar) {
+                    // 设置新的截取的字符串
+                    etwtMoney.setText(s.toString().substring(0, s.toString().length() - 1));
+                    // 光标强制到末尾
+                    etwtMoney.setSelection(etwtMoney.getText().length());
+                }
+                // 以小数点开头，前面自动加上 "0"
+                if (s.toString().startsWith(".")) {
+                    etwtMoney.setText("0" + s);
+                    etwtMoney.setSelection(etwtMoney.getText().length());
+                }
+            }
+        });
+        etwtMoney.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                EditText editText1 = (EditText) v;
+                // 以小数点结尾，去掉小数点
+                if (!hasFocus && editText1.getText() != null && editText1.getText().toString().endsWith(".")) {
+                    etwtMoney.setText(editText1.getText().subSequence(0, editText1.getText().length() - 1));
+                    etwtMoney.setSelection(editText1.getText().length());
+                }
+            }
+        });
 
         SpannableString ss = new SpannableString("     添加备注");//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12,true);//设置字体大小 true表示单位是sp
@@ -311,8 +363,8 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private void saveData(){
         final String kind = mKind;
         final String kindDetail = mKindDetail;
-        final String money = String.valueOf(etwtMoney.getText());
-        final String comment = String.valueOf(etComment.getText());
+        final String money = String.valueOf(etwtMoney.getText()).trim();
+        final String comment = String.valueOf(etComment.getText()).trim();
 
         if(kind.equals("")){
 //            SpannableString ss = new SpannableString("     添加备注");//定义hint的值
@@ -326,6 +378,11 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
             etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
             return;
         }
+//        else if(!OtherUtil.isStringToNum(money)){
+//            etwtMoney.setText("");
+//            etwtMoney.setHint("                请填写正确金额");
+//            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+//        }
 
         new Thread(new Runnable() {
             @Override

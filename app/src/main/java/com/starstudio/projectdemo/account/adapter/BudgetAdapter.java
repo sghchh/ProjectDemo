@@ -1,5 +1,7 @@
 package com.starstudio.projectdemo.account.adapter;
 
+import android.graphics.Color;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,18 +50,23 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetHold
 
     static class BudgetHolder extends RecyclerView.ViewHolder{
         private final TextView tvKind,  tvBalance;
-        private final EditText tvBudget;
+        private final EditText etBudget;
 
         public BudgetHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             tvKind = itemView.findViewById(R.id.tv_kind);
-            tvBudget = itemView.findViewById(R.id.et_budget);
+            etBudget = itemView.findViewById(R.id.et_budget);
             tvBalance = itemView.findViewById(R.id.tv_balance);
+
+            etBudget.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         }
 
         private void loadData(BudgetData data){
             tvKind.setText(data.getKind());
-            tvBudget.setText(data.getBudget());
+            etBudget.setText(data.getBudget());
+            if(data.getBalance().charAt(0) == '-'){
+                tvBalance.setTextColor(Color.parseColor("#ABFF3E3E"));
+            }
             tvBalance.setText(data.getBalance());
 //            switch (position){
 //                case 0:

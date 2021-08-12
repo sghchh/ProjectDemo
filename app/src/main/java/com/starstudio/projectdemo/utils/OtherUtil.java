@@ -7,13 +7,17 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.util.Log;
 
+
 import com.google.gson.Gson;
+import com.huawei.hms.framework.common.StringUtils;
 import com.huawei.hms.videoeditor.sdk.p.S;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
 
 public class OtherUtil {
     private static final HashMap<String, String> weekToEng = new HashMap(){{
@@ -250,6 +254,23 @@ public class OtherUtil {
             ans =  "-" + bigNumberAdd(f.substring(1),s.substring(1));
         }
         return ans;
+    }
+
+
+    public static Boolean isStringToNum(String s){
+//        if(s == null){
+//            return false;
+//        }
+//
+//        try {
+//                // parseInt 是将字符串转换为整数类型，返回一个int类型，如果字符串中有非数字类型字符，则会抛出一个NumberFormatException的异常
+//            Double.parseDouble(s);
+//            return true;
+//        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+        return true;
     }
 
     /**

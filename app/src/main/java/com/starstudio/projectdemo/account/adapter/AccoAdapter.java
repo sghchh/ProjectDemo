@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.account.adapter;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +69,17 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
             this.recyclerDaily.setAdapter(new AccoDailyAdapter(data));
             this.recyclerDaily.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             tvDailyDate.setText(data.getmMonth() + "月" + data.getmDay() + "日");
-            tvCount.setText(data.getmCount());
+            if(data.getmCount().charAt(0) != '-'){
+                if(!data.getmCount().equals("0")){
+                    tvCount.setTextColor(Color.parseColor("#ABFF3E3E"));
+                    tvCount.setText("+" + data.getmCount());
+                }else{
+                    tvCount.setText(data.getmCount());
+                }
+            }else{
+                tvCount.setText(data.getmCount());
+            }
+
         }
     }
 
