@@ -681,7 +681,12 @@ public class OtherUtil {
                 ans="-"+ans_integer+"."+arr[0];
             }
         }
-        return ans;
+//        return ans;
+        int i = 0;
+        while(ans.charAt(i) == '-'){
+            i++;
+        }
+        return ans.substring(i == 0 ? 0 : i -1);
     }
 
 

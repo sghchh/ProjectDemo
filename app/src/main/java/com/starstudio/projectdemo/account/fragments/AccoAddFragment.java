@@ -2,7 +2,6 @@ package com.starstudio.projectdemo.account.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,18 +21,14 @@ import android.text.SpannedString;
 import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +46,7 @@ import com.starstudio.projectdemo.Custom.EditTextWithText;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.account.api.AccoDao;
 import com.starstudio.projectdemo.account.api.AccoDatabase;
+import com.starstudio.projectdemo.account.data.AccoData;
 import com.starstudio.projectdemo.account.data.AccoEntity;
 import com.starstudio.projectdemo.account.data.KindData;
 import com.starstudio.projectdemo.utils.OtherUtil;
@@ -59,7 +55,6 @@ import com.wheelpicker.OnCascadeWheelListener;
 import com.wheelpicker.OnMultiDataPickListener;
 import com.wheelpicker.PickOption;
 
-import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,14 +66,15 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private EditTextWithText etwtKind, etwtMoney;
     private EditText etComment;
     private ImageView ivVoice, ivCancle;
-    private TextView tvExpense, tvIncome, tvCancel, tvSave;
+    private TextView tvExpense, tvIncome, tvCancel, tvSave, tvTitle;
     private MLSpeechRealTimeTranscription mSpeechRecognizer;
     private AccoDatabase mAccoDatabase;
     private AccoDao mAccoDao;
     private LocalBroadcastManager mLocalBroadcastManager ;
     private List<Integer> mCascadeInitIndex = new ArrayList<Integer>();
     private KindData mKindDatas;
-    private String mKind = "", mKindDetail = "";
+    private String mKind = "", mKindDetail = "", mYear, mMonth, mDay;
+    private AccoData.AccoDailyData mAccoDeilyData = null;
 
     private static final int AUDIO_PERMISSION_CODE = 1;
     // Permission
@@ -88,6 +84,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     public static final String REAL_VOICE_SUCCESS = "success";
     public static final int REAL_VOICE_SUCCESS_CODE = 0;
     private boolean isExpend = true;
+    private boolean  hasData = false;   //判断是点击添加按钮跳转的，还是具体账单跳转的
     private static final int HANDLE_INSERT_FINISH = 3;
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -105,6 +102,20 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         }
     });
 
+    public AccoAddFragment(){}
+
+    public AccoAddFragment(AccoData.AccoDailyData data, String year, String month, String day){
+        mAccoDeilyData = data;
+        mYear = year;
+        mMonth = month;
+        mDay = day;
+        mKind = data.getmKind();
+        mKindDetail = data.getmKindDetail();
+        hasData = true;
+    }
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dialog_add_acco, container, false);
@@ -112,6 +123,11 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         initView(rootView);
         setAllOnClickListener();
         setDialogCancel();
+
+        if(hasData){
+            setInitData(mAccoDeilyData, rootView);
+        }
+
 
         //注册广播接收器
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext()) ;
@@ -277,6 +293,26 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         dialog.setCancelable(false);
     }
 
+    private void setInitData(AccoData.AccoDailyData data, View rootView){
+        tvTitle = rootView.findViewById(R.id.tv_title);
+
+        if(data.getmMoney().charAt(0) == '-'){
+            isExpend = true;
+            tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
+            tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
+            etwtMoney.setText(data.getmMoney().substring(1));
+        }else{
+            isExpend = false;
+            tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
+            tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
+            etwtMoney.setText(data.getmMoney());
+        }
+        tvTitle.setText("修改账单");
+        etwtKind.setText(data.getmKind() + " > " + data.getmKindDetail());
+        etComment.setText(" " + data.getmComment());
+        tvCancel.setText("删除");
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -299,10 +335,18 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
                 break;
             case R.id.tv_cancel:
-                dismiss();
+                if(!hasData){
+                    dismiss();
+                }else{
+                    deleteData();
+                }
                 break;
             case R.id.tv_save:
-                saveData();
+                if(!hasData){
+                    saveData();
+                }else{
+                    updateData();
+                }
                 break;
             case R.id.et_kind:
                 pickKind();
@@ -401,6 +445,61 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         }).start();
     }
 
+    private void deleteData(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                    mAccoDao.deleteAccos(new AccoEntity(mAccoDeilyData.getPostTime(),
+                           "","",
+                            "", "", "","",""));
+
+                Message msg = new Message();
+                msg.what = HANDLE_INSERT_FINISH;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private void updateData(){
+        final String kind = mKind;
+        final String kindDetail = mKindDetail;
+        final String money = String.valueOf(etwtMoney.getText()).trim();
+        final String comment = String.valueOf(etComment.getText()).trim();
+
+        if(kind.equals("")){
+            etwtKind.setHint("        请选择种类");
+            etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return;
+        }else if(money.equals("")){
+            etwtMoney.setHint("                  请填写金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return;
+        }else if(!OtherUtil.isStringToNum(money)){
+            etwtMoney.setText("");
+            etwtMoney.setHint("                请填写正确金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(isExpend){
+                    mAccoDao.updateAccos(new AccoEntity(mAccoDeilyData.getPostTime(),
+                            mYear, mMonth,mDay,
+                            kind,kindDetail,comment,"-" + money));
+                }else{
+                    mAccoDao.updateAccos(new AccoEntity(mAccoDeilyData.getPostTime(),
+                            mYear, mMonth,mDay,
+                            kind,kindDetail,comment,money));
+                }
+
+                Message msg = new Message();
+                msg.what = HANDLE_INSERT_FINISH;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
 
     private void startRealTimeVoice() {
         //                requestCameraPermission();
