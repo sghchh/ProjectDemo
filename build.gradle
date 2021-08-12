@@ -6,6 +6,8 @@ buildscript {
 
         // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
+        //配置 3DWheelPicker 的Maven仓地址
+        maven { url 'https://www.jitpack.io'}
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.2.2"
@@ -26,6 +28,9 @@ allprojects {
 
         // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
+
+        //配置 3DWheelPicker 的Maven仓地址
+        maven { url 'https://www.jitpack.io'}
     }
 }
 

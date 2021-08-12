@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,9 +47,14 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.account.api.AccoDao;
 import com.starstudio.projectdemo.account.api.AccoDatabase;
 import com.starstudio.projectdemo.account.data.AccoEntity;
-import com.starstudio.projectdemo.utils.HandlerHelper;
+import com.starstudio.projectdemo.account.data.KindData;
 import com.starstudio.projectdemo.utils.OtherUtil;
+import com.wheelpicker.DataPicker;
+import com.wheelpicker.OnCascadeWheelListener;
+import com.wheelpicker.OnMultiDataPickListener;
+import com.wheelpicker.PickOption;
 
+import java.nio.file.WatchEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,6 +71,9 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private AccoDatabase mAccoDatabase;
     private AccoDao mAccoDao;
     private LocalBroadcastManager mLocalBroadcastManager ;
+    private List<Integer> mCascadeInitIndex = new ArrayList<Integer>();
+    private KindData mKindDatas;
+    private String mKind = "", mKindDetail = "";
 
     private static final int AUDIO_PERMISSION_CODE = 1;
     // Permission
@@ -95,8 +103,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dialog_add_acco, container, false);
-        mAccoDatabase = Room.databaseBuilder(this.getContext(), AccoDatabase.class,"acco_database").build();
-        mAccoDao = mAccoDatabase.getAccoDao();
+        initData();
         initView(rootView);
         setAllOnClickListener();
         setDialogCancel();
@@ -106,6 +113,48 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
 
 
         return rootView;
+    }
+
+    private void initData() {
+        mKindDatas = new KindData(new ArrayList<KindData.KindDetailFirst>(){{
+            add(new KindData.KindDetailFirst("饮食", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("食堂三餐"));
+                add(new KindData.KindDetailSecond("聚餐"));
+                add(new KindData.KindDetailSecond("水果零食"));
+                add(new KindData.KindDetailSecond("外卖"));
+                add(new KindData.KindDetailSecond("外出吃饭"));
+            }}));
+            add(new KindData.KindDetailFirst("衣服饰品", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("衣服裤子"));
+                add(new KindData.KindDetailSecond("化妆饰品"));
+                add(new KindData.KindDetailSecond("鞋帽包包"));
+            }}));
+            add(new KindData.KindDetailFirst("通讯交通", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("话费"));
+                add(new KindData.KindDetailSecond("网费"));
+                add(new KindData.KindDetailSecond("邮费"));
+                add(new KindData.KindDetailSecond("公共交通"));
+                add(new KindData.KindDetailSecond("打车租车"));
+                add(new KindData.KindDetailSecond("自行车"));
+            }}));
+            add(new KindData.KindDetailFirst("学习进修", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("书籍软件"));
+                add(new KindData.KindDetailSecond("学杂费"));
+                add(new KindData.KindDetailSecond("文印费"));
+                add(new KindData.KindDetailSecond("学习工具"));
+            }}));
+            add(new KindData.KindDetailFirst("休闲娱乐", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("电影"));
+                add(new KindData.KindDetailSecond("旅游"));
+                add(new KindData.KindDetailSecond("健身"));
+                add(new KindData.KindDetailSecond("其他"));
+            }}));
+            add(new KindData.KindDetailFirst("其他杂项", new ArrayList<KindData.KindDetailSecond>(){{
+                add(new KindData.KindDetailSecond("其他"));
+            }}));
+        }});
+        mAccoDatabase = Room.databaseBuilder(this.getContext(), AccoDatabase.class,"acco_database").build();
+        mAccoDao = mAccoDatabase.getAccoDao();
     }
 
     @Override
@@ -149,6 +198,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         etwtMoney.setLeadText("￥");
         etwtMoney.setLeadTextSize(23);
         etwtMoney.setLeadTextColor("#FF646A73");
+        etwtMoney.setInputType(EditorInfo.TYPE_CLASS_NUMBER);
 
         SpannableString ss = new SpannableString("     添加备注");//定义hint的值
         AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12,true);//设置字体大小 true表示单位是sp
@@ -164,6 +214,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         tvIncome.setOnClickListener(this);
         tvCancel.setOnClickListener(this);
         tvSave.setOnClickListener(this);
+        etwtKind.setOnClickListener(this);
     }
 
     private void setDialogCancel(){
@@ -200,22 +251,81 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
             case R.id.tv_save:
                 saveData();
                 break;
+            case R.id.et_kind:
+                pickKind();
+//                Toast.makeText(getContext(), "进行种类选择", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 
+    private void pickKind(){
+        PickOption option = PickOption.getPickDefaultOptionBuilder(getContext())
+                .setLeftTitleColor(0xFF1233DD)
+                .setRightTitleColor(0xFF1233DD)
+                .setMiddleTitleColor(0xFF333333)
+                .setTitleBackground(0XFFDDDDDD)
+                .setLeftTitleText("取消")
+                .setRightTitleText("确定")
+                .setMiddleTitleText("请选择种类")
+                .setFlingAnimFactor(0.4f)
+                .setVisibleItemCount(7)
+                .setItemTextSize(getContext().getResources().getDimensionPixelSize(com.wheelpicker.R.dimen.font_36px))
+                .setItemLineColor(0xFF558800)
+                .build();
+
+        DataPicker.pickData(getContext(), mCascadeInitIndex, getPickKindData(mCascadeInitIndex), option,
+                new OnMultiDataPickListener() {
+                    @Override
+                    public void onDataPicked(List indexArr, List val, List data) {
+                        mKind = val.get(0).toString();
+                        mKindDetail = val.get(1).toString();
+                        etwtKind.setText(mKind + " > " + mKindDetail);
+//                        Log.e(getClass().getSimpleName(), "回调函数: indexArr = " + indexArr.toString());
+//                        Log.e(getClass().getSimpleName(), "回调函数: val = " + val.toString());
+//                        Log.e(getClass().getSimpleName(), "回调函数: val.get(0) = " + val.get(0));
+//                        Log.e(getClass().getSimpleName(), "回调函数: val.get(1) = " + val.get(1));
+//                        Log.e(getClass().getSimpleName(), "回调函数: data" + data.toString());
+                    }
+                }, new OnCascadeWheelListener<List<?>>() {
+                    @Override
+                    public List<?> onCascade(int wheelIndex, List<Integer> itemIndex) {
+                        //级联数据
+                            return mKindDatas.kinds.get(itemIndex.get(0)).kindSeconds;
+                    }
+                });
+    }
+
+    private List<List<?>> getPickKindData(List<Integer> indexArr){
+        int secondIndex = 0;
+        if (indexArr != null && !indexArr.isEmpty()) {
+            secondIndex = indexArr.get(0);
+        }
+        List<List<?>> pickDataKindList = new ArrayList<List<?>>(){{
+            add(mKindDatas.kinds);
+        }};
+        pickDataKindList.add(mKindDatas.kinds.get(secondIndex).kindSeconds);
+
+        return pickDataKindList;
+    }
+
     private void saveData(){
-        final String kind = "";
-        final String kindDetail = "";
+        final String kind = mKind;
+        final String kindDetail = mKindDetail;
         final String money = String.valueOf(etwtMoney.getText());
         final String comment = String.valueOf(etComment.getText());
 
-//        if(kind.equals("")){
-//            Toast.makeText(getContext(),"请选择种类",Toast.LENGTH_LONG);
-//            return;
-//        }else if(money.equals("")){
-//            Toast.makeText(getContext(),"请填写金额",Toast.LENGTH_LONG);
-//            return;
-//        }
+        if(kind.equals("")){
+//            SpannableString ss = new SpannableString("     添加备注");//定义hint的值
+//            AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12,true);//设置字体大小 true表示单位是sp
+//            ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            etwtKind.setHint("        请选择种类");
+            etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return;
+        }else if(money.equals("")){
+            etwtMoney.setHint("                  请填写金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return;
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -371,7 +481,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 if (text == null || "".equals(text)) {
                     text = "Result is null.";
                 }
-                etComment.setText(text);
+                etComment.setText(" " + etComment.getText() + text);
                 // Process the recognized text information.
 //                displayResult(text);
 //                break;
