@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/dialog_title"
+        android:text="添加待办"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        app:layout_constraintBottom_toBottomOf="@id/dialog_title"
+        app:layout_constraintTop_toTopOf="@id/dialog_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/close_icon"
+        android:layout_width="8dp"
+        android:layout_height="8dp" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/dialog_title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/dialog_todo_name"
+        android:text="待办名称:"
+        android:textSize="12sp"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        app:layout_constraintTop_toTopOf="@id/dialog_todo_name"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_todo_name"
+        app:layout_constraintStart_toEndOf="@id/dialog_todo_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/dialog_todo_name_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/dialog_todo_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/dialog_todo_time"
+        android:text="开始时间:"
+        android:textSize="12sp"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        app:layout_constraintTop_toTopOf="@id/dialog_todo_time"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_todo_time"
+        app:layout_constraintStart_toEndOf="@id/dialog_todo_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/dialog_todo_time_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/dialog_todo_time"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end|center_vertical">
+
+        <Button
+            android:id="@+id/dialog_todo_add_cancel"
+            android:text="取消"
+            android:textColor="@color/red_login_color"
+            android:backgroundTint="#DADADA"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"/>
+
+        <Button
+            android:id="@+id/dialog_todo_add_sure"
+            android:text="添加"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:backgroundTint="#48D14D"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
