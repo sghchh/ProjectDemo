@@ -54,7 +54,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
     @NotNull
     @Override
     public JourAdapter.JourHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.journal_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.Item_journal, parent, false);
         JourHolder holder = new JourHolder(view);
         holder.setListener(listener);
         return holder;

@@ -30,7 +30,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterHold
     @NotNull
     @Override
     public FilterHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.filter_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_filter, parent, false);
         FilterHolder holder = new FilterHolder(view);
         holder.setListener(this.listener);
         return holder;
