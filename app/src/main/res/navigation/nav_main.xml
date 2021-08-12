@@ -40,7 +40,7 @@
 
     <fragment
         android:id="@+id/TodoFragment"
-        android:name="com.starstudio.projectdemo.TodoFragment"
+        android:name="com.starstudio.projectdemo.todo.fragments.TodoFragment"
         android:label="todo_fragment"
         tools:layout="@layout/fragment_todo" />
 

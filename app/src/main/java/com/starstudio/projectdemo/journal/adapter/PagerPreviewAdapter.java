@@ -34,7 +34,7 @@ public class PagerPreviewAdapter extends PagerAdapter {
     @NotNull
     @Override
     public Object instantiateItem(@NonNull @NotNull ViewGroup container, int position) {
-        View view = LayoutInflater.from(container.getContext()).inflate(R.layout.pager_preview_item, container, false);
+        View view = LayoutInflater.from(container.getContext()).inflate(R.layout.item_pager_preview, container, false);
         ImageView img = (ImageView) view.findViewById(R.id.pager_preview_img);
         Glide.with(img).load(pcitures.get(position).getPicturePath()).into(img);
         container.addView(view);

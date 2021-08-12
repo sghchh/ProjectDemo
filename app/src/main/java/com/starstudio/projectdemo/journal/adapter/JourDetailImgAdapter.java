@@ -33,7 +33,7 @@ public class JourDetailImgAdapter extends RecyclerView.Adapter<JourDetailImgAdap
     @NotNull
     @Override
     public DetailImgHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.journal_detail_image_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_journal_detail_image, parent, false);
         return new DetailImgHolder(view);
     }
 
