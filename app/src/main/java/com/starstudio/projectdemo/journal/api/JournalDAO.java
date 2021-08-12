@@ -20,11 +20,11 @@ import io.reactivex.Flowable;
 @Dao
 public interface JournalDAO {
     @Insert
-    Completable insertJournal(JournalEntity jounal);     // 插入日记的方法
+    Completable insertJournal(JournalEntity journal);     // 插入日记的方法
 
     @Delete
     Completable deleteJournal(JournalEntity journalEntity);     // 根据主键删除实体
 
-    @Query("select * from journal_entity")
+    @Query("select * from journal_table")
     Flowable<List<JournalEntity>> loadAllJournal();
 }
