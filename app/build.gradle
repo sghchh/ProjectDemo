@@ -108,4 +108,7 @@ dependencies {
     // Automatic speech recognition plugin.
     implementation 'com.huawei.hms:ml-computer-voice-asr-plugin:2.2.0.300'
 
+    //3DWheelPicker
+    implementation 'com.github.yijiebuyi:3DWheelPicker:v1.1.1'
+
 }
