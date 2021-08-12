@@ -19,7 +19,7 @@ import java.util.List;
  * 2021-8-9
  * "心情日记"每个日记对应的数据库表
  */
-@Entity(tableName = "journal_entity")
+@Entity(tableName = "journal_table")
 public class JournalEntity implements Serializable {
     @PrimaryKey
     @ColumnInfo(name = "post_time")
