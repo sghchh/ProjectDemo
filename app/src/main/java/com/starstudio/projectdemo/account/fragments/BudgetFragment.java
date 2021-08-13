@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
+import com.starstudio.projectdemo.account.KeyboardStatusDetectorUtil;
 import com.starstudio.projectdemo.account.adapter.BudgetAdapter;
 import com.starstudio.projectdemo.account.api.AccoDao;
 import com.starstudio.projectdemo.account.api.AccoDatabase;
@@ -39,6 +40,7 @@ public class BudgetFragment extends Fragment {
     private ArrayList<BudgetData>  mBudgetData;
     private SharedPreferencesUtils mSharedPreferencesUtils;
     private String mBudgetCount;
+    private KeyboardStatusDetectorUtil mKeyboardStatusDetectorUtil;
     private static final HashMap<String,Integer> kindToNum = new HashMap(){{
         put("饮食",0);
         put("学习进修",1);
@@ -142,7 +144,8 @@ public class BudgetFragment extends Fragment {
     }
 
     private void initView(){
-        binding.recyclerBudget.setAdapter(new BudgetAdapter(mBudgetData));
+        mKeyboardStatusDetectorUtil = new KeyboardStatusDetectorUtil();
+        binding.recyclerBudget.setAdapter(new BudgetAdapter(mBudgetData, mKeyboardStatusDetectorUtil));
         binding.recyclerBudget.setLayoutManager(new LinearLayoutManager(getActivity()));
         binding.tvBudgetCount.setText(mBudgetCount);
     }
@@ -162,5 +165,6 @@ public class BudgetFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        mKeyboardStatusDetectorUtil = null;
     }
 }

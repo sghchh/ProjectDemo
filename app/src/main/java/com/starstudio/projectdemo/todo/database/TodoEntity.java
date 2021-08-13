@@ -1,5 +1,6 @@
 package com.starstudio.projectdemo.todo.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -13,6 +14,7 @@ import androidx.room.PrimaryKey;
 public class TodoEntity {
 
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "todo_time")
     private String todoTime;         // 所选择的待办时间
 
