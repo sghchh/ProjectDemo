@@ -1,6 +1,8 @@
 package com.starstudio.projectdemo.todo.fragments;
 
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +24,15 @@ import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
 import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
+import com.wheelpicker.DataPicker;
+import com.wheelpicker.IDateTimePicker;
+import com.wheelpicker.OnDatePickListener;
+import com.wheelpicker.PickOption;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
@@ -39,6 +46,7 @@ public class UpdateDialogFragment extends DialogFragment {
     private TodoDaoService todoDaoService;
     private FragmentDialogUpdateTodoBinding binding;
     private TodoEntity originTodoEntity;
+    private long timestamp = 0;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -136,11 +144,11 @@ public class UpdateDialogFragment extends DialogFragment {
                     return;
                 }
                 originTodoEntity.setContent(binding.dialogTodoNameEdit.getText().toString());
-                if (binding.dialogTodoTimeEdit.getText() == null || binding.dialogTodoTimeEdit.getText().toString().trim().equals("")) {
+                if (timestamp == 0) {
                     Toast.makeText(getActivity(), "请选择完成时间~", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                originTodoEntity.setTodoTime(OtherUtil.generateTimestamp(binding.dialogTodoTimeEdit.getText().toString()));
+                originTodoEntity.setTodoTime(timestamp);
                 todoDaoService.update(originTodoEntity)
                         .subscribe(new CompletableObserver() {
                             @Override
@@ -172,22 +180,30 @@ public class UpdateDialogFragment extends DialogFragment {
     }
 
     public void showTimePickerDialog() {
-        Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(getActivity()
-                // 设置主题
-                , TimePickerDialog.THEME_HOLO_LIGHT
-                // 绑定监听器
-                , new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view,
-                                  int hourOfDay, int minute) {
-                binding.dialogTodoTimeEdit.setText(hourOfDay + ":" + minute);
-            }
-        }
-                // 设置初始时间
-                , calendar.get(Calendar.HOUR_OF_DAY)
-                , calendar.get(Calendar.MINUTE)
-                // true表示采用24小时制
-                ,true).show();
+        PickOption option = getPickDefaultOptionBuilder(getActivity())
+                .setMiddleTitleText("请选择日期")
+                .setDurationDays(100)
+                .build();
+        DataPicker.pickFutureDate(getActivity(), new Date(System.currentTimeMillis()),
+                option, new OnDatePickListener() {
+                    @Override
+                    public void onDatePicked(IDateTimePicker picker) {
+                        timestamp = picker.getTime();
+                        binding.dialogTodoTimeEdit.setText(picker.getSelectedHour()+":"+picker.getSelectedMinute());
+                    }
+                });
+    }
+
+    // 配置时间选择选项
+    private PickOption.Builder getPickDefaultOptionBuilder(Context context) {
+        return PickOption.getPickDefaultOptionBuilder(context)
+                .setLeftTitleColor(0xFF1233DD)
+                .setRightTitleColor(0xFF1233DD)
+                .setMiddleTitleColor(0xFF333333)
+                .setTitleBackground(0XFFDDDDDD)
+                .setLeftTitleText("取消")
+                .setRightTitleText("确定")
+                .setLeftTitleColor(Color.BLACK)
+                .setRightTitleColor(Color.BLACK);
     }
 }
