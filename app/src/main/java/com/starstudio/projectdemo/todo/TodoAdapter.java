@@ -1,9 +1,13 @@
 package com.starstudio.projectdemo.todo;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,14 +20,15 @@ import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
     private List<TodoEntity> todoList;
     private OnTodoItemClickListener listener;
 
-    public TodoAdapter(List<TodoEntity> list) {
-        this.todoList = list;
+    public TodoAdapter() {
+        todoList = new ArrayList<>();
     }
 
     public void setTodoList(List<TodoEntity> list) {
@@ -59,7 +64,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
 
         private OnTodoItemClickListener listener;
         private final TextView time, time2now, content;
-        private final ImageView condition;
+        private final Button condition;
 
         public TodoHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -73,6 +78,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
             this.listener = listener;
         }
 
+        @SuppressLint("ResourceAsColor")
         public void loadData(TodoEntity data) {
             time.setText(OtherUtil.getClockTime(data.getTodoTime()));
             content.setText(data.getContent());
@@ -93,10 +99,21 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
                         time2now.setText("Yesterday");
             }
 
+            // 设置状态
+            if (data.getCondition().equals("已完成")) {
+                condition.setText("已完成");
+                condition.setTextColor(R.color.my_primary);
+                condition.setEnabled(false);
+            } else {
+                condition.setText("完成");
+                condition.setTextColor(Color.WHITE);
+                condition.setEnabled(true);
+            }
+
         }
     }
 
-    static interface OnTodoItemClickListener {
+    public static interface OnTodoItemClickListener {
         void onTodoItemClick(View v, TodoEntity data);
     }
 }

@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/todo_analyse_pie"
-        android:layout_width="200dp"
-        android:layout_height="220dp"/>
+        android:layout_width="300dp"
+        android:layout_height="330dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

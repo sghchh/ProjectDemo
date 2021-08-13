@@ -62,9 +62,9 @@ public class AnalyseFragment extends Fragment {
 
         int[] colors = new int[]{Color.rgb(72, 208, 77), Color.rgb(203, 201, 205)};
         List<PieEntry> pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(allNum - doneNum, "未完成"));
         pieEntries.add(new PieEntry(doneNum, "已完成"));
-        PieDataSet iPieDataSet = new PieDataSet(pieEntries, "pie label");
+        pieEntries.add(new PieEntry(allNum - doneNum, "未完成"));
+        PieDataSet iPieDataSet = new PieDataSet(pieEntries, "完成度分析");
         iPieDataSet.setColors(colors);
         List<Integer> textColors = new ArrayList<>();
         textColors.add(Color.WHITE);

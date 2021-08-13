@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="5dp"
+    android:padding="15dp"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,6 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/dialog_title"
         android:text="添加待办"
+        android:textStyle="bold"
         android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -21,7 +23,7 @@
         android:id="@+id/dialog_todo_name"
         android:text="待办名称:"
         android:textSize="12sp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -40,7 +42,7 @@
         android:id="@+id/dialog_todo_time"
         android:text="开始时间:"
         android:textSize="12sp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -55,7 +57,7 @@
 
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/dialog_todo_time"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

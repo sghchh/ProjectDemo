@@ -7,30 +7,42 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
+import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
+import com.starstudio.projectdemo.todo.TodoAdapter;
+import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
 
 import org.jetbrains.annotations.NotNull;
+import org.reactivestreams.Subscription;
 
 import java.util.List;
 
-public class TodoFragment extends Fragment {
+import io.reactivex.FlowableSubscriber;
 
+public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClickListener {
+    private TodoDaoService daoService;
     private FragmentTodoBinding binding;
     private List<TodoEntity> todoList;
+    private TodoAdapter adapter;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        daoService = TodoDaoService.getInstance();
+        setHasOptionsMenu(true);
         binding = FragmentTodoBinding.inflate(inflater, container, false);
         configView();
         return binding.getRoot();
@@ -53,6 +65,8 @@ public class TodoFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.todo_chart) {
             Bundle bundle = new Bundle();
+            bundle.putInt("allNum", 20);
+            bundle.putInt("doneNum", 12);
             // 跳转到完成度分析页面
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
             navHost.getNavController().navigate(R.id.action_TodoFragment_to_TodoAnalyseFragment, bundle);
@@ -70,8 +84,41 @@ public class TodoFragment extends Fragment {
         binding.todoAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AddDialogFragment dialogFragment = new AddDialogFragment();
+                dialogFragment.show(getActivity().getSupportFragmentManager(), "addTodo");
             }
         });
+
+        adapter = new TodoAdapter();
+        adapter.setListener(this::onTodoItemClick);
+        binding.todoRecyler.setAdapter(adapter);
+        binding.todoRecyler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        daoService.loadAllTodo()
+                .subscribe(new FlowableSubscriber<List<TodoEntity>>() {
+                    @Override
+                    public void onSubscribe(@NotNull Subscription s) {
+                        s.request(Integer.MAX_VALUE);
+                    }
+
+                    @Override
+                    public void onNext(List<TodoEntity> todoEntities) {
+                        adapter.setTodoList(todoEntities);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(getContext(), "获取待办事项失败：" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    @Override
+    public void onTodoItemClick(View v, TodoEntity data) {
+
     }
 }

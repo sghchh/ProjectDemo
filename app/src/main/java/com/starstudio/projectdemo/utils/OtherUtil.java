@@ -124,6 +124,7 @@ public class OtherUtil {
      * @return 转换后的时间戳
      */
     public static String time2Timestamp(String time) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             return String.valueOf(sdf.parse(time).getTime());
@@ -139,8 +140,9 @@ public class OtherUtil {
      * @return yyyy-MM-dd HH:mm:ss格式的时间字符串
      */
     public static String timestamp2Time(String timestamp) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(timestamp);
+        return sdf.format(new Date(Long.parseLong(timestamp)));
     }
 
     /**
@@ -150,16 +152,17 @@ public class OtherUtil {
      * @return 0:代表长度小于一天；1：代表长度大于一天，小于两天；2：代表长度大于等于两天
      */
     public static int checkTimeLength(long time1, long time2) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String t1 = sdf.format(time1);
-        String t2 = sdf.format(time2);
+        String t1 = sdf.format(new Date(time1));
+        String t2 = sdf.format(new Date(time2));
         String[] time1s = t1.split("-");
         String[] time2s = t2.split("-");
-        if (time1s[0] != time2s[0] || time1s[1] != time2s[1])
+        if (!time1s[0].equals(time2s[0]) || !time1s[1].equals(time2s[1]))
             return 2;
-        if (time1s[2] == time2s[2])
+        if (time1s[2].equals(time2s[2]))
             return 0;
-        return Math.min(Math.abs(Integer.valueOf(time1s[2]) - Integer.valueOf(time2s[2])), 2);
+        return Math.min(Math.abs(Integer.parseInt(time1s[2]) - Integer.parseInt(time2s[2])), 2);
     }
 
     /**
@@ -168,9 +171,10 @@ public class OtherUtil {
      * @return 钟表时间
      */
     public static String getClockTime(String timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String time = sdf.format(timestamp);
-        return time.split(" ")[1];
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String time = sdf.format(Long.parseLong(timestamp));
+        return time;
     }
 
     /**
@@ -179,9 +183,10 @@ public class OtherUtil {
      * @return yyyy-MM-dd
      */
     public static String getYearMonth(String timestamp) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String time = sdf.format(timestamp);
-        return time.split(" ")[1];
+        String time = sdf.format(new Date(Long.parseLong(timestamp)));
+        return time;
     }
 
 //    /**
