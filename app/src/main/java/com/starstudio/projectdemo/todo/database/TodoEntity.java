@@ -5,16 +5,19 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /**
  * created by sgh
  * 2021-8-12
  * "待办事项“对应的数据表类
  */
 @Entity(tableName = "todo_table")
-public class TodoEntity {
+public class TodoEntity implements Serializable {
 
-    @PrimaryKey
-    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
     @ColumnInfo(name = "todo_time")
     private String todoTime;         // 所选择的待办时间
 
@@ -25,10 +28,19 @@ public class TodoEntity {
     @Override
     public String toString() {
         return "TodoEntity{" +
-                "todoTime=" + todoTime +
+                "id=" + id +
+                ", todoTime='" + todoTime + '\'' +
                 ", content='" + content + '\'' +
                 ", condition='" + condition + '\'' +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTodoTime() {

@@ -61,13 +61,14 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
     }
 
     static class TodoHolder extends RecyclerView.ViewHolder {
-
+        private final View root;
         private OnTodoItemClickListener listener;
         private final TextView time, time2now, content;
         private final Button condition;
 
         public TodoHolder(@NonNull @NotNull View itemView) {
             super(itemView);
+            root = itemView;
             time = itemView.findViewById(R.id.todo_time);
             time2now = itemView.findViewById(R.id.todo_time2now);
             content = itemView.findViewById(R.id.todo_content);
@@ -102,18 +103,33 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
             // 设置状态
             if (data.getCondition().equals("已完成")) {
                 condition.setText("已完成");
-                condition.setTextColor(R.color.my_primary);
                 condition.setEnabled(false);
+                condition.setPadding(0, 0, 0, 0);
             } else {
                 condition.setText("完成");
-                condition.setTextColor(Color.WHITE);
                 condition.setEnabled(true);
             }
+
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onTodoItemClick(v, data);
+                }
+            });
+
+            condition.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onContidionChange(v, data);
+                }
+            });
 
         }
     }
 
     public static interface OnTodoItemClickListener {
         void onTodoItemClick(View v, TodoEntity data);
+        // 专门为点击“完成”按钮准备的方法
+        void onContidionChange(View view, TodoEntity data);
     }
 }

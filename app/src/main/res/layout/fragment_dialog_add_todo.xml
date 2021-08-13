@@ -33,6 +33,7 @@
         app:layout_constraintStart_toEndOf="@id/dialog_todo_name"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/dialog_todo_name_edit"
+        android:textSize="12sp"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
@@ -52,6 +53,7 @@
         app:layout_constraintStart_toEndOf="@id/dialog_todo_time"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/dialog_todo_time_edit"
+        android:textSize="12sp"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 

@@ -42,7 +42,7 @@ public class TodoDaoService {
     }
 
     public Completable update(TodoEntity nData) {
-        return database.todoDAO().delete(nData)
+        return database.todoDAO().update(nData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

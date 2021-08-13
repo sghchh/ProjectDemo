@@ -12,11 +12,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.huawei.hms.image.vision.B;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
 import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
@@ -29,7 +31,9 @@ import org.reactivestreams.Subscription;
 
 import java.util.List;
 
+import io.reactivex.CompletableObserver;
 import io.reactivex.FlowableSubscriber;
+import io.reactivex.disposables.Disposable;
 
 public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClickListener {
     private TodoDaoService daoService;
@@ -90,7 +94,7 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
         });
 
         adapter = new TodoAdapter();
-        adapter.setListener(this::onTodoItemClick);
+        adapter.setListener(this);
         binding.todoRecyler.setAdapter(adapter);
         binding.todoRecyler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         daoService.loadAllTodo()
@@ -119,6 +123,32 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
 
     @Override
     public void onTodoItemClick(View v, TodoEntity data) {
+        DialogFragment todoUpdate = new UpdateDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("todoEntity", data);
+        todoUpdate.setArguments(bundle);
+        todoUpdate.show(getActivity().getSupportFragmentManager(), "updateTodo");
+    }
 
+    @Override
+    public void onContidionChange(View view, TodoEntity data) {
+        data.setCondition("已完成");
+        daoService.update(data)
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(@NotNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void onError(@NotNull Throwable e) {
+                        Toast.makeText(getContext(), "修改待办事项失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
