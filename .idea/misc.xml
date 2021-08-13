@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/mysoftware/Projects/AndroidProjects/ProjectDemo/app/src/main/res/layout/fragment2_todo_analyse.xml" value="0.38645833333333335" />
+        <entry key="..\:/mysoftware/Projects/AndroidProjects/ProjectDemo/app/src/main/res/layout/fragment_dialog_add_todo.xml" value="0.3509963768115942" />
+        <entry key="..\:/mysoftware/Projects/AndroidProjects/ProjectDemo/app/src/main/res/layout/fragment_dialog_update_todo.xml" value="0.3509963768115942" />
+        <entry key="..\:/mysoftware/Projects/AndroidProjects/ProjectDemo/app/src/main/res/layout/item_journal.xml" value="0.38645833333333335" />
+        <entry key="..\:/mysoftware/Projects/AndroidProjects/ProjectDemo/app/src/main/res/layout/item_todo.xml" value="0.3509963768115942" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

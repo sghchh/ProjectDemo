@@ -1,5 +1,7 @@
 package com.starstudio.projectdemo.journal.adapter;
 
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -103,6 +106,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             this.location.setText(data.getLocation());
             this.content.setText(data.getContent());
             this.week.setText(data.getWeek());
+            this.weather.setImageDrawable(weather.getContext().getDrawable(OtherUtil.weatherId2Mipmap.getOrDefault(data.getWeather(), SUNNY)));
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getPictureArray().size(), 3);

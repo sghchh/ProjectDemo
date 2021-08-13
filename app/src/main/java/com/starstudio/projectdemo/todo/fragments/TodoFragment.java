@@ -26,6 +26,8 @@ import com.starstudio.projectdemo.todo.database.TodoEntity;
 import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Subscription;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.CompletableObserver;
@@ -36,6 +38,8 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
     private TodoDaoService daoService;
     private FragmentTodoBinding binding;
     private TodoAdapter adapter;
+    private int allNum = 0;
+    private int doneNum = 0;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -65,8 +69,8 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.todo_chart) {
             Bundle bundle = new Bundle();
-            bundle.putInt("allNum", 20);
-            bundle.putInt("doneNum", 12);
+            bundle.putInt("allNum", allNum);
+            bundle.putInt("doneNum", doneNum);
             // 跳转到完成度分析页面
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_main);
             navHost.getNavController().navigate(R.id.action_TodoFragment_to_TodoAnalyseFragment, bundle);
@@ -102,7 +106,26 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
 
                     @Override
                     public void onNext(List<TodoEntity> todoEntities) {
+                        Collections.sort(todoEntities, new Comparator<TodoEntity>() {
+                            @Override
+                            public int compare(TodoEntity todoEntity, TodoEntity t1) {
+                                if (todoEntity.getCondition().equals("已完成") && t1.getCondition().equals("未完成"))
+                                    return 1;
+                                if (todoEntity.getCondition().equals("未完成") && t1.getCondition().equals("已完成"))
+                                    return -1;
+                                if (todoEntity.getTodoTime() < t1.getTodoTime())
+                                    return -1;
+                                if (todoEntity.getTodoTime() > t1.getTodoTime())
+                                    return 1;
+                                return 0;
+                            }
+                        });
                         adapter.setTodoList(todoEntities);
+                        allNum = todoEntities.size();
+                        for (int i = 0; i < todoEntities.size(); i ++)
+                            if (todoEntities.get(i).getCondition().equals("已完成"))
+                                doneNum ++;
+
                     }
 
                     @Override

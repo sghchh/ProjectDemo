@@ -43,24 +43,24 @@ public class HmsWeatherService {
         HmsWeatherService.getLocation();
     }
 
-    public static String getWeather() {
+    public static int getWeather() {
         if (serviceImpl == null)
             throw new RuntimeException("请先执行init(Context)方法");
         if (serviceImpl.weatherSituation != null)
-            return "" + serviceImpl.weatherSituation.getSituation().getCnWeatherId();
-        final String[] res = new String[1];
+            return serviceImpl.weatherSituation.getSituation().getCnWeatherId();
+        final int[] res = new int[1];
         serviceImpl.client.getWeatherByDevice()
                 .addOnSuccessListener(new OnSuccessListener<WeatherStatusResponse>() {
                     @Override
                     public void onSuccess(WeatherStatusResponse weatherStatusResponse) {
                         serviceImpl.weatherSituation = weatherStatusResponse.getWeatherStatus().getWeatherSituation();
-                        res[0] = "" + serviceImpl.weatherSituation.getSituation().getCnWeatherId();
+                        res[0] = serviceImpl.weatherSituation.getSituation().getCnWeatherId();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        res[0] = e.getMessage();
+                        res[0] = -1;
                     }
                 });
         return res[0];

@@ -8,21 +8,20 @@
 
     <TextView
         android:id="@+id/day_text"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:text="17"
         android:gravity="end"
         android:textColor="@color/white"
         android:textSize="42sp"/>
 
     <LinearLayout
+        android:id="@+id/toolbar_weather"
         android:background="@drawable/weather_overcast"
         android:layout_marginStart="6dp"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
         android:weightSum="4">
 
@@ -33,7 +32,6 @@
             android:layout_height="0dp"
             android:layout_gravity="center|center_horizontal"
             android:gravity="end|bottom"
-            android:text="Mon."
             android:textColor="@color/white"
             android:textSize="12sp"/>
 
@@ -43,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
-            android:text="AUGUST"
             android:gravity="end"
             android:textColor="@color/white"
             android:textSize="12sp"/>

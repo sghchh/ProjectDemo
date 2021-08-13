@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.huawei.hms.videoeditor.sdk.p.S;
 import com.starstudio.projectdemo.MainActivity;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentDialogAddTodoBinding;
@@ -160,7 +161,16 @@ public class AddDialogFragment extends DialogFragment {
                     @Override
                     public void onDatePicked(IDateTimePicker picker) {
                         timestamp = picker.getTime();
-                        binding.dialogTodoTimeEdit.setText(picker.getSelectedHour()+":"+picker.getSelectedMinute());
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(picker.getSelectedHour())
+                                .append("月")
+                                .append(picker.getSelectedDay())
+                                .append("日")
+                                .append(" ")
+                                .append(picker.getSelectedHour())
+                                .append(":")
+                                .append(picker.getSelectedMinute());
+                        binding.dialogTodoTimeEdit.setText(builder.toString());
                     }
                 });
     }

@@ -50,7 +50,6 @@ public class JourFragment extends Fragment implements JourAdapter.OnJourItemClic
                     @Override
                     public void onNext(List<JournalEntity> journalEntities) {
                         adapter.reset(journalEntities);
-                        binding.recycler.scrollToPosition(journalEntities.size() - 1);
                     }
 
                     @Override
@@ -65,7 +64,7 @@ public class JourFragment extends Fragment implements JourAdapter.OnJourItemClic
         adapter.setListener(this::onJourItemClick);
         binding = Fragment2JourBinding.inflate(inflater, container, false);
         binding.recycler.setAdapter(adapter);
-        binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, true));
+        binding.recycler.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         binding.recycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         return binding.getRoot();
     }

@@ -1,6 +1,9 @@
 package com.starstudio.projectdemo;
 
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
+
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerAdapter;
+import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -85,7 +89,9 @@ public class JournalFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         binding.toolbarJournal.dateAndWeather.dayText.setText(OtherUtil.getSystemDay());
-        binding.toolbarJournal.dateAndWeather.weekText.setText(OtherUtil.getSystemWeek());
-        binding.toolbarJournal.dateAndWeather.monthText.setText(OtherUtil.getSystemMonth());
+        binding.toolbarJournal.dateAndWeather.weekText.setText(OtherUtil.getSystemWeekEng());
+        binding.toolbarJournal.dateAndWeather.monthText.setText(OtherUtil.getSystemMonthEng());
+        int weatherId = HmsWeatherService.getWeather();
+        binding.toolbarJournal.dateAndWeather.toolbarWeather.setBackground(getContext().getDrawable(OtherUtil.weatherId2Mipmap.getOrDefault(weatherId, SUNNY)));
     }
 }

@@ -1,5 +1,26 @@
 package com.starstudio.projectdemo.utils;
 
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.CLOUDY;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.HEAVY_RAIN;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.HEAVY_RAIN_TO_STORM;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.HEAVY_SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.HEAVY_SNOW_TO_SNOWSTORM;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.LIGHT_RAIN;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.LIGHT_SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.LIGHT_TO_MODERATE_RAIN;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.LIGHT_TO_MODERATE_SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.MODERATE_RAIN;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.MODERATE_SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.MODERATE_TO_HEAVY_RAIN;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.MODERATE_TO_HEAVY_SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.OVERCAST;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.RAINFALL;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SNOW;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SNOWFALL;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SNOWSTORM;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SNOW_FLURRY;
+import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +32,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.huawei.hms.framework.common.StringUtils;
 import com.huawei.hms.videoeditor.sdk.p.S;
+import com.starstudio.projectdemo.R;
 
 
 import java.text.ParseException;
@@ -21,14 +43,36 @@ import java.util.TimeZone;
 
 
 public class OtherUtil {
+    public static final HashMap<Integer, Integer> weatherId2Mipmap = new HashMap() {{
+        put(SUNNY, R.mipmap.weather2_sun);
+        put(CLOUDY, R.mipmap.weather2_cloud);
+        put(OVERCAST, R.mipmap.weather2_overcast);
+        put(SNOW, R.mipmap.weather2_snow);
+        put(SNOW_FLURRY, R.mipmap.weather2_snow);
+        put(SNOWFALL, R.mipmap.weather2_snow);
+        put(SNOWSTORM, R.mipmap.weather2_snow);
+        put(HEAVY_SNOW, R.mipmap.weather2_snow);
+        put(LIGHT_SNOW, R.mipmap.weather2_snow);
+        put(LIGHT_TO_MODERATE_SNOW, R.mipmap.weather2_snow);
+        put(MODERATE_SNOW, R.mipmap.weather2_snow);
+        put(MODERATE_TO_HEAVY_SNOW, R.mipmap.weather2_snow);
+        put(HEAVY_SNOW_TO_SNOWSTORM, R.mipmap.weather2_snow);
+        put(RAINFALL, R.mipmap.weather2_rain);
+        put(HEAVY_RAIN, R.mipmap.weather2_rain);
+        put(LIGHT_RAIN, R.mipmap.weather2_rain);
+        put(MODERATE_RAIN, R.mipmap.weather2_rain);
+        put(LIGHT_TO_MODERATE_RAIN, R.mipmap.weather2_rain);
+        put(MODERATE_TO_HEAVY_RAIN, R.mipmap.weather2_rain);
+        put(HEAVY_RAIN_TO_STORM, R.mipmap.weather2_rain);
+    }};
     private static final HashMap<String, String> weekToEng = new HashMap(){{
-        put("周一", "Mon");
-        put("周二", "Tue");
-        put("周三", "Wen");
-        put("周四", "Thu");
-        put("周五", "Fri");
-        put("周六", "Sta");
-        put("周日", "Sun");
+        put("周一", "Mon.");
+        put("周二", "Tue.");
+        put("周三", "Wen.");
+        put("周四", "Thu.");
+        put("周五", "Fri.");
+        put("周六", "Sta.");
+        put("周日", "Sun.");
     }};
     private static final HashMap<Integer, String> monthToEng = new HashMap(){{
        put(1, "January");
@@ -89,12 +133,12 @@ public class OtherUtil {
 
     public static String getSystemMonthToNumber() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return Integer.valueOf(ss[1]).toString();
+        return ss[1];
     }
 
     public static String getSystemMonth() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return monthToEng.get(Integer.valueOf(ss[1]));
+        return ss[1];
     }
 
     public static String getSystemDay() {
@@ -104,9 +148,18 @@ public class OtherUtil {
 
     public static String getSystemWeek() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return weekToEng.get(ss[3]);
+        return ss[3];
     }
 
+    public static String getSystemMonthEng() {
+        String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
+        return monthToEng.get(Integer.valueOf(ss[1]));
+    }
+
+    public static String getSystemWeekEng() {
+        String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
+        return weekToEng.get(ss[3]);
+    }
     /**
      * 将传递的毫秒时长解析为“时：分：秒”的格式
      * @param time 为时间长度，单位为毫秒

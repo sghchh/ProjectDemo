@@ -29,6 +29,6 @@ public interface TodoDao {
     @Update
     Completable update(TodoEntity nData);
 
-    @Query("select * from todo_table")
+    @Query("select * from todo_table order by rowid desc")
     Flowable<List<TodoEntity>> loadAllTodo();
 }

@@ -60,6 +60,9 @@ public class AnalyseFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        binding.todoAnalyseAll.setText(allNum+"");
+        binding.todoAnalyseDone.setText(doneNum+"");
+
         int[] colors = new int[]{Color.rgb(72, 208, 77), Color.rgb(203, 201, 205)};
         List<PieEntry> pieEntries = new ArrayList<>();
         pieEntries.add(new PieEntry(doneNum, "已完成"));
@@ -72,6 +75,7 @@ public class AnalyseFragment extends Fragment {
         iPieDataSet.setValueTextColors(textColors);
         iPieDataSet.setSliceSpace(3);   // 每块之间的距离
         PieData pieData = new PieData(iPieDataSet);
+        binding.todoAnalysePie.getDescription().setEnabled(false);
         binding.todoAnalysePie.setData(pieData);
         /*mPieChart.setDrawSliceText(true);*/   // : 将X值绘制到饼状图环切片内,否则不显示。默认true,已弃用，用下面setDrawEntryLabels()
         binding.todoAnalysePie.setDrawEntryLabels(true);   // 同上,默认true，记住颜色和环不要一样，否则会显示不出来

@@ -25,7 +25,7 @@ public class JournalEntity implements Serializable {
     @ColumnInfo(name = "post_time")
     private long postTime;  // 日记发表时间戳
 
-    private String weather; // 天气
+    private int weather; // 天气
     private String location;  // 定位
     private String content;     // 日记文本内容
     private String month;     // 发表日记的日期
@@ -59,11 +59,11 @@ public class JournalEntity implements Serializable {
         this.postTime = postTime;
     }
 
-    public String getWeather() {
+    public int getWeather() {
         return weather;
     }
 
-    public void setWeather(String weather) {
+    public void setWeather(int weather) {
         this.weather = weather;
     }
 
