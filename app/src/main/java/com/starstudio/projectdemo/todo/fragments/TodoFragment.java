@@ -16,12 +16,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.huawei.hms.image.vision.B;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
-import com.starstudio.projectdemo.journal.adapter.RecyclerGridDivider;
 import com.starstudio.projectdemo.todo.TodoAdapter;
 import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
@@ -38,7 +35,6 @@ import io.reactivex.disposables.Disposable;
 public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClickListener {
     private TodoDaoService daoService;
     private FragmentTodoBinding binding;
-    private List<TodoEntity> todoList;
     private TodoAdapter adapter;
 
     @Nullable

@@ -19,7 +19,7 @@ public class TodoEntity implements Serializable {
     private int id;
 
     @ColumnInfo(name = "todo_time")
-    private String todoTime;         // 所选择的待办时间
+    private long todoTime;         // 所选择的待办时间
 
     private String content;        // 待办的内容
 
@@ -43,11 +43,11 @@ public class TodoEntity implements Serializable {
         this.id = id;
     }
 
-    public String getTodoTime() {
+    public long getTodoTime() {
         return todoTime;
     }
 
-    public void setTodoTime(String todoTime) {
+    public void setTodoTime(long todoTime) {
         this.todoTime = todoTime;
     }
 

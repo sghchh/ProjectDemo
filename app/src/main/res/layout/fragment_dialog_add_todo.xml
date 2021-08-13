@@ -52,6 +52,8 @@
         app:layout_constraintBottom_toBottomOf="@id/dialog_todo_time"
         app:layout_constraintStart_toEndOf="@id/dialog_todo_time"
         app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="false"
+        android:inputType="none"
         android:id="@+id/dialog_todo_time_edit"
         android:textSize="12sp"
         android:layout_width="0dp"

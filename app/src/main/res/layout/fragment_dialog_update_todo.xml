@@ -62,7 +62,10 @@
         app:layout_constraintStart_toEndOf="@id/dialog_todo_time"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/dialog_todo_time_edit"
+        android:focusable="false"
+        android:inputType="none"
         android:textSize="12sp"
+        android:textColor="@color/selector_todo_edit_txt"
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 

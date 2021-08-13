@@ -1,11 +1,13 @@
 package com.starstudio.projectdemo.todo.fragments;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,8 @@ import com.starstudio.projectdemo.utils.DisplayMetricsUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Calendar;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.disposables.Disposable;
@@ -76,6 +80,19 @@ public class UpdateDialogFragment extends DialogFragment {
     private void configView() {
         binding.dialogTodoNameEdit.setText(originTodoEntity.getContent());
         binding.dialogTodoTimeEdit.setText(OtherUtil.getClockTime(originTodoEntity.getTodoTime()));
+
+        binding.dialogTodoTimeEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
+
+        if (originTodoEntity.getCondition().equals("已完成")) { // 如果是已完成的待办事项，则不支持修改，只支持删除
+            binding.dialogTodoTimeEdit.setEnabled(false);
+            binding.dialogTodoNameEdit.setEnabled(false);
+        }
+
         // 执行关闭窗口操作
         binding.dialogClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +119,7 @@ public class UpdateDialogFragment extends DialogFragment {
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-                                Toast.makeText(getContext(), "删除失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "删除失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 // 关闭页面
@@ -114,8 +131,16 @@ public class UpdateDialogFragment extends DialogFragment {
         binding.dialogTodoUpdateSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (binding.dialogTodoNameEdit.getText() == null || binding.dialogTodoNameEdit.getText().toString().trim().equals("")) {
+                    Toast.makeText(getActivity(), "请输入待办事项~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 originTodoEntity.setContent(binding.dialogTodoNameEdit.getText().toString());
-                originTodoEntity.setTodoTime(String.valueOf(System.currentTimeMillis()));
+                if (binding.dialogTodoTimeEdit.getText() == null || binding.dialogTodoTimeEdit.getText().toString().trim().equals("")) {
+                    Toast.makeText(getActivity(), "请选择完成时间~", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                originTodoEntity.setTodoTime(OtherUtil.generateTimestamp(binding.dialogTodoTimeEdit.getText().toString()));
                 todoDaoService.update(originTodoEntity)
                         .subscribe(new CompletableObserver() {
                             @Override
@@ -128,7 +153,7 @@ public class UpdateDialogFragment extends DialogFragment {
 
                             @Override
                             public void onError(@NotNull Throwable e) {
-
+                                Toast.makeText(getActivity(), "删除失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                 // 关闭页面
@@ -144,5 +169,25 @@ public class UpdateDialogFragment extends DialogFragment {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.remove(this);
         transaction.commit();
+    }
+
+    public void showTimePickerDialog() {
+        Calendar calendar = Calendar.getInstance();
+        new TimePickerDialog(getActivity()
+                // 设置主题
+                , TimePickerDialog.THEME_HOLO_LIGHT
+                // 绑定监听器
+                , new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view,
+                                  int hourOfDay, int minute) {
+                binding.dialogTodoTimeEdit.setText(hourOfDay + ":" + minute);
+            }
+        }
+                // 设置初始时间
+                , calendar.get(Calendar.HOUR_OF_DAY)
+                , calendar.get(Calendar.MINUTE)
+                // true表示采用24小时制
+                ,true).show();
     }
 }

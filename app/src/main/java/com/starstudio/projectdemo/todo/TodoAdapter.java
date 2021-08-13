@@ -85,10 +85,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.TodoHolder> {
             content.setText(data.getContent());
 
             long now = System.currentTimeMillis();
-            long todotime = Long.parseLong(data.getTodoTime());
+            long todotime = data.getTodoTime();
             switch (OtherUtil.checkTimeLength(todotime, now)) {
                 case 0:
-                    time2now.setVisibility(View.GONE);
+                    time2now.setText("Today");
                     break;
                 case 2:
                     time2now.setText(OtherUtil.getYearMonth(data.getTodoTime()));

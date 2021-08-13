@@ -118,32 +118,6 @@ public class OtherUtil {
         return format.format(time);
     }
 
-    /**
-     * 将标准时间格式的字符串，转化为时间戳
-     * @param time 标准格式的时间字符串  yyyy-MM-dd HH:mm:ss
-     * @return 转换后的时间戳
-     */
-    public static String time2Timestamp(String time) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            return String.valueOf(sdf.parse(time).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * 将时间戳转化为标准的时间格式字符串
-     * @param timestamp 字符串给出的时间戳
-     * @return yyyy-MM-dd HH:mm:ss格式的时间字符串
-     */
-    public static String timestamp2Time(String timestamp) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date(Long.parseLong(timestamp)));
-    }
 
     /**
      * 检查两个时间是否位于同一天
@@ -170,10 +144,10 @@ public class OtherUtil {
      * @param timestamp 时间戳
      * @return 钟表时间
      */
-    public static String getClockTime(String timestamp) {
+    public static String getClockTime(long timestamp) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        String time = sdf.format(Long.parseLong(timestamp));
+        String time = sdf.format(timestamp);
         return time;
     }
 
@@ -182,12 +156,32 @@ public class OtherUtil {
      * @param timestamp 时间戳
      * @return yyyy-MM-dd
      */
-    public static String getYearMonth(String timestamp) {
+    public static String getYearMonth(long timestamp) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String time = sdf.format(new Date(Long.parseLong(timestamp)));
+        String time = sdf.format(new Date(timestamp));
         return time;
     }
+
+    /**
+     * 根据选择的时间生成时间戳
+     * @param hhmm 用户使用TimePicker选择出的时间
+     * @return 时间戳
+     */
+     public static long generateTimestamp(String hhmm) {
+         @SuppressLint("SimpleDateFormat")
+         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+         StringBuilder builder = new StringBuilder(getYearMonth(System.currentTimeMillis()));
+         builder.append(" ");
+         builder.append(hhmm);
+         long res = System.currentTimeMillis();
+         try {
+             res = sdf.parse(builder.toString()).getTime();
+         } catch (ParseException e) {
+             e.printStackTrace();
+         }
+         return res;
+     }
 
 //    /**
 //     * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
