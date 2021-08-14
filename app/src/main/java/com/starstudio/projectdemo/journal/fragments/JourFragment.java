@@ -22,6 +22,7 @@ import com.starstudio.projectdemo.journal.data.JournalEntity;
 import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Subscription;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.FlowableSubscriber;
@@ -49,6 +50,7 @@ public class JourFragment extends Fragment implements JourAdapter.OnJourItemClic
 
                     @Override
                     public void onNext(List<JournalEntity> journalEntities) {
+                        Collections.reverse(journalEntities);
                         adapter.reset(journalEntities);
                     }
 

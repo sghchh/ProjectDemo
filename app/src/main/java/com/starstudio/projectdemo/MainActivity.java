@@ -52,8 +52,6 @@ public class MainActivity extends HideInputActivity {
             ContextHolder.init(this);
             // 进行文件操作
             FileUtil.init(this);
-            //HMS天气、地理信息
-            HmsWeatherService.init(this);
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

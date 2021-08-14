@@ -1,16 +1,10 @@
 package com.starstudio.projectdemo.todo;
 
-import android.annotation.TargetApi;
-import android.app.AppOpsManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -26,13 +20,10 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         show(context);
-        //showNotification(context);
-        Log.e("正在测试广播组件", "onReceive: 执行了onReceive方法");
 
     }
 
     private void show(Context context) {
-        Log.e("测试", "showNotification: "+"这里是wo的方法");
         Intent resultIntent = new Intent(context, MainActivity.class);
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);

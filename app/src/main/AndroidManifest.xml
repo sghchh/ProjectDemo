@@ -72,17 +72,14 @@
         <activity
             android:name=".journal.activity.JournalEditActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.ProjectDemo.NoActionBar" />
         <activity
             android:name=".journal.activity.JournalItemDetailActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.ProjectDemo.NoActionBar" />
         <activity
             android:name=".journal.activity.JournalVideoActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.ProjectDemo.MediaPlay" />
     </application>
 

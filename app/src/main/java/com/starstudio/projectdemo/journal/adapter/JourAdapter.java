@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
@@ -22,6 +23,7 @@ import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,8 +82,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         private View layout;
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
-        private final TextView week, date, location, content;
-        private final ImageView weather, videoImg;
+        private final TextView week, date, location, content, videoNullTxt;
+        private final ImageView weather, videoImg, videoPlayer;
         private final FrameLayout videoRoot;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -95,6 +97,8 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
             videoImg = (ImageView)itemView.findViewById(R.id.journal_video_pre);
             videoRoot = (FrameLayout) itemView.findViewById(R.id.journal_video_root);
+            videoPlayer = (ImageView)itemView.findViewById(R.id.journal_video_play);
+            videoNullTxt = (TextView)itemView.findViewById(R.id.journal_video_null_txt);
         }
 
         public void setListener(OnJourItemClickListener listener) {
@@ -107,6 +111,20 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             this.content.setText(data.getContent());
             this.week.setText(data.getWeek());
             this.weather.setImageDrawable(weather.getContext().getDrawable(OtherUtil.weatherId2Mipmap.getOrDefault(data.getWeather(), SUNNY)));
+
+            this.videoRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onJourItemClick(v, data);
+                }
+            });
+
+            this.imgGrid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onJourItemClick(v, data);
+                }
+            });
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getPictureArray().size(), 3);
@@ -124,15 +142,24 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 videoRoot.setVisibility(View.GONE);
             } else {
                 videoRoot.setVisibility(View.VISIBLE);
-                GlideEngine.createGlideEngine().loadImage(videoImg.getContext(), data.getVideo(), videoImg);
+                File file = new File(data.getVideo());
+                if (file.exists()) {
+                    // 说明本地的视频没有被删除，或者没有被移动位置
+                    videoRoot.setEnabled(true);
+                    GlideEngine.createGlideEngine().loadImage(videoImg.getContext(), data.getVideo(), videoImg);
+                    videoPlayer.setVisibility(View.VISIBLE);
+                    videoNullTxt.setVisibility(View.GONE);
+                }
+                else {
+                    videoRoot.setEnabled(false);
+                    Glide.with(videoImg.getContext()).load(R.drawable.pathnull).into(videoImg);
+                    videoPlayer.setVisibility(View.GONE);
+                    videoNullTxt.setVisibility(View.VISIBLE);
+                }
+
             }
 
-            this.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onJourItemClick(v, data);
-                }
-            });
+
 
         }
     }

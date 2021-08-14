@@ -1,29 +1,9 @@
 package com.starstudio.projectdemo.todo;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AppOpsManager;
-import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-import com.starstudio.projectdemo.MainActivity;
-import com.starstudio.projectdemo.MyApplication;
-import com.starstudio.projectdemo.R;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class TODONotification {
     public static final String CHANNEL_ID = "UESTC2021";

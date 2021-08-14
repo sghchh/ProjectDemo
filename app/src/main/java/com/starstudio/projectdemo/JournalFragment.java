@@ -3,9 +3,10 @@ package com.starstudio.projectdemo;
 import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import com.starstudio.projectdemo.databinding.FragmentJournalBinding;
 import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
 import com.starstudio.projectdemo.journal.adapter.PagerAdapter;
 import com.starstudio.projectdemo.journal.api.HmsWeatherService;
+import com.starstudio.projectdemo.utils.HandlerHelper;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
 import org.jetbrains.annotations.NotNull;

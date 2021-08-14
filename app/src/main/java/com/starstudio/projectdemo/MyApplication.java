@@ -10,6 +10,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.huawei.hms.mlsdk.common.MLApplication;
+import com.starstudio.projectdemo.journal.api.HmsWeatherService;
 import com.starstudio.projectdemo.journal.api.JournalDatabase;
 import com.starstudio.projectdemo.todo.TODONotification;
 import com.starstudio.projectdemo.todo.database.TodoDatabase;
@@ -24,6 +25,8 @@ public class MyApplication extends Application {
         JournalDatabase.init(this);
         TodoDatabase.init(this);
         TODONotification.init(this);
+        //HMS天气、地理信息
+        HmsWeatherService.init(this);
     }
 
 

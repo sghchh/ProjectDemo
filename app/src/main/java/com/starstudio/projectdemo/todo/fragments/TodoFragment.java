@@ -57,6 +57,7 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
     private TodoDaoService daoService;
     private FragmentTodoBinding binding;
     private TodoAdapter adapter;
+    private Context context;
     private Intent intentService;
     private int allNum = 0;
     private int doneNum = 0;
@@ -69,7 +70,8 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         daoService = TodoDaoService.getInstance();
         setHasOptionsMenu(true);
-        intentService = new Intent(getActivity(), TodoService.class);
+        intentService = new Intent(getContext(), TodoService.class);
+        context = getContext();
         binding = FragmentTodoBinding.inflate(inflater, container, false);
         configView();
 
@@ -154,14 +156,12 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
                                 serviceData.add(todoEntities.get(i).getTodoTime());
                         }
 
-
                         // 开启后台服务
                         long[] serviceDataArray = new long[allNum - doneNum];
                         for (int i = 0; i < serviceDataArray.length; i ++)
                             serviceDataArray[i] = serviceData.get(i);
                         intentService.putExtra("serviceData", serviceDataArray);
-                        getActivity().startService(intentService);
-
+                        context.startService(intentService);
                     }
 
                     @Override

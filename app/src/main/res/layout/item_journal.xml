@@ -96,9 +96,21 @@
 
         <ImageView
             android:layout_gravity="center"
+            android:id="@+id/journal_video_play"
             android:src="@android:drawable/ic_media_play"
             android:layout_width="30dp"
             android:layout_height="30dp" />
+
+        <TextView
+            android:id="@+id/journal_video_null_txt"
+            android:text="原视频已被删除或移动"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="10dp"/>
     </FrameLayout>
 
     <!--如果日记中含有音频的话，该布局负责展示音频-->
