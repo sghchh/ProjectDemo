@@ -216,7 +216,7 @@ public class OtherUtil {
         return time;
     }
 
-<<<<<<< HEAD
+
     /**
      * 根据选择的时间生成时间戳
      * @param hhmm 用户使用TimePicker选择出的时间
@@ -236,7 +236,7 @@ public class OtherUtil {
          }
          return res;
      }
-=======
+
 
     /**
      * 将用字符串表示的两个数字进行相加 (该方法默认字符串中不包含 "+" 或 ”-“ 号)
@@ -287,7 +287,7 @@ public class OtherUtil {
         return sb.toString();
     }
 
->>>>>>> fzc
+
 
     /**
      * 将用字符串表示的两个数字进行相减 (该方法默认字符串中不包含 "+" 或 ”-“ 号)，

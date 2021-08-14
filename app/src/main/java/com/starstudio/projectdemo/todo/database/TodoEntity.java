@@ -18,15 +18,9 @@ public class TodoEntity implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-<<<<<<< HEAD
     @ColumnInfo(name = "todo_time")
     private long todoTime;         // 所选择的待办时间
-=======
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "todo_time")
-    private String todoTime;        // 所选择的待办时间
->>>>>>> fzc
+
 
     private String content;        // 待办的内容
 
