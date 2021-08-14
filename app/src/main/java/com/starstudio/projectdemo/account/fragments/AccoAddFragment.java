@@ -411,19 +411,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         final String money = String.valueOf(etwtMoney.getText()).trim();
         final String comment = String.valueOf(etComment.getText()).trim();
 
-        if(kind.equals("")){
-            etwtKind.setHint("        请选择种类");
-            etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-            return;
-        }else if(money.equals("")){
-            etwtMoney.setHint("                  请填写金额");
-            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-            return;
-        }else if(!OtherUtil.isStringToNum(money)){
-            etwtMoney.setText("");
-            etwtMoney.setHint("                请填写正确金额");
-            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-        }
+        if (isParamEmpty(kind, money)) return;
 
         new Thread(new Runnable() {
             @Override
@@ -443,6 +431,24 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 handler.sendMessage(msg);
             }
         }).start();
+    }
+
+    private boolean isParamEmpty(String kind, String money) {
+        if (kind.equals("")) {
+            etwtKind.setHint("        请选择种类");
+            etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return true;
+        } else if (money.equals("")) {
+            etwtMoney.setHint("                  请填写金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return true;
+        } else if (!OtherUtil.isStringToNum(money)) {
+            etwtMoney.setText("");
+            etwtMoney.setHint("                请填写正确金额");
+            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
+            return true;
+        }
+        return false;
     }
 
     private void deleteData(){
@@ -467,19 +473,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         final String money = String.valueOf(etwtMoney.getText()).trim();
         final String comment = String.valueOf(etComment.getText()).trim();
 
-        if(kind.equals("")){
-            etwtKind.setHint("        请选择种类");
-            etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-            return;
-        }else if(money.equals("")){
-            etwtMoney.setHint("                  请填写金额");
-            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-            return;
-        }else if(!OtherUtil.isStringToNum(money)){
-            etwtMoney.setText("");
-            etwtMoney.setHint("                请填写正确金额");
-            etwtMoney.setHintTextColor(Color.parseColor("#E8FF3E3E"));
-        }
+        if (isParamEmpty(kind, money)) return;
 
         new Thread(new Runnable() {
             @Override

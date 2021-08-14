@@ -16,7 +16,7 @@ public class TodoEntity {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "todo_time")
-    private String todoTime;         // 所选择的待办时间
+    private String todoTime;        // 所选择的待办时间
 
     private String content;        // 待办的内容
 
