@@ -1,6 +1,15 @@
 package com.starstudio.projectdemo.todo.fragments;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,34 +21,47 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.starstudio.projectdemo.MainActivity;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.databinding.FragmentTodoBinding;
 import com.starstudio.projectdemo.todo.TodoAdapter;
+import com.starstudio.projectdemo.todo.TodoService;
 import com.starstudio.projectdemo.todo.database.TodoDaoService;
 import com.starstudio.projectdemo.todo.database.TodoEntity;
 
 import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Subscription;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.disposables.Disposable;
 
+import static com.starstudio.projectdemo.todo.TODONotification.CHANNEL_ID;
+import static com.starstudio.projectdemo.todo.TODONotification.NOTIFICATION_ID;
+
 public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClickListener {
     private TodoDaoService daoService;
     private FragmentTodoBinding binding;
     private TodoAdapter adapter;
+    private Intent intentService;
     private int allNum = 0;
     private int doneNum = 0;
+    // 传递给后台Service的数据
+    private List<Long> serviceData = new ArrayList<>();
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -47,8 +69,10 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         daoService = TodoDaoService.getInstance();
         setHasOptionsMenu(true);
+        intentService = new Intent(getActivity(), TodoService.class);
         binding = FragmentTodoBinding.inflate(inflater, container, false);
         configView();
+
         return binding.getRoot();
     }
 
@@ -122,9 +146,21 @@ public class TodoFragment extends Fragment implements TodoAdapter.OnTodoItemClic
                         });
                         adapter.setTodoList(todoEntities);
                         allNum = todoEntities.size();
-                        for (int i = 0; i < todoEntities.size(); i ++)
+                        doneNum = 0;
+                        for (int i = 0; i < todoEntities.size(); i ++) {
                             if (todoEntities.get(i).getCondition().equals("已完成"))
                                 doneNum ++;
+                            else
+                                serviceData.add(todoEntities.get(i).getTodoTime());
+                        }
+
+
+                        // 开启后台服务
+                        long[] serviceDataArray = new long[allNum - doneNum];
+                        for (int i = 0; i < serviceDataArray.length; i ++)
+                            serviceDataArray[i] = serviceData.get(i);
+                        intentService.putExtra("serviceData", serviceDataArray);
+                        getActivity().startService(intentService);
 
                     }
 
