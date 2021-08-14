@@ -116,4 +116,6 @@ dependencies {
     // MPAndroidChart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    implementation 'com.huawei.hms:audiokit-player:1.3.0.300'
+
 }

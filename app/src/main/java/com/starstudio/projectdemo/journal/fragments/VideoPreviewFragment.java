@@ -193,11 +193,11 @@ public class VideoPreviewFragment extends Fragment implements SurfaceHolder.Call
                 break;
         }
     }
+
     /**
      * 更新播放时间
      */
     private void updateTime() {
-
         binding.videoStartTime.setText(OtherUtil.formatLongToTime(mPlayer.getCurrentPosition()));
         binding.videoProgess.setProgress(mPlayer.getCurrentPosition());
     }
@@ -210,6 +210,7 @@ public class VideoPreviewFragment extends Fragment implements SurfaceHolder.Call
         mHandler.removeMessages(UPDATE_TIME);
         binding.controlLl.animate().setDuration(300).translationY(binding.controlLl.getHeight());
     }
+
     /**
      * 显示进度条
      */
@@ -223,6 +224,7 @@ public class VideoPreviewFragment extends Fragment implements SurfaceHolder.Call
         mHandler.sendEmptyMessageDelayed(HIDE_CONTROL, 5000);
         binding.controlLl.animate().setDuration(300).translationY(0);
     }
+
     /**
      * 设置快进10秒方法
      */
