@@ -19,6 +19,18 @@
         <action
             android:id="@+id/action_JournalAddFragment_to_VideoPreviewFragment"
             app:destination="@id/VideoPreviewFragment" />
+
+        <action
+            android:id="@+id/action_JournalAddFragment_to_AudioPreviewFragment"
+            app:destination="@id/AudioPreviewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/AudioPreviewFragment"
+        android:name="com.starstudio.projectdemo.journal.fragments.AudioPreviewFragment"
+        android:label="audio_preview_fragment"
+        tools:layout="@layout/fragment3_preview_audio">
+
     </fragment>
 
     <fragment

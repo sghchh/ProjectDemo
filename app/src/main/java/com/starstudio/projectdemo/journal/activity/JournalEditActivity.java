@@ -1,6 +1,8 @@
 package com.starstudio.projectdemo.journal.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,4 +39,15 @@ public class JournalEditActivity extends AppCompatActivity {
         super.onDestroy();
         binding = null;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 300) {
+            editActivityData.setAudioPath(data.getDataString());
+            Log.e(getClass().getSimpleName(), "获得的音频地址: " + data.getDataString());
+        }
+    }
+
 }

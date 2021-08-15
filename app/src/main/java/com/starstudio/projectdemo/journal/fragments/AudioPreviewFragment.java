@@ -1,6 +1,8 @@
 package com.starstudio.projectdemo.journal.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,50 +53,38 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 
     private HwAudioManager mHwAudioManager;
     private HwAudioPlayerManager mHwAudioPlayerManager;
-    private HwAudioConfigManager mHwAudioConfigManager;
-    private HwAudioQueueManager mHwAudioQueueManager;
-    private HwAudioEffectManager mHwAudioEffectManager;
+    private HwAudioStatusListener mPlayListener;
     List<HwAudioPlayItem> playItemList  = new ArrayList<>();
     private final String TAG = getClass().getSimpleName();
+    private Boolean mIsPause = false;
+    public static final int UPDATE_UI = 1;
 
-    private HwAudioStatusListener mPlayListener = new HwAudioStatusListener() {
-
-        @Override
-        public void onSongChange(HwAudioPlayItem song) {
-            // 当前音频变化回调。
-        }
+    private Handler UIhandle = new Handler(){
 
         @Override
-        public void onQueueChanged(List<HwAudioPlayItem> infos) {
-            // 队列变化回调。
-        }
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            if(msg.what==UPDATE_UI) {
+                int position = (int) mHwAudioPlayerManager.getOffsetTime();
+                int totalduration = (int) mHwAudioPlayerManager.getDuration();
 
-        @Override
-        public void onBufferProgress(int percent) {
-            // 缓冲进度变化回调。
-        }
+                binding.videoProgess.setMax(totalduration);
+                binding.videoProgess.setProgress(position);
 
-        @Override
-        public void onPlayProgress(long currPos, long duration) {
-            // 播放进度变化回调。
-            updateTime();
-        }
+                updateTime();
+                if(mHwAudioPlayerManager.isPlaying()) {
+                    binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
+                } else {
+                    binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                }
 
-        @Override
-        public void onPlayCompleted(boolean isStopped) {
-            // 播放完成回调。
-        }
-
-        @Override
-        public void onPlayError(int errorCode, boolean isUserForcePlay) {
-            // 播放出错回调。
-        }
-
-        @Override
-        public void onPlayStateChange(boolean isPlaying, boolean isBuffering) {
-            // 播放状态变化回调。
+                UIhandle.sendEmptyMessageDelayed(UPDATE_UI, 500);
+            }
         }
     };
+
+
+
 
 
     @Nullable
@@ -109,7 +99,8 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         initEvent();
         createHwAudioManager();
         playLocalList();
-        initView();
+//        initView();
+        UIhandle.sendEmptyMessage(UPDATE_UI);
         return binding.getRoot();
     }
 
@@ -125,18 +116,13 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
             @Override
             public void onSuccess(HwAudioManager hwAudioManager) {
                 try {
-                    Log.i(TAG, "createHwAudioManager onSuccess");
+                    Log.e(TAG, "createHwAudioManager onSuccess");
                     mHwAudioManager = hwAudioManager;
                     // 获取播放管理实例。
                     mHwAudioPlayerManager = hwAudioManager.getPlayerManager();
-                    // 获取配置管理实例。
-                    mHwAudioConfigManager = hwAudioManager.getConfigManager();
-                    // 获取队列管理实例。
-                    mHwAudioQueueManager = hwAudioManager.getQueueManager();
-//                    // 获取音效管理实例。
-//                    mHwAudioEffectManager = hwAudioManager.getEffectManager();
+
                 } catch (Exception e) {
-                    Log.i(TAG, "player init fail");
+                    Log.e(TAG, "player init fail");
                 }
             }
             @Override
@@ -144,6 +130,61 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 Log.w(TAG, "init err:" + errorCode);
             }
         });
+
+        mPlayListener = new HwAudioStatusListener() {
+
+
+            @Override
+            public void onSongChange(HwAudioPlayItem song) {
+                // 当前音频变化回调。
+            }
+
+            @Override
+            public void onQueueChanged(List<HwAudioPlayItem> infos) {
+                // 队列变化回调。
+            }
+
+            @Override
+            public void onBufferProgress(int percent) {
+                // 缓冲进度变化回调。
+            }
+
+            @Override
+            public void onPlayProgress(long currPos, long duration) {
+//            updateTime();
+                if(currPos == duration){
+                    // 播放完成回调。
+                    updateTime();
+                    binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                    pause();
+                }
+            }
+
+            @Override
+            public void onPlayCompleted(boolean isStopped) {
+                if(isStopped){
+//                    UIhandle.sendEmptyMessage(UPDATE_UI);
+                    // 播放完成回调。
+                    if(binding != null){
+                        binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                    }
+                    seekTo((int) mHwAudioPlayerManager.getDuration());
+                    updateTime();
+                    pause();
+                }
+
+            }
+
+            @Override
+            public void onPlayError(int errorCode, boolean isUserForcePlay) {
+                // 播放出错回调。
+            }
+
+            @Override
+            public void onPlayStateChange(boolean isPlaying, boolean isBuffering) {
+                // 播放状态变化回调。
+            }
+        };
 
         addListener(mPlayListener);
     }
@@ -179,10 +220,11 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     public List<HwAudioPlayItem> getLocalPlayItemList() {
         // 设置音频本地路径。
         String path = data.getAudioPath();
+        Log.e(getClass().getSimpleName(), "音频本地路径: " + path);
         // 创建音频对象，写入音频信息。
         HwAudioPlayItem item = new HwAudioPlayItem();
         // 设置音频标题。
-        item.setAudioTitle("Playing input song");
+        item.setAudioTitle("");
         // 设置音频ID，作为音频文件的唯一标识，建议通过哈希值获取。
         item.setAudioId(String.valueOf(path.hashCode()));
         // 设置音频是否在线，0表示本地歌曲，1表示在线歌曲。
@@ -190,6 +232,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         // 传入音频本地路径。
         item.setFilePath(path);
         playItemList.add(item);
+
+        Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+        Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
+
         return playItemList;
     }
 
@@ -201,12 +247,6 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         binding.videoProgess.setOnSeekBarChangeListener(this);
     }
 
-    private void initView(){
-        binding.videoStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-        binding.videoEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
-        binding.videoProgess.setMax((int) mHwAudioPlayerManager.getDuration());
-        binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
-    }
 
     @Override
     public void onClick(View v) {
@@ -218,6 +258,9 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 forWard();
                 break;
             case R.id.rl_play_pause:
+                Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+                Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
+                Log.e(getClass().getSimpleName(), "执行了点击事件");
                 playControl();
                 break;
         }
@@ -227,20 +270,36 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      * 更新播放时间
      */
     private void updateTime() {
-        binding.videoStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-        binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
+//        if(!mIsInit){
+//                initView();
+//                mIsInit = true;
+//                Log.e(getClass().getSimpleName(), "设置了bar");
+//        }
+        // 播放进度变化回调。
+        if(mHwAudioPlayerManager != null){
+            binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
+            binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
+//            binding.videoProgess.setProgress((int) (mHwAudioPlayerManager.getOffsetTime() * 1000 / mHwAudioPlayerManager.getDuration()));
+
+        }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekTo(progress);
+        if(mHwAudioPlayerManager != null && fromUser){
+            seekTo(progress);
+        }
+//        seekTo(progress);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {}
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        int process = seekBar.getProgress();
+        seekTo(process);
+    }
 
     public void seekTo(int pos) {
         Log.i(TAG, "setQueuePosition,pos: " + pos);
@@ -257,7 +316,15 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private void forWard(){
         if(mHwAudioPlayerManager != null){
             int position = (int) mHwAudioPlayerManager.getOffsetTime();
-            mHwAudioPlayerManager.seekTo(position + 10000);
+            if(mHwAudioPlayerManager.getDuration() != -1 && mHwAudioPlayerManager.getDuration() - 10000 <= position){
+                mHwAudioPlayerManager.seekTo((int) mHwAudioPlayerManager.getDuration());
+                updateTime();
+                binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                mHwAudioPlayerManager.pause();
+            }else{
+                mHwAudioPlayerManager.seekTo(position + 10000);
+//                updateTime();
+            }
         }
     }
 
@@ -273,6 +340,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 position = 0;
             }
             mHwAudioPlayerManager.seekTo(position);
+            updateTime();
         }
     }
 
@@ -280,10 +348,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private void playControl(){
         if(mHwAudioPlayerManager.isPlaying()) {
             pause();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
+            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
         } else {
             play();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+            binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
         }
     }
 
@@ -291,7 +359,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      *  设置音频暂停
      */
     public void pause() {
-        Log.i(TAG, "pause");
+        Log.e(TAG, "pause");
         if (mHwAudioPlayerManager == null) {
             Log.w(TAG, "pause err");
             return;
@@ -303,13 +371,16 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      *  设置音频开始
      */
     public void play() {
-        Log.i(TAG, "pause");
+        Log.e(TAG, "play");
         if (mHwAudioPlayerManager == null) {
             Log.w(TAG, "pause err");
             return;
         }
+
         int position = (int) mHwAudioPlayerManager.getOffsetTime();
-        mHwAudioPlayerManager.seekTo(position);
+        mHwAudioPlayerManager.playList(getLocalPlayItemList(),0,position);
+        Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+        Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
     }
 
 
@@ -322,7 +393,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        removeListener(mPlayListener);
+
     }
 
     @Override
@@ -333,16 +404,25 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        removeListener(mPlayListener);
+        if(UIhandle != null){
+            UIhandle.removeCallbacksAndMessages(null);
+        }
+        mPlayListener = null;
+        mHwAudioPlayerManager.stop();
+        mHwAudioManager = null;
+        mHwAudioPlayerManager = null;
         if (item.getItemId() == android.R.id.home) {
             // 点击返回按钮，则返回上一级Fragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigateUp();
         } else if (item.getItemId() == R.id.image_preview_delete) {
             // 先删除，然后返回上一级Fragment
-            data.setVideoPath(null);
+            data.setAudioPath(null);
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigateUp();
         }
+
         return super.onOptionsItemSelected(item);
     }
 

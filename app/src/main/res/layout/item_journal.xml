@@ -115,8 +115,29 @@
 
     <!--如果日记中含有音频的话，该布局负责展示音频-->
     <FrameLayout
-        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:id="@+id/journal_audio_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" >
+
+<!--        <ImageView-->
+<!--            android:layout_width="80dp"-->
+<!--            android:layout_height="80dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/iv_add_journal_audio"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/journal_audio_null_txt"-->
+<!--            android:text="原音频已被删除或移动"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textColor="@color/red"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom|center_horizontal"-->
+<!--            android:layout_marginBottom="10dp"/>-->
+
+    </FrameLayout>
 </LinearLayout>
 

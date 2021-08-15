@@ -133,7 +133,11 @@ public class OtherUtil {
 
     public static String getSystemMonthToNumber() {
         String[] ss = dateFormat.format(new Date(System.currentTimeMillis())).split("-");
-        return ss[1];
+        if(ss[1].charAt(0) == '0'){
+            return ss[1].charAt(1) + "";
+        }else{
+            return ss[1];
+        }
     }
 
     public static String getSystemMonth() {

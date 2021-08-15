@@ -155,9 +155,9 @@ public class AccoFragment extends BaseFragment {
         monthIncome = "0";
         monthExpend = "0";
         for(int i = 0; i < data.size(); i++){
-            Log.e(getClass().getSimpleName(), "year = " + year + ";" + "data.get(i).getYear() = " + data.get(i).getYear());
-            Log.e(getClass().getSimpleName(), "month = " + month + ";" + "data.get(i).getMonth()  = " + data.get(i).getMonth() );
-            Log.e(getClass().getSimpleName(), "day = " + day + ";" + "data.get(i).getDay() = " + data.get(i).getDay());
+//            Log.e(getClass().getSimpleName(), "year = " + year + ";" + "data.get(i).getYear() = " + data.get(i).getYear());
+//            Log.e(getClass().getSimpleName(), "month = " + month + ";" + "data.get(i).getMonth()  = " + data.get(i).getMonth() );
+//            Log.e(getClass().getSimpleName(), "day = " + day + ";" + "data.get(i).getDay() = " + data.get(i).getDay());
             if(year.equals(data.get(i).getYear()) && month.equals(data.get(i).getMonth()) && day.equals(data.get(i).getDay())){
                 mClassifyData.get(mClassifyData.size() - 1).setmCount(OtherUtil.bigNumberOperation(mClassifyData.get(mClassifyData.size() - 1).getmCount(), data.get(i).getMoney()));
             }else{
@@ -170,6 +170,8 @@ public class AccoFragment extends BaseFragment {
                     data.get(i).getKindDetail(),
                     data.get(i).getComment(),
                     data.get(i).getMoney()));
+            Log.e(getClass().getSimpleName(),"data.get(i).getMonth()的值: " + data.get(i).getMonth());
+            Log.e(getClass().getSimpleName(),"OtherUtil.getSystemMonthToNumber()的值: " + OtherUtil.getSystemMonthToNumber());
             if(data.get(i).getMonth().equals(OtherUtil.getSystemMonthToNumber())){
                 if(data.get(i).getMoney().charAt(0) == '-'){
                     monthExpend = OtherUtil.bigNumberOperation(monthExpend, data.get(i).getMoney().substring(1));
