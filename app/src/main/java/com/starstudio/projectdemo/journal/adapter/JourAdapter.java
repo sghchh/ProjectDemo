@@ -82,7 +82,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         private View layout;
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
-        private final TextView week, date, location, content, videoNullTxt;
+        private final TextView week, date, location, content, videoNullTxt,audioNullTxt;
         private final ImageView weather, videoImg, videoPlayer;
         private final FrameLayout videoRoot, audioRoot;
         public JourHolder(@NonNull @NotNull View itemView) {
@@ -129,12 +129,12 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 }
             });
 
-//            this.audioRoot.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onJourItemClick(v, data);
-//                }
-//            });
+            this.audioRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onJourItemClick(v, data);
+                }
+            });
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getPictureArray().size(), 3);
