@@ -101,7 +101,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             videoNullTxt = (TextView)itemView.findViewById(R.id.journal_video_null_txt);
 
             audioRoot = (FrameLayout)itemView.findViewById(R.id.journal_audio_root);
-//            audioNullTxt = (TextView)itemView.findViewById(R.id.journal_audio_null_txt);
+            audioNullTxt = (TextView)itemView.findViewById(R.id.journal_audio_null_txt);
         }
 
         public void setListener(OnJourItemClickListener listener) {
@@ -169,22 +169,22 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
             }
 
-//            if(data.getAudio() == null){
-//                audioRoot.setVisibility(View.GONE);
-//            }else{
-//                audioRoot.setVisibility(View.VISIBLE);
-//                File fileAudio = new File(data.getAudio());
-//                if (fileAudio.exists()) {
-//                    // 说明本地的视频没有被删除，或者没有被移动位置
-//                    audioRoot.setEnabled(true);
-//                    audioRoot.setVisibility(View.GONE);
-//                }
-//                else {
-//                    audioRoot.setEnabled(false);
-//                    audioRoot.setVisibility(View.GONE);
-//                    audioNullTxt.setVisibility(View.VISIBLE);
-//                }
-//            }
+            if(data.getAudio() == null){
+                audioRoot.setVisibility(View.GONE);
+            }else{
+                audioRoot.setVisibility(View.VISIBLE);
+                File fileAudio = new File(data.getAudio());
+                if (fileAudio.exists()) {
+                    // 说明本地的视频没有被删除，或者没有被移动位置
+                    audioRoot.setEnabled(true);
+                    audioRoot.setVisibility(View.GONE);
+                }
+                else {
+                    audioRoot.setEnabled(false);
+                    audioRoot.setVisibility(View.GONE);
+                    audioNullTxt.setVisibility(View.VISIBLE);
+                }
+            }
 
         }
     }
