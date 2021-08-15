@@ -84,7 +84,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         private final RecyclerView imgGrid;
         private final TextView week, date, location, content, videoNullTxt;
         private final ImageView weather, videoImg, videoPlayer;
-        private final FrameLayout videoRoot;
+        private final FrameLayout videoRoot, audioRoot;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             layout = itemView;
@@ -99,6 +99,9 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             videoRoot = (FrameLayout) itemView.findViewById(R.id.journal_video_root);
             videoPlayer = (ImageView)itemView.findViewById(R.id.journal_video_play);
             videoNullTxt = (TextView)itemView.findViewById(R.id.journal_video_null_txt);
+
+            audioRoot = (FrameLayout)itemView.findViewById(R.id.journal_audio_root);
+//            audioNullTxt = (TextView)itemView.findViewById(R.id.journal_audio_null_txt);
         }
 
         public void setListener(OnJourItemClickListener listener) {
@@ -125,6 +128,13 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                     listener.onJourItemClick(v, data);
                 }
             });
+
+//            this.audioRoot.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    listener.onJourItemClick(v, data);
+//                }
+//            });
 
             // 计算所需要的列数，不同情境为：1/2/3列
             int coloum = Math.min(data.getPictureArray().size(), 3);
@@ -159,7 +169,22 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
             }
 
-
+//            if(data.getAudio() == null){
+//                audioRoot.setVisibility(View.GONE);
+//            }else{
+//                audioRoot.setVisibility(View.VISIBLE);
+//                File fileAudio = new File(data.getAudio());
+//                if (fileAudio.exists()) {
+//                    // 说明本地的视频没有被删除，或者没有被移动位置
+//                    audioRoot.setEnabled(true);
+//                    audioRoot.setVisibility(View.GONE);
+//                }
+//                else {
+//                    audioRoot.setEnabled(false);
+//                    audioRoot.setVisibility(View.GONE);
+//                    audioNullTxt.setVisibility(View.VISIBLE);
+//                }
+//            }
 
         }
     }

@@ -96,7 +96,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
                     android:layout_marginEnd="1dp"
-                    android:max="1000"
                     android:layout_below="@+id/audio_start_time"/>
 
             </RelativeLayout>

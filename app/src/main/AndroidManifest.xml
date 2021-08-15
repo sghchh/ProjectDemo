@@ -59,6 +59,7 @@
             android:name="com.huawei.hms.ml.DEPENDENCY"
             android:value="label" />
 
+        <!--   android:screenOrientation="fullSensor" -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
