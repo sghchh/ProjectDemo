@@ -1,6 +1,8 @@
 package com.starstudio.projectdemo.journal.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,8 +58,33 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private HwAudioEffectManager mHwAudioEffectManager;
     List<HwAudioPlayItem> playItemList  = new ArrayList<>();
     private final String TAG = getClass().getSimpleName();
+    private Boolean mIsInit = false;
+    private Boolean mIsPause = false;
+    private int mPausePosition = 0;
+    public static final int UPDATE_UI = 1;
+
+    private Handler UIhandle = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg){
+            super.handleMessage(msg);
+            if(msg.what==UPDATE_UI) {
+                int position = (int) mHwAudioPlayerManager.getOffsetTime();
+                int totalduration = (int) mHwAudioPlayerManager.getDuration();
+
+                binding.videoProgess.setMax(totalduration);
+                binding.videoProgess.setProgress(position);
+
+                updateTime();
+
+                UIhandle.sendEmptyMessageDelayed(UPDATE_UI, 500);
+            }
+        }
+    };
+
 
     private HwAudioStatusListener mPlayListener = new HwAudioStatusListener() {
+
 
         @Override
         public void onSongChange(HwAudioPlayItem song) {
@@ -67,6 +94,8 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         @Override
         public void onQueueChanged(List<HwAudioPlayItem> infos) {
             // 队列变化回调。
+            Log.e(getClass().getSimpleName(), "队列变化回调: 获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+            Log.e(getClass().getSimpleName(), "队列变化回调: 获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
         }
 
         @Override
@@ -76,13 +105,13 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 
         @Override
         public void onPlayProgress(long currPos, long duration) {
-            // 播放进度变化回调。
             updateTime();
         }
 
         @Override
         public void onPlayCompleted(boolean isStopped) {
             // 播放完成回调。
+            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
         }
 
         @Override
@@ -109,7 +138,8 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         initEvent();
         createHwAudioManager();
         playLocalList();
-        initView();
+//        initView();
+        UIhandle.sendEmptyMessage(UPDATE_UI);
         return binding.getRoot();
     }
 
@@ -125,7 +155,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
             @Override
             public void onSuccess(HwAudioManager hwAudioManager) {
                 try {
-                    Log.i(TAG, "createHwAudioManager onSuccess");
+                    Log.e(TAG, "createHwAudioManager onSuccess");
                     mHwAudioManager = hwAudioManager;
                     // 获取播放管理实例。
                     mHwAudioPlayerManager = hwAudioManager.getPlayerManager();
@@ -135,8 +165,9 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                     mHwAudioQueueManager = hwAudioManager.getQueueManager();
 //                    // 获取音效管理实例。
 //                    mHwAudioEffectManager = hwAudioManager.getEffectManager();
+
                 } catch (Exception e) {
-                    Log.i(TAG, "player init fail");
+                    Log.e(TAG, "player init fail");
                 }
             }
             @Override
@@ -179,10 +210,11 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     public List<HwAudioPlayItem> getLocalPlayItemList() {
         // 设置音频本地路径。
         String path = data.getAudioPath();
+        Log.e(getClass().getSimpleName(), "音频本地路径: " + path);
         // 创建音频对象，写入音频信息。
         HwAudioPlayItem item = new HwAudioPlayItem();
         // 设置音频标题。
-        item.setAudioTitle("Playing input song");
+        item.setAudioTitle("");
         // 设置音频ID，作为音频文件的唯一标识，建议通过哈希值获取。
         item.setAudioId(String.valueOf(path.hashCode()));
         // 设置音频是否在线，0表示本地歌曲，1表示在线歌曲。
@@ -190,6 +222,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         // 传入音频本地路径。
         item.setFilePath(path);
         playItemList.add(item);
+
+        Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+        Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
+
         return playItemList;
     }
 
@@ -202,8 +238,8 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     }
 
     private void initView(){
-        binding.videoStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-        binding.videoEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
+        binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
+        binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
         binding.videoProgess.setMax((int) mHwAudioPlayerManager.getDuration());
         binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
     }
@@ -218,7 +254,20 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 forWard();
                 break;
             case R.id.rl_play_pause:
+//                if(!mIsInit){
+//                    initView();
+//                    mIsInit = true;
+//                }
+                Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+                Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
+                Log.e(getClass().getSimpleName(), "执行了点击事件");
                 playControl();
+//                for(int i =0; i < 1000; i++){
+//                    Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+//                    Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
+//                }
+                Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+                Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
                 break;
         }
     }
@@ -227,20 +276,33 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      * 更新播放时间
      */
     private void updateTime() {
-        binding.videoStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-        binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
+//        if(!mIsInit){
+//                initView();
+//                mIsInit = true;
+//                Log.e(getClass().getSimpleName(), "设置了bar");
+//        }
+        // 播放进度变化回调。
+        if(mHwAudioPlayerManager != null){
+            binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
+            binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
+//            binding.videoProgess.setProgress((int) (mHwAudioPlayerManager.getOffsetTime() * 1000 / mHwAudioPlayerManager.getDuration()));
+
+        }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        seekTo(progress);
+//        seekTo(progress);
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {}
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        int process = seekBar.getProgress();
+        seekTo(process);
+    }
 
     public void seekTo(int pos) {
         Log.i(TAG, "setQueuePosition,pos: " + pos);
@@ -258,6 +320,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         if(mHwAudioPlayerManager != null){
             int position = (int) mHwAudioPlayerManager.getOffsetTime();
             mHwAudioPlayerManager.seekTo(position + 10000);
+            updateTime();
         }
     }
 
@@ -273,6 +336,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 position = 0;
             }
             mHwAudioPlayerManager.seekTo(position);
+            updateTime();
         }
     }
 
@@ -280,10 +344,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private void playControl(){
         if(mHwAudioPlayerManager.isPlaying()) {
             pause();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
+            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
         } else {
             play();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+            binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
         }
     }
 
@@ -291,7 +355,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      *  设置音频暂停
      */
     public void pause() {
-        Log.i(TAG, "pause");
+        Log.e(TAG, "pause");
         if (mHwAudioPlayerManager == null) {
             Log.w(TAG, "pause err");
             return;
@@ -303,13 +367,16 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
      *  设置音频开始
      */
     public void play() {
-        Log.i(TAG, "pause");
+        Log.e(TAG, "play");
         if (mHwAudioPlayerManager == null) {
             Log.w(TAG, "pause err");
             return;
         }
+
         int position = (int) mHwAudioPlayerManager.getOffsetTime();
-        mHwAudioPlayerManager.seekTo(position);
+        mHwAudioPlayerManager.playList(getLocalPlayItemList(),0,position);
+        Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
+        Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
     }
 
 

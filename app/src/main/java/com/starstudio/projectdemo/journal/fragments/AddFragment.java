@@ -191,6 +191,14 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
                 navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_VideoPreviewFragment);
             }
         });
+
+        binding.addJournalAudioIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+                navHost.getNavController().navigate(R.id.action_JournalAddFragment_to_AudioPreviewFragment);
+            }
+        });
     }
 
     /**
@@ -270,7 +278,11 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
      * 调用PictureSelector选择音频文件
      */
     private void selectAudio() {
+        Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
+        intent1.setType("audio/*"); //选择音频
+        getActivity().startActivityForResult(intent1, 300);
 
+        checkAddMediaVisibility();
     }
 
     /**
@@ -368,6 +380,7 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
             binding.addJourVideoTxt.setVisibility(View.GONE);
 
             binding.addJourAudioTxt.setVisibility(View.GONE);
+            binding.addJournalAudioRoot.setVisibility(View.GONE);
         } else if (editActivityData.getVideoPath() != null) {
             binding.addJournalVideoRoot.setVisibility(View.VISIBLE);
             binding.addJourVideoTxt.setVisibility(View.VISIBLE);
@@ -379,8 +392,10 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
             binding.recyclerAddImg.setVisibility(View.GONE);
 
             binding.addJourAudioTxt.setVisibility(View.GONE);
+            binding.addJournalAudioRoot.setVisibility(View.GONE);
         } else if (editActivityData.getAudioPath() != null) {
             binding.addJourAudioTxt.setVisibility(View.VISIBLE);
+            binding.addJournalAudioRoot.setVisibility(View.VISIBLE);
 
             binding.imageviewAddMedia.setVisibility(View.GONE);
             binding.addJourMediaTxt.setVisibility(View.GONE);
