@@ -120,23 +120,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-<!--        <ImageView-->
-<!--            android:layout_width="80dp"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/iv_add_journal_audio"/>-->
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/iv_add_journal_audio"/>
 
-<!--        <TextView-->
-<!--            android:id="@+id/journal_audio_null_txt"-->
-<!--            android:text="原音频已被删除或移动"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="14sp"-->
-<!--            android:textColor="@color/red"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|center_horizontal"-->
-<!--            android:layout_marginBottom="10dp"/>-->
+        <TextView
+            android:id="@+id/journal_audio_null_txt"
+            android:text="原音频已被删除或移动"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="@color/red"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="10dp"/>
 
     </FrameLayout>
 </LinearLayout>
