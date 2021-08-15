@@ -94,8 +94,6 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         @Override
         public void onQueueChanged(List<HwAudioPlayItem> infos) {
             // 队列变化回调。
-            Log.e(getClass().getSimpleName(), "队列变化回调: 获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
-            Log.e(getClass().getSimpleName(), "队列变化回调: 获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
         }
 
         @Override
@@ -112,6 +110,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         public void onPlayCompleted(boolean isStopped) {
             // 播放完成回调。
             binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+            mHwAudioPlayerManager.stop();
         }
 
         @Override
@@ -237,12 +236,12 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         binding.videoProgess.setOnSeekBarChangeListener(this);
     }
 
-    private void initView(){
-        binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-        binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
-        binding.videoProgess.setMax((int) mHwAudioPlayerManager.getDuration());
-        binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
-    }
+//    private void initView(){
+//        binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
+//        binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
+//        binding.videoProgess.setMax((int) mHwAudioPlayerManager.getDuration());
+//        binding.videoProgess.setProgress((int) mHwAudioPlayerManager.getOffsetTime());
+//    }
 
     @Override
     public void onClick(View v) {
@@ -319,8 +318,15 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private void forWard(){
         if(mHwAudioPlayerManager != null){
             int position = (int) mHwAudioPlayerManager.getOffsetTime();
-            mHwAudioPlayerManager.seekTo(position + 10000);
-            updateTime();
+            if(mHwAudioPlayerManager.getDuration() != -1 && mHwAudioPlayerManager.getDuration() - 10000 <= position){
+                binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                mHwAudioPlayerManager.seekTo((int) mHwAudioPlayerManager.getDuration());
+                updateTime();
+                mHwAudioPlayerManager.stop();
+            }else{
+                mHwAudioPlayerManager.seekTo(position + 10000);
+                updateTime();
+            }
         }
     }
 
@@ -389,7 +395,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        removeListener(mPlayListener);
+//        removeListener(mPlayListener);
+//        if(UIhandle != null){
+//            UIhandle.removeCallbacksAndMessages(null);
+//        }
     }
 
     @Override
@@ -400,16 +409,25 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        removeListener(mPlayListener);
+        if(UIhandle != null){
+            UIhandle.removeCallbacksAndMessages(null);
+        }
+        mPlayListener = null;
+        mHwAudioPlayerManager.stop();
+        mHwAudioManager = null;
+        mHwAudioPlayerManager = null;
         if (item.getItemId() == android.R.id.home) {
             // 点击返回按钮，则返回上一级Fragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigateUp();
         } else if (item.getItemId() == R.id.image_preview_delete) {
             // 先删除，然后返回上一级Fragment
-            data.setVideoPath(null);
+            data.setAudioPath(null);
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
             navHost.getNavController().navigateUp();
         }
+
         return super.onOptionsItemSelected(item);
     }
 

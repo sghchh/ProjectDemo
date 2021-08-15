@@ -416,6 +416,7 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
             binding.addJourVideoTxt.setVisibility(View.GONE);
 
             binding.addJourAudioTxt.setVisibility(View.GONE);
+            binding.addJournalAudioRoot.setVisibility(View.GONE);
         }
     }
 }
