@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.Build;
@@ -38,10 +40,19 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 
 import com.starstudio.projectdemo.databinding.FragmentInfoBinding;
+import com.starstudio.projectdemo.utils.FileUtil;
+import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -86,7 +97,7 @@ public class InfoFragment extends Fragment {
 
     //页面初始化部分控件
     private void initView(){
-        circleImage(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
+        circleImage(FileUtil.getImageContentUri(getContext(), new File(mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_IVINFO.toString()))));
         if(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + "") != ""){
             binding.etInfoName.setText(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + ""));
         }
@@ -95,8 +106,8 @@ public class InfoFragment extends Fragment {
     //该方法用来将用户头像设置为圆形
     private void circleImage(Uri uri){
         RequestOptions options = new RequestOptions()
-                .error(R.mipmap.nav_my_unselect)
-                .placeholder(R.mipmap.nav_my_unselect)
+                .error(R.drawable.logo)
+                .placeholder(R.drawable.logo)
                 .transforms(new CircleCrop());
 
         Glide.with(getContext())
@@ -184,11 +195,36 @@ public class InfoFragment extends Fragment {
             //打开系统相册后执行此处
             case PICTURE:
                 if(requestCode != RESULT_OK && data != null){
-                    circleImage(data.getData());
-                    mSharedPreferencesUtils.putUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString(),data.getData());
+                    Bitmap bitmap = FileUtil.sampleImage(FileUtil.getFilePathFromContentUri(Uri.parse(data.getDataString()), getContext().getContentResolver()));
+//                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    mSharedPreferencesUtils.putString(SharedPreferencesUtils.Key.KEY_IVINFO.toString(),saveBitmap(bitmap));
+//                    circleImage(data.getData());
+                    circleImage(FileUtil.getImageContentUri(getContext(), new File(mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_IVINFO.toString()))));
                 }
                 break;
         }
     }
+
+    public String saveBitmap(Bitmap bitmap) {
+        String FILE_STORAGE = getContext().getExternalFilesDir("").getPath();
+        File file = new File(FILE_STORAGE + "/picture");
+        if (!file.exists())
+            file.mkdir();
+        String PICTURE_FILE = file.getAbsolutePath();
+        File save = new File(PICTURE_FILE + "/" + "avater");
+        if (!save.exists())
+            save.mkdir();   // 如果该类别的文件夹不存在，则先创建
+        save = new File(save.getAbsolutePath(), new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(new Date()) + ".jpg");
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(save));
+            bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return save.getAbsolutePath();
+    }
+
 
 }

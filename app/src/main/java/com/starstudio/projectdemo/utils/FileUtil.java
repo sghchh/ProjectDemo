@@ -1,9 +1,15 @@
 package com.starstudio.projectdemo.utils;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 import com.starstudio.projectdemo.journal.data.AlbumData;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
@@ -115,4 +121,76 @@ public class FileUtil {
         }
         return res;
     }
+
+    /**
+     * 将Android绝对路径转换为Content开头的Uri
+     */
+    public static Uri getImageContentUri(Context context, java.io.File imageFile) {
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[] { MediaStore.Images.Media._ID }, MediaStore.Images.Media.DATA + "=? ",
+                new String[] { filePath }, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            Uri baseUri = Uri.parse("content://media/external/images/media");
+            return Uri.withAppendedPath(baseUri, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * 将Content开头的Uri转换为Android绝对路径
+     */
+    public static String getFilePathFromContentUri(Uri selectedVideoUri,
+                                                   ContentResolver contentResolver) {
+        String filePath;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+
+        Cursor cursor = contentResolver.query(selectedVideoUri, filePathColumn, null, null, null);
+//      也可用下面的方法拿到cursor
+//      Cursor cursor = this.context.managedQuery(selectedVideoUri, filePathColumn, null, null, null);
+
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
+
+    /**
+     * 压缩图片
+     */
+    public static Bitmap sampleImage(String filePath){
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 设置仅解码边缘,图片不会真正加载到内存中，解码器加载返回null，
+        // 但是图片的输出字段会进行赋值
+        // 比如说 图片的宽，高
+        options.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(filePath, options);
+
+        int outHeight = options.outHeight;
+        int outWidth = options.outWidth;
+
+        int scale = Math.max(outHeight / 300, outWidth / 300);
+        //scale向下取整,真实取值 2的n次幂
+        options.inSampleSize = scale;
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath,options);
+    }
+
+
+
 }
