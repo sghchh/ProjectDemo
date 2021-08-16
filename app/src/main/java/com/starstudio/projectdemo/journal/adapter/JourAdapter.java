@@ -3,6 +3,7 @@ package com.starstudio.projectdemo.journal.adapter;
 import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -119,7 +120,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 }
             });
 
-            this.imgGrid.setOnClickListener(new View.OnClickListener() {
+            this.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onJourItemClick(v, data);
@@ -136,6 +137,16 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 this.imgGrid.setAdapter(new ImgsAdapter(data.getPictureArray()));
                 this.imgGrid.setLayoutManager(new GridLayoutManager(ContextHolder.context(), coloum, LinearLayoutManager.VERTICAL, false));
                 this.imgGrid.addItemDecoration(new RecyclerGridDivider(10));
+                // 将RecyclerView拦截的点击传递给父控件
+                this.imgGrid.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_UP) {
+                            layout.performClick();  //模拟父控件的点击
+                        }
+                        return false;
+                    }
+                });
             }
 
             if (data.getVideo() == null) {
