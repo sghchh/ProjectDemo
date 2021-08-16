@@ -186,20 +186,13 @@ public class AccoFragment extends BaseFragment {
     }
 
 
+
+
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Toast.makeText(this.getContext(),"回调成功" + requestCode, Toast.LENGTH_SHORT).show();
-//        if ( requestCode == ML_ASR_CAPTURE_CODE) {
-////            realVoiceForResult(resultCode, data);
-//            Toast.makeText(this.getContext(),"回调成功", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 
     @Override

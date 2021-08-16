@@ -435,7 +435,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
 
     private boolean isParamEmpty(String kind, String money) {
         if (kind.equals("")) {
-            etwtKind.setHint("        请选择种类");
+            etwtKind.setHint("请选择种类");
             etwtKind.setHintTextColor(Color.parseColor("#E8FF3E3E"));
             return true;
         } else if (money.equals("")) {
@@ -629,115 +629,10 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                     text = "Result is null.";
                 }
                 etComment.setText(" " + etComment.getText() + text);
-                // Process the recognized text information.
-//                displayResult(text);
-//                break;
-//            // MLAsrCaptureConstants.ASR_FAILURE: Recognition fails.
-//            case MLAsrCaptureConstants.ASR_FAILURE:
-//                // Check whether a result code is contained.
-//                if (bundle.containsKey(MLAsrCaptureConstants.ASR_ERROR_CODE)) {
-//                    text = text + bundle.getInt(MLAsrCaptureConstants.ASR_ERROR_CODE);
-//                    // Perform troubleshooting based on the result code.
-//                }
-//                // Check whether error information is contained.
-//                if (bundle.containsKey(MLAsrCaptureConstants.ASR_ERROR_MESSAGE)) {
-//                    String errorMsg = bundle.getString(MLAsrCaptureConstants.ASR_ERROR_MESSAGE);
-//                    // Perform troubleshooting based on the error information.
-//                    if (errorMsg != null && !"".equals(errorMsg)) {
-//                        text = "[" + text + "]" + errorMsg;
-//                    }
-//                }
-//                // Check whether a sub-result code is contained.
-//                if (bundle.containsKey(MLAsrCaptureConstants.ASR_SUB_ERROR_CODE)) {
-//                    int subErrorCode = bundle.getInt(MLAsrCaptureConstants.ASR_SUB_ERROR_CODE);
-//                    // Process the sub-result code.
-//                    text = "[" + text + "]" + subErrorCode;
-//                }
-//                displayResult(text);
-//                break;
-//            default:
-//                displayResult("Failure.");
-//                break;
         }
     }
 
-//    private void speechRecognizer(){
-//        MLSpeechRealTimeTranscriptionConfig config = new MLSpeechRealTimeTranscriptionConfig.Factory()
-//                // 设置语言，目前支持中文、英语、法语转写。
-//                .setLanguage(MLSpeechRealTimeTranscriptionConstants.LAN_ZH_CN)
-//                // 设置标点。
-//                .enablePunctuation(true)
-//                // 设置句子的偏移。
-//                .enableSentenceTimeOffset(true)
-//                // 设置词的偏移。
-//                .enableWordTimeOffset(true)
-//                // 设置使用场景，MLSpeechRealTimeTranscriptionConstants.SCENES_SHOPPING：表示购物，仅支持中文，该场景对华为商品名识别进行了优化。
-//                .setScenes(MLSpeechRealTimeTranscriptionConstants.SCENES_SHOPPING)
-//                .create();
-//        mSpeechRecognizer = MLSpeechRealTimeTranscription.getInstance();
-//
-//        //绑定语音识别器
-//        mSpeechRecognizer.setRealTimeTranscriptionListener(new SpeechRecognitionListener());
-//
-//        //启动语音识别
-//        mSpeechRecognizer.startRecognizing(config);
-//
-//
-//    }
-//
-//    // 回调实现MLSpeechRealTimeTranscriptionListener接口，实现接口中的方法。
-//    protected class SpeechRecognitionListener implements MLSpeechRealTimeTranscriptionListener {
-//        @Override
-//        public void onStartListening() {
-//            // 录音器开始接收声音。
-//        }
-//
-//        @Override
-//        public void onStartingOfSpeech() {
-//            // 用户开始讲话，即语音识别器检测到用户开始讲话。
-//        }
-//
-//        @Override
-//        public void onVoiceDataReceived(byte[] data, float energy, Bundle bundle) {
-//            // 返回给用户原始的PCM音频流和音频能量，该接口并非运行在主线程中，返回结果需要在子线程中处理。
-//        }
-//
-//        @Override
-//        public void onRecognizingResults(Bundle partialResults) {
-//            // 从MLSpeechRealTimeTranscription接收到持续语音识别的文本。
-//            Log.e(getClass().getSimpleName(),"语音识别内容: " + partialResults.getString("data"));
-//        }
-//
-//        @Override
-//        public void onError(int error, String errorMessage) {
-//            // 识别发生错误后调用该接口。
-//            // 从MLSpeechRealTimeTranscription接收到持续语音识别的文本。
-//            Log.e(getClass().getSimpleName(),"语音识别发生错误: " + errorMessage);
-//        }
-//
-//        @Override
-//        public void onState(int state,Bundle params) {
-//            // 通知应用状态发生改变。
-//        }
-//    }
-//
-//    private void requestCameraPermission() {
-//        final String[] permissions = new String[]{Manifest.permission.RECORD_AUDIO};
-//        if (!ActivityCompat.shouldShowRequestPermissionRationale(this.getActivity(), Manifest.permission.RECORD_AUDIO)) {
-//            ActivityCompat.requestPermissions(this.getActivity(), permissions, AccoAddFragment.AUDIO_PERMISSION_CODE);
-//            return;
-//        }
-//    }
 
-//    // Permission application callback.
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        if (requestCode != AccoAddFragment.AUDIO_PERMISSION_CODE) {
-//            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//            return;
-//        }
-//    }
 
 
     @Override

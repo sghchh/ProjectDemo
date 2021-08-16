@@ -2,6 +2,7 @@ package com.starstudio.projectdemo.journal.adapter;
 
 import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
+import com.starstudio.projectdemo.journal.fragments.JournalAudioFragment;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.OtherUtil;
 
@@ -83,7 +88,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         private View layout;
         // 该RecyclerView是展示图片的控件
         private final RecyclerView imgGrid;
-        private final TextView week, date, location, content, videoNullTxt,audioNullTxt;
+        private final TextView week, date, location, content, videoNullTxt;
         private final ImageView weather, videoImg, videoPlayer;
         private final FrameLayout videoRoot, audioRoot;
         public JourHolder(@NonNull @NotNull View itemView) {
@@ -102,7 +107,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             videoNullTxt = (TextView)itemView.findViewById(R.id.journal_video_null_txt);
 
             audioRoot = (FrameLayout)itemView.findViewById(R.id.journal_audio_root);
-            audioNullTxt = (TextView)itemView.findViewById(R.id.journal_audio_null_txt);
+//            audioNullTxt = (TextView)itemView.findViewById(R.id.journal_audio_null_txt);
         }
 
         public void setListener(OnJourItemClickListener listener) {
@@ -184,17 +189,11 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
                 audioRoot.setVisibility(View.GONE);
             }else{
                 audioRoot.setVisibility(View.VISIBLE);
-                File fileAudio = new File(data.getAudio());
-                if (fileAudio.exists()) {
-                    // 说明本地的视频没有被删除，或者没有被移动位置
-                    audioRoot.setEnabled(true);
-                    audioRoot.setVisibility(View.GONE);
-                }
-                else {
-                    audioRoot.setEnabled(false);
-                    audioRoot.setVisibility(View.GONE);
-                    audioNullTxt.setVisibility(View.VISIBLE);
-                }
+                audioRoot.setEnabled(true);
+//                FragmentManager fragmentManager = ((AppCompatActivity)itemView.getContext()).getSupportFragmentManager();
+//                FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                transaction.replace(R.id.journal_audio_root, new JournalAudioFragment(data.getAudio()));
+//                transaction.commit();
             }
 
         }

@@ -29,10 +29,10 @@ public class EditTextWithText extends androidx.appcompat.widget.AppCompatEditTex
         Paint paint = new Paint();
         paint.setTextSize(OtherUtil.sp2px(this.getContext(),leadTextSize));//自定义字大小
         paint.setColor(Color.parseColor(leadTextColor));//自定义字颜色
-        canvas.drawText("  "+getLeadText(),2,getHeight()/2+20,paint);
-        int paddingLeft = (int) paint.measureText(getLeadText());
+        canvas.drawText(""+getLeadText(),2,getHeight()/2+20,paint);
+        int paddingLeft = (int) (paint.measureText(getLeadText()) * 2);
         //设置距离光标距离左侧的距离
-        setPadding(paddingLeft * 2, getPaddingTop(), getPaddingRight(), getPaddingBottom());
+        setPadding(paddingLeft, getPaddingTop(), getPaddingRight(), getPaddingBottom());
         super.onDraw(canvas);
     }
     public void setLeadText(String s){
