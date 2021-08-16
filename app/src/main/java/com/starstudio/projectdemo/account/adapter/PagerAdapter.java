@@ -1,8 +1,11 @@
-package com.starstudio.projectdemo.account.fragments;
+package com.starstudio.projectdemo.account.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.starstudio.projectdemo.account.fragments.AccoFragment;
+import com.starstudio.projectdemo.account.fragments.BudgetFragment;
 
 import org.jetbrains.annotations.NotNull;
 

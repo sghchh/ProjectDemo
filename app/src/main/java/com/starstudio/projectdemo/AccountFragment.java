@@ -8,19 +8,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.starstudio.projectdemo.account.BaseFragment;
 import com.starstudio.projectdemo.account.fragments.AccoAddFragment;
-import com.starstudio.projectdemo.account.fragments.PagerAdapter;
+import com.starstudio.projectdemo.account.adapter.PagerAdapter;
 import com.starstudio.projectdemo.databinding.FragmentAccountBinding;
 
 import org.jetbrains.annotations.NotNull;

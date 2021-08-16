@@ -24,6 +24,9 @@ Android程序中构成页面的相关类如下：
      * UpdateDialogFragment：弹窗，负责完成待办事项的修改，**通过点击TodoFragment某个待办项弹出**。
      * AnalyseFragment：分析页面，负责直观展示待办事项的完成度，**通过点击TodoFragment右上角的按钮跳转**。
    * AccountFragment：负责账单相关功能
+     + AccoAddFragment：弹窗，负责账单的添加以及修改，**通过点击AccoFragment右上角的添加按钮展示、或者通过点击具体的一项账单进行展示**。
+     + AccoFragment：记账页面，负责展示记录的所有账单
+     + BudgetFragment：预算页面，负责展示编辑预算
    * InfoFragment：负责个人信息相关功能
 2. JournalEditActivity：负责“写日记”所涉及到的功能，**通过点击JournalFragment右上角的添加按钮跳转过来**
    * AddFragment：*“写日记”*的页面，负责添加日记；**通过点击JournalFragment右上角的添加按钮跳转过来**。
