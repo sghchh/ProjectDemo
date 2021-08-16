@@ -25,8 +25,6 @@ public class MyApplication extends Application {
         JournalDatabase.init(this);
         TodoDatabase.init(this);
         TODONotification.init(this);
-        //HMS天气、地理信息
-        HmsWeatherService.init(this);
     }
 
 

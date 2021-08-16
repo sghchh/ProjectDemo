@@ -28,7 +28,7 @@ public class HmsWeatherService {
     }
 
     public static synchronized void init(Context context) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
             throw new RuntimeException("请为应用开启定位权限！！");
 
         if (serviceImpl == null) {

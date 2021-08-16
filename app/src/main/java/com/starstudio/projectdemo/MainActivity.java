@@ -1,14 +1,14 @@
 package com.starstudio.projectdemo;
 
 import android.Manifest;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -30,6 +30,7 @@ public class MainActivity extends HideInputActivity {
     private ActivityMainBinding binding;
     private RequestPermission permissionRequest;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,17 +42,19 @@ public class MainActivity extends HideInputActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
                 Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
         };
         // 本次申请的权限是必要的，即没用通过则会导致APP无法使用
         permissionRequest.checkPermissions(RequestPermission.CODE_MUST, permissions);
+        permissionRequest.requestLocationPermission();   // 单独申请定位权限
 
         // init
         {
             ContextHolder.init(this);
             // 进行文件操作
             FileUtil.init(this);
+            // 天气
+            HmsWeatherService.init(this);
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -68,22 +71,11 @@ public class MainActivity extends HideInputActivity {
         binding = null;
     }
 
-    /*
-            在该方法中对各种View添加点击事件、相互关联等配置
-         */
     private void configView() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-
         // 将BottomNavigationView与NavController绑定
         NavigationUI.setupWithNavController(binding.bottomNavMain, navController);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
@@ -91,7 +83,7 @@ public class MainActivity extends HideInputActivity {
         if (requestCode == RequestPermission.CODE_MUST)
             for (int res : grantResults) {
                 if (res != 0) {
-                    Toast.makeText(this, "相关权限未通过,无法使用~", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "相关权限未通过,会导致部分功能无法使用~", Toast.LENGTH_SHORT).show();
                 }
             }
     }

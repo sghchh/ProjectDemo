@@ -50,7 +50,7 @@ public class JournalEditActivityData {
 
     public static class PictureWithCategory {
         private String picturePath;
-        private String category = "test";   // 为该picture的分类结果
+        private String category = "其他";   // 为该picture的分类结果
 
         public String getPicturePath() {
             return picturePath;
