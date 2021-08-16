@@ -1,7 +1,11 @@
 package com.starstudio.projectdemo.utils;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -15,6 +19,7 @@ import java.util.ArrayList;
 public class RequestPermission {
     public static final int CODE_SIMPLE = 2021;
     public static final int CODE_MUST = 2022;  // 以该code发起权限请求的都必须通过才可
+    public static final int CODE_LOCATION = 2222;   // 为定位权限使用
 
     private Activity context;
     private static RequestPermission INSTANCE;
@@ -49,6 +54,30 @@ public class RequestPermission {
 
     // 请求权限
     public void requestPermissions(String[] permissions, int code) {
-        ActivityCompat.requestPermissions(context, permissions, code);
+        ActivityCompat.requestPermissions(context, permissions, code);   // 权限处理全部交由MainActivity进行
+    }
+
+    // 专门处理定位权限的申请
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public boolean requestLocationPermission() {
+        boolean background = false;
+        boolean foreground = ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        if (foreground) {
+            background = ActivityCompat.checkSelfPermission(context,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+            if (!background) {
+                ActivityCompat.requestPermissions(context,
+                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, CODE_LOCATION);
+            }
+        } else {
+            ActivityCompat.requestPermissions(context,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION}, CODE_LOCATION);
+        }
+
+        return foreground && background;
     }
 }
