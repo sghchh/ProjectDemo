@@ -26,12 +26,15 @@ import com.starstudio.projectdemo.journal.data.JournalEntity;
 import com.starstudio.projectdemo.journal.fragments.JournalAudioFragment;
 import com.starstudio.projectdemo.utils.ContextHolder;
 import com.starstudio.projectdemo.utils.OtherUtil;
+import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -91,6 +94,7 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
         private final TextView week, date, location, content, videoNullTxt;
         private final ImageView weather, videoImg, videoPlayer;
         private final FrameLayout videoRoot, audioRoot;
+        private final CircleImageView avater;
         public JourHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             layout = itemView;
@@ -100,6 +104,12 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             weather = (ImageView) itemView.findViewById(R.id.weather);
             content = (TextView)itemView.findViewById(R.id.content);
             location = (TextView)itemView.findViewById(R.id.location);
+            avater = itemView.findViewById(R.id.avatar);
+
+            SharedPreferencesUtils mSharedPreferencesUtils = SharedPreferencesUtils.getInstance(itemView.getContext());
+            if(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()) + "" != ""){
+                avater.setImageURI(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
+            }
 
             videoImg = (ImageView)itemView.findViewById(R.id.journal_video_pre);
             videoRoot = (FrameLayout) itemView.findViewById(R.id.journal_video_root);
