@@ -150,9 +150,20 @@
 
             <!--如果日记中含有音频的话，该布局负责展示音频-->
             <FrameLayout
+                android:id="@+id/journal_detail_audio_root"
+                android:layout_marginTop="10dp"
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/journal_detail_audio"-->
+<!--                    android:layout_width="100dp"-->
+<!--                    android:layout_height="100dp"-->
+<!--                    android:scaleType="centerCrop"-->
+<!--                    android:src="@drawable/iv_add_journal_audio"/>-->
+
+<!--            </FrameLayout>-->
 
         </LinearLayout>
 

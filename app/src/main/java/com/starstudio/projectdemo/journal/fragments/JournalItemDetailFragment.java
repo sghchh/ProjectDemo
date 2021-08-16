@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -147,7 +149,19 @@ public class JournalItemDetailFragment extends Fragment implements JourDetailImg
 
         //展示音频
         if (data.getAudio() != null) {
-
+            binding.journalDetailAudioRoot.setVisibility(View.VISIBLE);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.journal_detail_audio_root, new JournalAudioFragment(data.getAudio()));
+            transaction.commit();
+//            binding.journalDetailAudio.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+////                    Intent intent = new Intent(getActivity(), JournalVideoActivity.class);
+////                    intent.putExtra("audioPath", data.getAudio());
+////                    startActivity(intent);
+//                }
+//            });
         }
 
     }

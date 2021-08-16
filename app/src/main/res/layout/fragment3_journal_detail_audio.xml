@@ -1,58 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <View
-        android:id="@+id/status_view"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/black"/>
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/black"
+    app:cardCornerRadius="15dp">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar_video"
-        app:layout_constraintTop_toBottomOf="@id/status_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/bar_padding_bottom"
-            android:paddingEnd="@dimen/bar_padding_end"
-            android:paddingStart="@dimen/bar_padding_start"
-            android:paddingTop="@dimen/bar_padding_top"
-            android:id="@+id/toolbar">
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <RelativeLayout
-        app:layout_constraintTop_toBottomOf="@id/appbar_video"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:id="@+id/rl_video"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:background="#000000">
-        
-        <ImageView
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/playbg"/>
+<!--        <ImageView-->
+<!--            android:layout_marginTop="50dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:scaleType="fitXY"-->
+<!--            android:src="@drawable/playbg"/>-->
 
         <LinearLayout
-            android:id="@+id/control_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="350dp"
+            android:layout_marginTop="5dp"
             android:background="@color/black"
             android:orientation="vertical">
 
@@ -65,7 +30,7 @@
                 android:paddingBottom="5dp">
 
                 <TextView
-                    android:id="@+id/audio_start_time"
+                    android:id="@+id/audio_start_time_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
@@ -73,18 +38,18 @@
                     android:text="00:00:00"
                     android:textColor="#ffffff"/>
                 <TextView
-                    android:id="@+id/audio_separate_time"
+                    android:id="@+id/audio_separate_time_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/audio_start_time"
+                    android:layout_toEndOf="@+id/audio_start_time_detail"
                     android:layout_marginStart="1dp"
                     android:text="/"
                     android:textColor="#ffffff"/>
                 <TextView
-                    android:id="@+id/audio_end_time"
+                    android:id="@+id/audio_end_time_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/audio_separate_time"
+                    android:layout_toEndOf="@+id/audio_separate_time_detail"
                     android:layout_marginStart="1dp"
                     android:text="00:00:00"
                     android:textColor="#ffffff"/>
@@ -96,9 +61,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
                     android:layout_marginEnd="1dp"
-                    android:layout_below="@+id/audio_start_time"
+                    android:layout_below="@+id/audio_start_time_detail"
                     android:progressDrawable="@color/white"
-                    android:maxHeight="2dp"/>
+                    android:maxHeight="2dp" />
 
             </RelativeLayout>
 
@@ -108,11 +73,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="410dp"
+            android:layout_marginTop="55dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/iv_pre"
+                android:id="@+id/iv_pre_detail"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="fitXY"
@@ -127,7 +93,7 @@
                 android:layout_weight="1"/>
 
             <RelativeLayout
-                android:id="@+id/rl_play_pause"
+                android:id="@+id/rl_play_pause_detail"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:layout_gravity="center"
@@ -141,7 +107,7 @@
                     android:src="@drawable/btn_playback_play_bg_normal"/>
 
                 <ImageView
-                    android:id="@+id/iv_play"
+                    android:id="@+id/iv_play_detail"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
@@ -157,7 +123,7 @@
                 android:layout_weight="1"/>
 
             <ImageView
-                android:id="@+id/iv_next"
+                android:id="@+id/iv_next_detail"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:scaleType="fitXY"
@@ -167,5 +133,4 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

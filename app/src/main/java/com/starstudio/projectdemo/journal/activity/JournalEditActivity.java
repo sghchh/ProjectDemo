@@ -45,6 +45,7 @@ public class JournalEditActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 300) {
+            if(data.getDataString() != null && !data.getDataString().equals(""))
             editActivityData.setAudioPath(data.getDataString());
             Log.e(getClass().getSimpleName(), "获得的音频地址: " + data.getDataString());
         }

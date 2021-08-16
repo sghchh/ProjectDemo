@@ -6,58 +6,41 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.huawei.hms.api.bean.HwAudioPlayItem;
 import com.huawei.hms.audiokit.player.callback.HwAudioConfigCallBack;
-import com.huawei.hms.audiokit.player.manager.HwAudioConfigManager;
-import com.huawei.hms.audiokit.player.manager.HwAudioEffectManager;
 import com.huawei.hms.audiokit.player.manager.HwAudioManager;
 import com.huawei.hms.audiokit.player.manager.HwAudioManagerFactory;
 import com.huawei.hms.audiokit.player.manager.HwAudioPlayerConfig;
 import com.huawei.hms.audiokit.player.manager.HwAudioPlayerManager;
-import com.huawei.hms.audiokit.player.manager.HwAudioQueueManager;
 import com.huawei.hms.audiokit.player.manager.HwAudioStatusListener;
 import com.starstudio.projectdemo.R;
-import com.starstudio.projectdemo.databinding.Fragment3PreviewAudioBinding;
-import com.starstudio.projectdemo.databinding.Fragment3PreviewImgsBinding;
-import com.starstudio.projectdemo.journal.activity.JournalEditActivity;
-import com.starstudio.projectdemo.journal.adapter.PagerPreviewAdapter;
-import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
+import com.starstudio.projectdemo.databinding.Fragment3JournalDetailAudioBinding;
 import com.starstudio.projectdemo.utils.OtherUtil;
-
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * “写日记”板块点击已添加的音频进入到预览页面
- */
-public class AudioPreviewFragment extends Fragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-    private Fragment3PreviewAudioBinding binding;
-    private JournalEditActivityData data;
+public class JournalAudioFragment extends Fragment implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+
+    private Fragment3JournalDetailAudioBinding binding;
 
     private HwAudioManager mHwAudioManager;
     private HwAudioPlayerManager mHwAudioPlayerManager;
     private HwAudioStatusListener mPlayListener;
     List<HwAudioPlayItem> playItemList  = new ArrayList<>();
     private final String TAG = getClass().getSimpleName();
-    private Boolean mIsPause = false;
     public static final int UPDATE_UI = 1;
+    private String mAudioPath;
 
     private Handler UIhandle = new Handler(){
 
@@ -69,34 +52,37 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                     int position = (int) mHwAudioPlayerManager.getOffsetTime();
                     int totalduration = (int) mHwAudioPlayerManager.getDuration();
 
-                    binding.videoProgess.setMax(totalduration);
-                    binding.videoProgess.setProgress(position);
+                    if(position != -1 && totalduration != -1){
+                        binding.videoProgess.setMax(totalduration);
+                        binding.videoProgess.setProgress(position);
 
-                    updateTime();
-                    if(mHwAudioPlayerManager.isPlaying()) {
-                        binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
-                    } else {
-                        binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                        updateTime();
+                        if(mHwAudioPlayerManager.isPlaying()) {
+                            binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_pause_normal);
+                        } else {
+                            binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_play_normal);
+                        }
                     }
                 }
+
                 UIhandle.sendEmptyMessageDelayed(UPDATE_UI, 500);
             }
         }
     };
 
+    public JournalAudioFragment(){}
 
 
+    public JournalAudioFragment(String audioPath){
+        this.mAudioPath = audioPath;
+    }
 
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        data = ((JournalEditActivity)getActivity()).getEditActivityData();
-        setHasOptionsMenu(true);
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        binding = Fragment3PreviewAudioBinding.inflate(inflater, container, false);
-        configView();
+        binding = Fragment3JournalDetailAudioBinding.inflate(inflater, container, false);
         initEvent();
         createHwAudioManager();
         playLocalList();
@@ -156,7 +142,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
                 if(currPos == duration && binding != null){
                     // 播放完成回调。
                     updateTime();
-                    binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                    binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_play_normal);
                     pause();
                 }
             }
@@ -167,7 +153,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 //                    UIhandle.sendEmptyMessage(UPDATE_UI);
                     // 播放完成回调。
                     if(binding != null && mHwAudioPlayerManager != null){
-                        binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                        binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_play_normal);
                         seekTo((int) mHwAudioPlayerManager.getDuration());
                         updateTime();
                         pause();
@@ -215,12 +201,13 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         if (mHwAudioPlayerManager != null) {
             // 播放本地列表歌曲。
             mHwAudioPlayerManager.playList(getLocalPlayItemList(), 0, 0);
+            mHwAudioPlayerManager.pause();
         }
     }
 
     public List<HwAudioPlayItem> getLocalPlayItemList() {
         // 设置音频本地路径。
-        String path = data.getAudioPath();
+        String path = mAudioPath;
         Log.e(getClass().getSimpleName(), "音频本地路径: " + path);
         // 创建音频对象，写入音频信息。
         HwAudioPlayItem item = new HwAudioPlayItem();
@@ -241,9 +228,9 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     }
 
     private void initEvent() {
-        binding.ivPre.setOnClickListener(this);
-        binding.rlPlayPause.setOnClickListener(this);
-        binding.ivNext.setOnClickListener(this);
+        binding.ivPreDetail.setOnClickListener(this);
+        binding.rlPlayPauseDetail.setOnClickListener(this);
+        binding.ivNextDetail.setOnClickListener(this);
 
         binding.videoProgess.setOnSeekBarChangeListener(this);
     }
@@ -252,13 +239,13 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.iv_pre:
+            case R.id.iv_pre_detail:
                 backWard();
                 break;
-            case R.id.iv_next:
+            case R.id.iv_next_detail:
                 forWard();
                 break;
-            case R.id.rl_play_pause:
+            case R.id.rl_play_pause_detail:
                 Log.e(getClass().getSimpleName(), "获取当前时间:" + (int) mHwAudioPlayerManager.getOffsetTime());
                 Log.e(getClass().getSimpleName(), "获取总时间:" + (int) mHwAudioPlayerManager.getDuration());
                 Log.e(getClass().getSimpleName(), "执行了点击事件");
@@ -278,10 +265,11 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
 //        }
         // 播放进度变化回调。
         if(mHwAudioPlayerManager != null){
-            binding.audioStartTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
-            binding.audioEndTime.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
+            if(mHwAudioPlayerManager.getOffsetTime() != -1 && mHwAudioPlayerManager.getDuration() != -1){
+                binding.audioStartTimeDetail.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getOffsetTime()));
+                binding.audioEndTimeDetail.setText(OtherUtil.formatLongToTime((int) mHwAudioPlayerManager.getDuration()));
 //            binding.videoProgess.setProgress((int) (mHwAudioPlayerManager.getOffsetTime() * 1000 / mHwAudioPlayerManager.getDuration()));
-
+            }
         }
     }
 
@@ -320,7 +308,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
             if(mHwAudioPlayerManager.getDuration() != -1 && mHwAudioPlayerManager.getDuration() - 10000 <= position){
                 mHwAudioPlayerManager.seekTo((int) mHwAudioPlayerManager.getDuration());
                 updateTime();
-                binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+                binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_play_normal);
                 mHwAudioPlayerManager.pause();
             }else{
                 mHwAudioPlayerManager.seekTo(position + 10000);
@@ -349,10 +337,10 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     private void playControl(){
         if(mHwAudioPlayerManager.isPlaying()) {
             pause();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_play_normal);
+            binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_play_normal);
         } else {
             play();
-            binding.ivPlay.setImageResource(R.mipmap.btn_playback_pause_normal);
+            binding.ivPlayDetail.setImageResource(R.mipmap.btn_playback_pause_normal);
         }
     }
 
@@ -393,18 +381,7 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
 
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
-        inflater.inflate(R.menu.preview_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         removeListener(mPlayListener);
         if(UIhandle != null){
             UIhandle.removeCallbacksAndMessages(null);
@@ -413,29 +390,8 @@ public class AudioPreviewFragment extends Fragment implements View.OnClickListen
         mHwAudioPlayerManager.stop();
         mHwAudioManager = null;
         mHwAudioPlayerManager = null;
-        if (item.getItemId() == android.R.id.home) {
-            // 点击返回按钮，则返回上一级Fragment
-            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
-            navHost.getNavController().navigateUp();
-        } else if (item.getItemId() == R.id.image_preview_delete) {
-            // 先删除，然后返回上一级Fragment
-            data.setAudioPath(null);
-            NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
-            navHost.getNavController().navigateUp();
-        }
+        binding = null;
 
-        return super.onOptionsItemSelected(item);
     }
-
-
-    private void configView() {
-        // 将Fragment的toolbar添加上
-        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.back);
-    }
-
-
 
 }

@@ -141,6 +141,10 @@ public class BudgetFragment extends Fragment {
         }
     }
 
+    public void checkBudget(ArrayList<AccoEntity> data){
+
+    }
+
     private void initView(){
         binding.recyclerBudget.setAdapter(new BudgetAdapter(mBudgetData));
         binding.recyclerBudget.setLayoutManager(new LinearLayoutManager(getActivity()));
