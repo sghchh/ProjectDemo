@@ -72,6 +72,10 @@ public class ImagePreviewFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         if (item.getItemId() == R.id.image_preview_delete) {
             adapter.remove(binding.pagerPreview.getCurrentItem());
+            if (editActivityData.getPictures().size() == 0) {  // 如果删完了就退出预览界面
+                NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
+                navHost.getNavController().navigateUp();
+            }
         } else if (item.getItemId() == android.R.id.home) {
             // 添加点击事件，跳转到ImagePreviewFragment
             NavHostFragment navHost =(NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_jounal_edit);
