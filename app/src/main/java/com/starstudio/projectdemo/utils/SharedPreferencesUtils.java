@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 
+/**
+ *
+ */
 public class SharedPreferencesUtils {
 
     private static SharedPreferencesUtils sharedPreferencesUtils;

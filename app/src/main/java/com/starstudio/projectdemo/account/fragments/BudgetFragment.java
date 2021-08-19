@@ -71,6 +71,9 @@ public class BudgetFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * 获取数据并处理数据
+     */
     private void refreshData(){
         mAccoDatabase = Room.databaseBuilder(this.getContext(),AccoDatabase.class,"acco_database").build();
         mAccoDao = mAccoDatabase.getAccoDao();
@@ -80,7 +83,8 @@ public class BudgetFragment extends Fragment {
                 if(mBudgetData != null){
                     mBudgetData.clear();
                 }
-                Log.e(getClass().getSimpleName(), "测试SP存储: " + (mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ? "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString())));
+//                Log.e(getClass().getSimpleName(), "测试SP存储: " + (mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ?
+//                        "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString())));
                 mBudgetData = new ArrayList<BudgetData>(){{
                     add(new BudgetData("饮食", mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()).equals("") ?
                             "0" : mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_BUDGET_EAT.toString()),
@@ -122,28 +126,25 @@ public class BudgetFragment extends Fragment {
         }).start();
     }
 
+    /**
+     * 封装数据
+     * @param data
+     */
     private void classifyData(ArrayList<AccoEntity> data){
         for(int i = 0; i < data.size(); i++){
             if(data.get(i).getMonth().equals(OtherUtil.getSystemMonthToNumber()) && data.get(i).getYear().equals(OtherUtil.getSystemYear())){
                 Log.e(getClass().getSimpleName(), "计算余额为中第一个数: " + mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance());
                 Log.e(getClass().getSimpleName(), "计算余额为中第二个数: " + data.get(i).getMoney());
-                Log.e(getClass().getSimpleName(), "计算余额为: " + OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(), data.get(i).getMoney()));
+                Log.e(getClass().getSimpleName(), "计算余额为: " + OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(),
+                        data.get(i).getMoney()));
                 mBudgetData.get(kindToNum.get(data.get(i).getKind())).
                         setBalance(OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(), data.get(i).getMoney()));
             }else{
-//                for(int j = 0; j < mBudgetData.size(); j++){
-//                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).
-//                            setBalance(OtherUtil.bigNumberOperation(mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBalance(),
-//                                    mBudgetData.get(kindToNum.get(data.get(i).getKind())).getBudget()));
-//                }
                 break;
             }
         }
     }
 
-    public void checkBudget(ArrayList<AccoEntity> data){
-
-    }
 
     private void initView(){
         binding.recyclerBudget.setAdapter(new BudgetAdapter(mBudgetData));

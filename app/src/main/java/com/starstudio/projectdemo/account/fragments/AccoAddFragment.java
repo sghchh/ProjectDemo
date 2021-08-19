@@ -76,12 +76,10 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     private String mKind = "", mKindDetail = "", mYear, mMonth, mDay;
     private AccoData.AccoDailyData mAccoDeilyData = null;
 
-    private static final int AUDIO_PERMISSION_CODE = 1;
     // Permission
     private static final String[] ALL_PERMISSION = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     private static final int WRITE_PERMISSION_CODE = 0;
     public static final int ML_ASR_CAPTURE_CODE = 2;
-    public static final String REAL_VOICE_SUCCESS = "success";
     public static final int REAL_VOICE_SUCCESS_CODE = 0;
     private boolean isExpend = true;
     private boolean  hasData = false;   //判断是点击添加按钮跳转的，还是具体账单跳转的
@@ -128,10 +126,8 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
             setInitData(mAccoDeilyData, rootView);
         }
 
-
         //注册广播接收器
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getContext()) ;
-
 
         return rootView;
     }
@@ -185,7 +181,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
 
     }
 
-    //设置宽和高
+    //设置弹窗宽和高
     private void setSize(){
         Window win = getDialog().getWindow();
         // 一定要设置Background，如果不设置，window属性设置无效
@@ -317,19 +313,23 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.iv_voice_add:
+                //点击了语音图标，弹出实时语音转换弹窗
                 startRealTimeVoice();
 //                Toast.makeText(this.getContext(), "点击了语音按钮", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_cancel:
+                //点击了取消按钮，弹窗关闭
                 dismiss();
 //                Toast.makeText(this.getContext(), "点击了叉叉按钮", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_expense:
+                //切换为支出按钮
                 isExpend = true;
                 tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
                 tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
                 break;
             case R.id.tv_income:
+                //切换为收入按钮
                 isExpend = false;
                 tvExpense.setBackground(getContext().getDrawable(R.drawable.btn_selector_acco_add));
                 tvIncome.setBackground(getContext().getDrawable(R.drawable.btn_acco_add_press));
@@ -349,12 +349,14 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
                 }
                 break;
             case R.id.et_kind:
+                //点击种类选择，弹出种类数据选择器
                 pickKind();
 //                Toast.makeText(getContext(), "进行种类选择", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
 
+    //弹出种类数据选择器
     private void pickKind(){
         PickOption option = PickOption.getPickDefaultOptionBuilder(getContext())
                 .setLeftTitleColor(0xFF1233DD)
@@ -405,6 +407,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         return pickDataKindList;
     }
 
+    //保存账单
     private void saveData(){
         final String kind = mKind;
         final String kindDetail = mKindDetail;
@@ -433,6 +436,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         }).start();
     }
 
+    //判断是否选择了种类并且输入了正确的金额
     private boolean isParamEmpty(String kind, String money) {
         if (kind.equals("")) {
             etwtKind.setHint("请选择种类");
@@ -451,6 +455,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         return false;
     }
 
+    //删除账单
     private void deleteData(){
 
         new Thread(new Runnable() {
@@ -467,6 +472,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         }).start();
     }
 
+    //更新账单
     private void updateData(){
         final String kind = mKind;
         final String kindDetail = mKindDetail;
@@ -495,6 +501,7 @@ public class AccoAddFragment extends DialogFragment implements View.OnClickListe
         }).start();
     }
 
+    //打开实时语音转换功能
     private void startRealTimeVoice() {
         //                requestCameraPermission();
 //                speechRecognizer();

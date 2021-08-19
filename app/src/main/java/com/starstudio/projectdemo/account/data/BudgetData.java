@@ -1,5 +1,9 @@
 package com.starstudio.projectdemo.account.data;
 
+/**
+ *  记账“预算”页面中RecyclerView的Adapter所需的数据
+ *  用来封装展示本月每一种类的数据
+ */
 public class BudgetData {
     private String kind;    //预算项分类种类
     private String budget;  //预算项开支预算

@@ -2,6 +2,10 @@ package com.starstudio.projectdemo.account.data;
 
 import java.util.ArrayList;
 
+/**
+ *  记账“记账”页面中RecyclerView的Adapter所需的数据
+ *  用来封装展示每一天的账单数据
+ */
 public class AccoData {
     private String mYear;
     private String mMonth;

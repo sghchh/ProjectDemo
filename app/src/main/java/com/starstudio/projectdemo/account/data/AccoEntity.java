@@ -4,6 +4,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+/**
+ *  "记账"每一条账单对应的数据库表
+ */
 @Entity
 public class AccoEntity {
     @PrimaryKey

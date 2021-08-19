@@ -32,6 +32,12 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
         mData = data;
     }
 
+    /**
+     * 该方法用于加载 RecyclerView 子项的布局，然后返回一个 ViewHolder 对象**
+     * @param parent  可以简单理解为`item`的根`ViewGroup`，`item`的子控件加载在其中
+     * @param viewType  `item`的类型，可以根据`viewType`来创建不同的`ViewHolder`，来加载不同的类型的`item`
+     * @return
+     */
     @NonNull
     @NotNull
     @Override
@@ -40,19 +46,29 @@ public class AccoAdapter extends RecyclerView.Adapter<AccoAdapter.AccoHolder> {
         return new AccoHolder(view);
     }
 
+    /**
+     *  为子项绑定数据
+     */
     @Override
     public void onBindViewHolder(@NonNull @NotNull AccoAdapter.AccoHolder holder, int position) {
         Log.e(getClass().getSimpleName(), "mData.get(position) = " + mData.get(position));
         holder.loadData(mData.get(position));
     }
 
+    /**
+     *
+     * @return  设置 RecyclerView 一共有多少子项展示
+     */
     @Override
     public int getItemCount() {
         Log.e(getClass().getSimpleName(),"mData.size() = " + mData.size());
         return mData.size();
     }
 
-
+    /**
+     *  设置 RecyclerView 中每一个子项的布局以及数据展示
+     *  其构造方法中会传入一个View类型参数，传入的为每一次创建时对应的ItemView（子项）
+     */
     static class AccoHolder extends RecyclerView.ViewHolder{
 
         private final RecyclerView recyclerDaily;

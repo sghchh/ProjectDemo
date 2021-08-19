@@ -117,7 +117,8 @@
                 android:visibility="gone"
                 android:textSize="14sp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"/>
 
             <!--如果日记中含有图片的话，该RecyclerView负责展示图片-->
             <androidx.recyclerview.widget.RecyclerView

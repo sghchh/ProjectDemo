@@ -47,7 +47,7 @@ import static com.starstudio.projectdemo.account.fragments.AccoAddFragment.REAL_
 /**
  * 为“记账”页面的“账单”
  */
-public class AccoFragment extends BaseFragment {
+public class AccoFragment extends Fragment {
     private View mView;
     private RecyclerView mRecyclerView;
     private TextView tvIncomeCount,tvDisburseCount;
@@ -79,6 +79,9 @@ public class AccoFragment extends BaseFragment {
         }
     });
 
+    /**
+     *  用于接收 AccoAddFragment 发出的广播，进行界面的更新
+     */
     private class LoaclBroadcastReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -103,13 +106,13 @@ public class AccoFragment extends BaseFragment {
         tvIncomeCount = mView.findViewById(R.id.tv_income_count);
         tvDisburseCount = mView.findViewById(R.id.tv_disburse_count);
 
-        mAccoAdapter = new AccoAdapter(mClassifyData);
 //        binding.recyclerAcco.setAdapter(mAccoAdapter);
 //        binding.recyclerAcco.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        Log.e(getClass().getSimpleName(), "monthIncome + " + monthIncome);
 //        Log.e(getClass().getSimpleName(), "monthExpend + " + monthExpend);
 //        binding.tvIncomeCount.setText(monthIncome);
 //        binding.tvDisburseCount.setText(monthExpend);
+        mAccoAdapter = new AccoAdapter(mClassifyData);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAccoAdapter);
 
@@ -133,6 +136,9 @@ public class AccoFragment extends BaseFragment {
         mAccoAdapter.notifyDataSetChanged();
     }
 
+    /**
+     *  在非UI线程中进行读取数据库内容，并将其封装成 AccoData 类型用于传入 RecyclerView 的 Adapter 中
+     */
     private void refreshData() {
         mAccoDatabase = Room.databaseBuilder(this.getContext(),AccoDatabase.class,"acco_database").build();
         mAccoDao = mAccoDatabase.getAccoDao();
@@ -180,9 +186,9 @@ public class AccoFragment extends BaseFragment {
                 }
             }
         }
-        year = null;
-        month = null;
-        day = null;
+//        year = null;
+//        month = null;
+//        day = null;
     }
 
 

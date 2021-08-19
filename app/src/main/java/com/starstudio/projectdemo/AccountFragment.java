@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -23,7 +24,7 @@ import com.starstudio.projectdemo.databinding.FragmentAccountBinding;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AccountFragment extends BaseFragment {
+public class AccountFragment extends Fragment {
     private final String[] TAGS = {"记账", "预算"};
     FragmentAccountBinding binding;
 
@@ -67,6 +68,7 @@ public class AccountFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        //appbar最右侧的按钮的点击事件
         if (item.getItemId() == R.id.account_add) {
 //            Toast.makeText(getActivity(), "点击了Account页面的add按钮", Toast.LENGTH_SHORT).show();
             DialogFragment dialogFragment = new AccoAddFragment();

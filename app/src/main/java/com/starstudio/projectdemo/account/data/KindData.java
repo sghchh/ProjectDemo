@@ -4,6 +4,9 @@ import com.wheelpicker.widget.PickString;
 
 import java.util.List;
 
+/**
+ *  添加账单（AccoAddFragment）中选择种类的级联滚轮数据类型
+ */
 public class KindData {
     public List<KindDetailFirst> kinds;
 

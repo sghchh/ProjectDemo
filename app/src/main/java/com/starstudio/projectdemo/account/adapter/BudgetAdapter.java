@@ -64,7 +64,8 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetHold
             etBudget = itemView.findViewById(R.id.et_budget);
             tvBalance = itemView.findViewById(R.id.tv_balance);
 
-            etBudget.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+//            //设置输入只能为数字和小数点
+//            etBudget.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 //            etBudget.addTextChangedListener(new TextWatcher() {
 //                boolean deleteLastChar;// 是否需要删除末尾
 //
@@ -104,10 +105,9 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetHold
 //
 //                }
 //            });
-
-
         }
 
+        //如果余额为负数则字体显示红色，如果金额为正数，则显示黑色
         private void setTvBalanceText(String text){
             if(text.charAt(0) == '-'){
                 tvBalance.setTextColor(Color.parseColor("#ABFF3E3E"));
@@ -121,22 +121,17 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetHold
             tvKind.setText(data.getKind());
             etBudget.setText(data.getBudget());
             setTvBalanceText(data.getBalance());
-//            if(data.getBalance().charAt(0) == '-'){
-//                tvBalance.setTextColor(Color.parseColor("#ABFF3E3E"));
-//            }
-//            tvBalance.setText(data.getBalance());
 
-
+            //设置etBudget的内容改变时的事件
             etBudget.addTextChangedListener(new TextWatcher() {
                 boolean deleteLastChar;// 是否需要删除末尾
 
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    //设置小数点后最多只能输入两位数字
                     if (s.toString().contains(".")) {
                         // 如果点后面有超过三位数值,则删掉最后一位
                         int length = s.length() - s.toString().lastIndexOf(".");
@@ -183,14 +178,15 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.BudgetHold
                             mSharedPreferencesUtils.putString(SharedPreferencesUtils.Key.KEY_BUDGET_OTHER.toString(), etBudget.getText().toString());
                             break;
                     }
-                    Log.e(getClass().getSimpleName(), "etBudget中输入的内容为: " + etBudget.getText());
+//                    Log.e(getClass().getSimpleName(), "etBudget中输入的内容为: " + etBudget.getText());
                     if(etBudget.getText().length() == 0){
-                        setTvBalanceText(OtherUtil.bigNumberOperation(OtherUtil.bigNumberOperation("-" + data.getBudget(), "0"), tvBalance.getText().toString()));
+                        setTvBalanceText(OtherUtil.bigNumberOperation(OtherUtil.bigNumberOperation("-" + data.getBudget(), "0"),
+                                tvBalance.getText().toString()));
                     }else if(!etBudget.getText().equals(data.getBudget())){
-                        setTvBalanceText(OtherUtil.bigNumberOperation(OtherUtil.bigNumberOperation("-" + data.getBudget(), etBudget.getText().toString()), tvBalance.getText().toString()));
+                        setTvBalanceText(OtherUtil.bigNumberOperation(OtherUtil.bigNumberOperation("-" + data.getBudget(), etBudget.getText().toString()),
+                                tvBalance.getText().toString()));
                     }
-//                        tvBalance.setText();
-                    Log.e(getClass().getSimpleName(), "tvBalance中修改后的内容为: " + tvBalance.getText().toString());
+//                    Log.e(getClass().getSimpleName(), "tvBalance中修改后的内容为: " + tvBalance.getText().toString());
                     data.setBudget(etBudget.getText().toString());
 
                 }

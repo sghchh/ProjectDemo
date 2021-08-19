@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import org.greenrobot.greendao.annotation.NotNull;
 
+//用来开发测试的时候，打印观察 Fragment 生命周期的变化
 public abstract class BaseFragment extends Fragment {
 
 
