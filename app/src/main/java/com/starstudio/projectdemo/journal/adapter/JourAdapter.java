@@ -2,7 +2,7 @@ package com.starstudio.projectdemo.journal.adapter;
 
 import static com.huawei.hms.kit.awareness.status.weather.constant.CNWeatherId.SUNNY;
 
-import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,19 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.starstudio.projectdemo.R;
 import com.starstudio.projectdemo.journal.GlideEngine;
 import com.starstudio.projectdemo.journal.data.JournalEntity;
-import com.starstudio.projectdemo.journal.fragments.JournalAudioFragment;
 import com.starstudio.projectdemo.utils.ContextHolder;
+import com.starstudio.projectdemo.utils.FileUtil;
 import com.starstudio.projectdemo.utils.OtherUtil;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
@@ -49,12 +47,14 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
 
     public JourAdapter() { }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void reset(List<JournalEntity> append) {
         this.data.clear();
         this.data.addAll(append);
         this.notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void append(JournalEntity append) {
         this.data.add(append);
         this.notifyDataSetChanged();
@@ -106,10 +106,13 @@ public class JourAdapter extends RecyclerView.Adapter<JourAdapter.JourHolder>{
             location = (TextView)itemView.findViewById(R.id.location);
             avater = itemView.findViewById(R.id.avatar);
 
-            SharedPreferencesUtils mSharedPreferencesUtils = SharedPreferencesUtils.getInstance(itemView.getContext());
-            if(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()) + "" != ""){
-                avater.setImageURI(mSharedPreferencesUtils.readUri(SharedPreferencesUtils.Key.KEY_IVINFO.toString()));
-            }
+            RequestOptions options = new RequestOptions()
+                    .error(R.drawable.logo)
+                    .placeholder(R.drawable.logo);
+            Glide.with(avater.getContext())
+                    .load(SharedPreferencesUtils.getInstance(avater.getContext()).readString("avatar"))
+                    .apply(options)
+                    .into(avater);
 
             videoImg = (ImageView)itemView.findViewById(R.id.journal_video_pre);
             videoRoot = (FrameLayout) itemView.findViewById(R.id.journal_video_root);

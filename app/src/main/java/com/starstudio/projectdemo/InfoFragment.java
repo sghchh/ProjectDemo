@@ -1,32 +1,20 @@
 package com.starstudio.projectdemo;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.icu.text.IDNA;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,12 +24,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.listener.OnResultCallbackListener;
 import com.starstudio.projectdemo.databinding.FragmentInfoBinding;
+import com.starstudio.projectdemo.journal.GlideEngine;
+import com.starstudio.projectdemo.journal.api.HmsClassificationService;
+import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
 import com.starstudio.projectdemo.utils.FileUtil;
-import com.starstudio.projectdemo.utils.OtherUtil;
+import com.starstudio.projectdemo.utils.RequestPermission;
 import com.starstudio.projectdemo.utils.SharedPreferencesUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +47,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -97,23 +94,18 @@ public class InfoFragment extends Fragment {
 
     //页面初始化部分控件
     private void initView(){
-        circleImage(FileUtil.getImageContentUri(getContext(), new File(mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_IVINFO.toString()))));
+        RequestOptions options = new RequestOptions()
+                .error(R.drawable.logo)
+                .placeholder(R.drawable.logo);
+        Glide.with(getContext())
+                .load(mSharedPreferencesUtils.readString("avatar"))
+                .apply(options)
+                .skipMemoryCache(true)
+                .into(binding.avatar);
+
         if(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + "") != ""){
             binding.etInfoName.setText(mSharedPreferencesUtils.readString(binding.etInfoName.getId() + ""));
         }
-    }
-
-    //该方法用来将用户头像设置为圆形
-    private void circleImage(Uri uri){
-        RequestOptions options = new RequestOptions()
-                .error(R.drawable.logo)
-                .placeholder(R.drawable.logo)
-                .transforms(new CircleCrop());
-
-        Glide.with(getContext())
-                .load(uri)
-                .apply(options)
-                .into(binding.ivInfo);
     }
 
 
@@ -124,7 +116,7 @@ public class InfoFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED){
                 // 已获得权限
-                openPicture();
+                selectPicture();
             }else{
                 //未获得权限,进行申请
                 InfoFragment.this.requestPermissions(
@@ -152,28 +144,36 @@ public class InfoFragment extends Fragment {
         });
     }
 
-    // 打开系统图库选择图片
-    private void openPicture() {
-        Intent picture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(picture, PICTURE);
+    private void selectPicture(){
+        // 选择图片或者拍照
+        PictureSelector.create(getActivity())
+                .openGallery(PictureMimeType.ofImage())
+                .imageEngine(GlideEngine.createGlideEngine())
+                .imageSpanCount(4)
+                .maxSelectNum(1)
+                .selectionMode(PictureConfig.MULTIPLE)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        String picPath = result.get(0).getRealPath();
+                        mSharedPreferencesUtils.putString("avatar", FileUtil.saveAvatar(picPath));
+                        RequestOptions options = new RequestOptions()
+                                .error(R.drawable.logo)
+                                .placeholder(R.drawable.logo);
+                        Glide.with(getContext())
+                                .load(mSharedPreferencesUtils.readString("avatar"))
+                                .apply(options)
+                                .skipMemoryCache(true)
+                                .into(binding.avatar);
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
     }
 
-
-    //请求权限后的回调方法
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION: {
-                if(ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED){
-                    openPicture();
-                }else{
-                    showWaringDialog();
-                }
-            }
-            return;
-        }
-    }
 
     //提示
     private void showWaringDialog() {
@@ -187,44 +187,4 @@ public class InfoFragment extends Fragment {
                     }
                 }).show();
     }
-
-    //startActivityForResult的回调方法
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            //打开系统相册后执行此处
-            case PICTURE:
-                if(requestCode != RESULT_OK && data != null){
-                    Bitmap bitmap = FileUtil.sampleImage(FileUtil.getFilePathFromContentUri(Uri.parse(data.getDataString()), getContext().getContentResolver()));
-//                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                    mSharedPreferencesUtils.putString(SharedPreferencesUtils.Key.KEY_IVINFO.toString(),saveBitmap(bitmap));
-//                    circleImage(data.getData());
-                    circleImage(FileUtil.getImageContentUri(getContext(), new File(mSharedPreferencesUtils.readString(SharedPreferencesUtils.Key.KEY_IVINFO.toString()))));
-                }
-                break;
-        }
-    }
-
-    public String saveBitmap(Bitmap bitmap) {
-        String FILE_STORAGE = getContext().getExternalFilesDir("").getPath();
-        File file = new File(FILE_STORAGE + "/picture");
-        if (!file.exists())
-            file.mkdir();
-        String PICTURE_FILE = file.getAbsolutePath();
-        File save = new File(PICTURE_FILE + "/" + "avater");
-        if (!save.exists())
-            save.mkdir();   // 如果该类别的文件夹不存在，则先创建
-        save = new File(save.getAbsolutePath(), new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(new Date()) + ".jpg");
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(save));
-            bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
-            bos.flush();
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return save.getAbsolutePath();
-    }
-
-
 }

@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.starstudio.projectdemo.journal.data.AlbumData;
 import com.starstudio.projectdemo.journal.data.JournalEditActivityData;
@@ -19,6 +20,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -27,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 public class FileUtil {
+    private static String TAG = "FileUtil";
     @SuppressLint("SimpleDateFormat")
     private static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
@@ -51,8 +54,13 @@ public class FileUtil {
 
     }
 
+    /**
+     * 滤镜服务中保存处理过后的Bitmap到指定目录
+     * @param bitmap 滤镜处理后的bitmap
+     * @return
+     */
     public static String saveBitmap(Bitmap bitmap) {
-        File save = new File(PICTURE_FILE + "/" + "filter");
+        File save = new File(PICTURE_FILE + "/filter");
         if (!save.exists())
             save.mkdir();   // 如果该类别的文件夹不存在，则先创建
         save = new File(save.getAbsolutePath(), formatter.format(new Date()) + ".jpg");
@@ -63,6 +71,35 @@ public class FileUtil {
             bos.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return save.getAbsolutePath();
+    }
+
+    /**
+     * 修改头像时，将选中的图片保存到指定文件
+     * @param selectedPath 所选中的图片的绝对路径
+     * @return
+     */
+    public static String saveAvatar(String selectedPath) {
+        File avatar = new File(FILE_STORAGE + "/avatar");
+        if (!avatar.exists())
+            avatar.mkdir();
+        File save = new File(avatar.getAbsolutePath(), formatter.format(new Date()) + ".jpg");
+        BufferedInputStream inputStream;
+        BufferedOutputStream outputStream;
+        try {
+            inputStream = new BufferedInputStream(new FileInputStream(new File(selectedPath)));
+            outputStream = new BufferedOutputStream(new FileOutputStream(save));
+            byte[] cache = new byte[1024];
+            while(inputStream.read(cache) != -1) {
+                outputStream.write(cache);
+            }
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "IO错误：保存头像失败！");
         }
         return save.getAbsolutePath();
     }
