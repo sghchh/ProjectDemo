@@ -278,11 +278,33 @@ public class AddFragment extends Fragment implements AddPictureAdapter.OnItemCli
      * 调用PictureSelector选择音频文件
      */
     private void selectAudio() {
-        Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
-        intent1.setType("audio/*"); //选择音频
-        getActivity().startActivityForResult(intent1, 300);
+//        Intent intent1 = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent1.setType("audio/*"); //选择音频
+//        getActivity().startActivityForResult(intent1, 300);
 
-        checkAddMediaVisibility();
+        PictureSelector.create(getActivity())
+                .openGallery(PictureMimeType.ofAudio())
+                .selectionMode(PictureConfig.SINGLE)
+                .imageEngine(GlideEngine.createGlideEngine())
+                .maxVideoSelectNum(1)
+                .filterMaxFileSize(100000)  // 视频上限100MB
+                .imageSpanCount(3)
+                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                    @Override
+                    public void onResult(List<LocalMedia> result) {
+                        String audioPath = result.get(0).getRealPath();
+                        editActivityData.setAudioPath(audioPath);
+
+                        // 添加了视频，所以需要关闭一些页面元素
+                        checkAddMediaVisibility();
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+//        checkAddMediaVisibility();
     }
 
     /**
